@@ -26,6 +26,10 @@ $all_users = $all_users ?? []; // Retrieve the list of users
             --primary-hover: #1d4ed8;
             /* Tailwind Blue-700 */
         }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+        }
     </style>
 </head>
 
