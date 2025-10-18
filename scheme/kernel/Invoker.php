@@ -188,6 +188,10 @@ class Invoker {
 	}
 
 
+	// File: scheme/kernel/Invoker.php
+
+	// ... (previous methods)
+
 	/**
 	 * Load View File
 	 *
@@ -229,7 +233,14 @@ class Invoker {
 			return;
 		}
 
-		$path = APP_DIR . "views/" . ($nested ? "{$module_or_nested}/{$nested}/" : '') . "{$file}.php";
+		// --- FIX START ---
+		// Reconstruct the directory path correctly for single or nested subdirectories (e.g., 'auth' or 'some/dir')
+		$app_path_prefix = trim((!empty($module_or_nested) ? $module_or_nested . '/' : '') . $nested, '/');
+
+		// Build the final path: APP_DIR . views/ + path/ + file.php
+		$path = APP_DIR . "views/" . (empty($app_path_prefix) ? '' : $app_path_prefix . '/') . "{$file}.php";
+		// --- FIX END ---
+
 		if (file_exists($path)) {
 			require $path;
 			echo ob_get_clean();
@@ -238,6 +249,8 @@ class Invoker {
 
 		throw new RuntimeException("View {$view_file} not found in module or app/views");
 	}
+
+	// ... (rest of the Invoker class)
 
 	/**
 	 * Load Helper
