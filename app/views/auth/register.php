@@ -20,8 +20,7 @@ function display_validation_errors($errors)
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Dental System</title>
-    <!-- Tailwind CSS CDN for styling -->
+    <title>DENTALCARE: Register</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* CRITICAL CHANGE: Set primary color to Blue */
@@ -40,14 +39,29 @@ function display_validation_errors($errors)
 
 <body class="bg-gray-100 flex justify-center items-center min-h-screen p-4">
     <div class="form-container w-full max-w-sm bg-white p-8 rounded-xl shadow-2xl border border-gray-200">
-        <h1 class="text-3xl font-extrabold text-center text-[--primary-color] mb-6">
-            Register an Account
+        <h1 class="text-3xl font-extrabold text-left text-[--primary-color] mb-6">
+            Welcome to DENTALCARE <br> <br>
+            <p class="text-xl"> Register an Account </p>
         </h1>
 
         <?php display_validation_errors($errors ?? []); ?>
 
         <form method="POST" action="<?= site_url('register/submit') ?>" class="space-y-4">
             <?= csrf_field() ?>
+
+            <div>
+                <label for="full_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <input type="text" id="full_name" name="full_name" value="<?= html_escape($full_name ?? '') ?>" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition"
+                    placeholder="Enter your full name">
+            </div>
+
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" id="email" name="email" value="<?= html_escape($email ?? '') ?>" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition"
+                    placeholder="user@example.com">
+            </div>
 
             <div>
                 <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
@@ -70,12 +84,10 @@ function display_validation_errors($errors)
                     placeholder="••••••••">
             </div>
 
-            <div>
-                <!-- UPDATED ROLE SELECTION FIELD -->
+            <div hidden>
                 <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Select Role</label>
                 <select id="role" name="role" required
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition">
-                    <!-- NOTE: Role submission is enabled for testing. -->
                     <option value="user">Patient/User</option>
                     <option value="staff">Staff</option>
                     <option value="admin">Admin</option>
@@ -90,7 +102,7 @@ function display_validation_errors($errors)
 
         <div class="text-center mt-6 text-sm">
             Already have an account?
-            <a href="<?= site_url('login') ?>" class="text-blue-600 hover:text-blue-800 font-medium transition">
+            <a href="<?= site_url('login') ?>" class="underline text-blue-600 hover:text-blue-800 font-medium transition">
                 Login
             </a>
         </div>

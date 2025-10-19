@@ -114,23 +114,31 @@ class Auth extends Controller
         $this->_check_logged_in();
         $data = $this->io->post();
 
-        // 1. Set Validation Rules
+        // 1. Set Validation Rules (UPDATED)
         $this->form_validation
+            // NEW VALIDATION RULES
+            ->name('full_name|Full Name')->required()->valid_name() // Check for letters and spaces only
+            ->name('email|Email')->required()->valid_email()        // Check for valid email format
+
             ->name('username|Username')->required()->alpha_numeric()->is_unique('users', 'username', $data['username'])
             ->name('password|Password')->required()->min_length(6)
             ->name('confirm_password|Confirm Password')->required()->matches('password');
 
-        // Validate the submitted role against the allowed ENUM values.
+        // Validate role remains the same
         $this->form_validation->name('role|Role')->required()->in_list('user,staff,admin');
 
         if ($this->form_validation->run()) {
 
-            // 2. Prepare Data and Save
+            // 2. Prepare Data and Save (UPDATED)
             $hashed_password = password_hash($data['password'], PASSWORD_BCRYPT);
 
             $final_role = $this->io->post('role');
 
             $new_user_data = [
+                // NEW FIELDS ADDED HERE
+                'full_name' => $this->io->post('full_name'),
+                'email'     => $this->io->post('email'),
+
                 'username' => $data['username'],
                 'password' => $hashed_password,
                 'role' => $final_role
@@ -144,9 +152,12 @@ class Auth extends Controller
                 redirect('register');
             }
         } else {
-            // 3. Validation Failed
+            // 3. Validation Failed (Pass back all entered data for convenience)
             $data['errors'] = $this->form_validation->get_errors();
             $data['username'] = $this->io->post('username');
+            $data['full_name'] = $this->io->post('full_name');
+            $data['email'] = $this->io->post('email');
+
             $this->call->view('auth/register', $data);
         }
     }
@@ -156,5 +167,87 @@ class Auth extends Controller
         $this->session->sess_destroy();
         redirect('login');
     }
-    
+
+    public function profile()
+    {
+        // Redirect if not logged in
+        if (!$this->session->userdata('is_logged_in')) {
+            redirect('login');
+        }
+
+        $user_id = $this->session->userdata('user_id');
+        $data['user'] = $this->UserModel->find($user_id);
+
+        // This is a new view we need to create
+        $this->call->view('auth/profile', $data);
+    }
+
+    /**
+     * Handles profile update submission (Update: Full Name and Email).
+     */
+    public function profile_edit_submit()
+    {
+        if (!$this->session->userdata('is_logged_in')) {
+            redirect('login');
+        }
+
+        $user_id = $this->session->userdata('user_id');
+        $data = $this->io->post();
+
+        // 1. Set Validation Rules
+        $this->form_validation
+            ->name('full_name|Full Name')->required()->valid_name()
+            ->name('email|Email')->required()->valid_email();
+
+        // Optional: Add validation for unique email if user changes it
+        // The is_unique validation needs custom logic to ignore the current user's email.
+        // For simplicity in the MVP, we skip the unique check here.
+
+        if ($this->form_validation->run()) {
+
+            $update_data = [
+                'full_name' => $this->io->post('full_name'),
+                'email' => $this->io->post('email')
+            ];
+
+            if (!empty($this->io->post('new_password'))) {
+                // If a new password is provided, validate it and hash it
+                $this->form_validation
+                    ->name('new_password|New Password')->required()->min_length(6)
+                    ->name('confirm_new_password|Confirm Password')->required()->matches('new_password')->run();
+
+                if ($this->form_validation->run()) {
+                    $update_data['password'] = password_hash($this->io->post('new_password'), PASSWORD_BCRYPT);
+                } else {
+                    $this->session->set_flashdata('error_message', $this->form_validation->errors());
+                    redirect('profile');
+                }
+            }
+
+            $this->UserModel->update($user_id, $update_data);
+            $this->session->set_flashdata('success_message', 'Profile updated successfully!');
+        } else {
+            $this->session->set_flashdata('error_message', $this->form_validation->errors());
+        }
+        redirect('profile');
+    }
+
+    /**
+     * Handles account deletion (Delete).
+     */
+    public function profile_delete()
+    {
+        if (!$this->session->userdata('is_logged_in')) {
+            redirect('login');
+        }
+
+        $user_id = $this->session->userdata('user_id');
+        $this->UserModel->delete($user_id);
+
+        // Destroy the session after deletion
+        $this->session->sess_destroy();
+        $this->session->set_flashdata('success_message', 'Your account has been deleted.');
+
+        redirect('/');
+    }
 }

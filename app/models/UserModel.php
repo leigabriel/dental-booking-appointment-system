@@ -6,15 +6,12 @@ class UserModel extends Model
     protected $table = 'users';
     protected $primary_key = 'id';
 
-    // Only allow safe fields for mass assignment (registration)
-    protected $fillable = ['username', 'password', 'role'];
+    // UPDATED: Allow new fields for mass assignment
+    protected $fillable = ['username', 'password', 'role', 'full_name', 'email'];
 
     public function __construct()
     {
-        parent::__construct();
-
-        // CRITICAL FIX: Explicitly load the database instance immediately
-        // after the parent Model construct to ensure $this->db property is set.
+        // ... (omitted code) ...
         $this->call->database();
     }
 

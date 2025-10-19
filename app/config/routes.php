@@ -45,7 +45,7 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 
 // $router->get('/', 'Welcome::index');
 
-// --- Authentication Routes ---
+// Authentication Routes
 $router->get('/login', 'Auth::login');
 $router->post('/login/submit', 'Auth::login_submit');
 
@@ -54,8 +54,8 @@ $router->post('/register/submit', 'Auth::register_submit');
 
 $router->get('/logout', 'Auth::logout');
 
-// --- Role-Based Dashboards (Protected) ---
-// Admin: Full Access (only role 'admin' can view)
+// Role-Based Dashboards (Protected)
+// Admin: Full Access
 $router->get('/admin/dashboard', function () {
   $LAVA = lava_instance();
   // Must load helper and library inside closure if not globally autoloaded
@@ -70,20 +70,28 @@ $router->get('/admin/dashboard', function () {
   }
 });
 
-// Staff: Limited Access (roles 'admin' OR 'staff' can view)
+// Staff: Limited Access
 $router->get('/staff/dashboard', function () {
-  $role = lava_instance()->session->userdata('role');
+  $LAVA = lava_instance();
+  $LAVA->call->helper('url');
+  $LAVA->call->library('session');
+
+  $role = $LAVA->session->userdata('role');
   if ($role === 'admin' || $role === 'staff') {
-    lava_instance()->call->view('staff/dashboard');
+    // This calls the controller that fetches the data.
+    $LAVA->call->controller('Staff', 'dashboard');
   } else {
     redirect('login');
   }
 });
 
-// --- User Landing Page / Default Route ---
-// This is the public landing page for patients/users.
+// User Landing Page
+// This is the public landing page for users.
 $router->get('/', function () {
   lava_instance()->call->view('user_landing');
 });
 
-// You can safely remove the original: $router->get('/', 'Welcome::index');
+// User Profile Management Routes
+$router->get('/profile', 'Auth::profile');
+$router->post('/profile/update', 'Auth::profile_edit_submit');
+$router->get('/profile/delete', 'Auth::profile_delete');

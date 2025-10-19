@@ -24,7 +24,7 @@ function display_flashdata($session)
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Dental System</title>
+    <title>DENTALCARE: Login</title>
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -45,8 +45,8 @@ function display_flashdata($session)
 <body class="bg-gray-100 flex justify-center items-center min-h-screen p-4">
     <div class="form-container w-full max-w-sm bg-white p-8 rounded-xl shadow-2xl border border-gray-200">
         <h1 class="text-3xl font-extrabold text-left text-[--primary-color] mb-6">
-            Welcome to Dental Appointment System <br> <br>
-            Login to Your Account
+            Welcome to DENTALCARE <br> <br>
+            <p class="text-xl"> Login to Your Account </p>
         </h1>
 
         <?php display_flashdata(lava_instance()->session); ?>
@@ -79,7 +79,7 @@ function display_flashdata($session)
 
         <div class="text-center mt-6 text-sm">
             Don't have an account?
-            <a href="<?= site_url('register') ?>" class="text-blue-600 hover:text-blue-800 font-medium transition">
+            <a href="<?= site_url('register') ?>" class="underline text-blue-600 hover:text-blue-800 font-medium transition">
                 Register
             </a>
         </div>
