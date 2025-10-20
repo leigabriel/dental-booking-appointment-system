@@ -33,7 +33,17 @@ class Management extends Controller
         }
     }
 
-    // --- 1. Appointments Overview (No Change) ---
+    // NEW FUNCTION: Allows Staff for Read/Update access to management pages
+    private function _check_management_access()
+    {
+        $role = $this->session->userdata('role');
+        if ($role !== 'admin' && $role !== 'staff') {
+            $this->session->set_flashdata('error_message', 'Access denied. Admin or Staff privileges required.');
+            redirect('login');
+        }
+    }
+
+    // --- 1. Appointments Overview ---
 
     public function appointments()
     {
@@ -47,7 +57,7 @@ class Management extends Controller
         $this->call->view('admin/appointments', $data);
     }
 
-    // --- Action: Confirm Appointment (FIXED) ---
+    // --- Action: Confirm Appointment ---
     public function appointment_confirm($id)
     {
         $this->_check_admin_or_staff(); // Auth check
@@ -63,7 +73,7 @@ class Management extends Controller
         redirect('management/appointments');
     }
 
-    // --- Action: Cancel Appointment (FIXED) ---
+    // --- Action: Cancel Appointment ---
     public function appointment_cancel($id)
     {
         $this->_check_admin_or_staff(); // Auth check
@@ -79,13 +89,12 @@ class Management extends Controller
         redirect('management/appointments');
     }
 
-    // --- 2. Doctor Management CRUD (Admin Only) ---
+    // --- 2. Doctor Management CRUD (Admin/Staff for everything but Delete) ---
 
-    // New/Updated: Main view (List and Add Form)
     public function doctors()
     {
-        $this->_check_admin(); // Auth check
-
+        $this->_check_management_access(); // <--- UPDATED
+        // ... (rest of method)
         $data['doctors'] = $this->DoctorModel->all();
         // Pass any lingering flash data (errors or old input)
         $data['errors'] = $this->session->flashdata('errors');
@@ -94,10 +103,10 @@ class Management extends Controller
         $this->call->view('admin/doctor_management', $data);
     }
 
-    // New: Dedicated view for editing a single doctor (GET request)
     public function doctor_edit($id)
     {
-        $this->_check_admin();
+        $this->_check_management_access(); // <--- UPDATED
+        // ... (rest of method)
         $data['doctor'] = $this->DoctorModel->find($id);
 
         if (!$data['doctor']) {
@@ -113,17 +122,16 @@ class Management extends Controller
         $this->call->view('admin/doctor_edit_form', $data);
     }
 
-    // Updated: Submission handler (POST request for Add/Update)
     public function doctor_add_update($id = null)
     {
-        $this->_check_admin();
+        $this->_check_management_access(); // <--- UPDATED
 
         if ($this->io->method() !== 'POST') {
             redirect('management/doctors'); // Ensure only POST is processed here
         }
 
         $data = $this->io->post();
-
+        // ... (rest of method)
         $this->form_validation
             ->name('name|Doctor Name')->required()->valid_name()
             ->name('specialty|Specialty')->required()
@@ -157,10 +165,9 @@ class Management extends Controller
         redirect('management/doctors');
     }
 
-    // **FIXED:** Delete doctor by explicitly deleting dependent appointments first.
     public function doctor_delete($id)
     {
-        $this->_check_admin(); // Auth check
+        $this->_check_admin(); // <--- RESTRICTED TO ADMIN ONLY (No Change)
 
         if (!$this->DoctorModel->find($id)) {
             $this->session->set_flashdata('error_message', 'Doctor not found.');
@@ -176,13 +183,12 @@ class Management extends Controller
         redirect('management/doctors');
     }
 
-    // --- 3. Service Management CRUD (Admin Only) ---
+    // --- 3. Service Management CRUD (Admin/Staff for everything but Delete) ---
 
-    // New/Updated: Main view (List and Add Form)
     public function services()
     {
-        $this->_check_admin(); // Auth check
-
+        $this->_check_management_access(); // <--- UPDATED
+        // ... (rest of method)
         $data['services'] = $this->ServiceModel->all();
         // Pass any lingering flash data (errors or old input)
         $data['errors'] = $this->session->flashdata('errors');
@@ -191,10 +197,10 @@ class Management extends Controller
         $this->call->view('admin/service_management', $data);
     }
 
-    // New: Dedicated view for editing a single service (GET request)
     public function service_edit($id)
     {
-        $this->_check_admin();
+        $this->_check_management_access(); // <--- UPDATED
+        // ... (rest of method)
         $data['service'] = $this->ServiceModel->find($id);
 
         if (!$data['service']) {
@@ -210,17 +216,16 @@ class Management extends Controller
         $this->call->view('admin/service_edit_form', $data);
     }
 
-    // Updated: Submission handler (POST request for Add/Update)
     public function service_add_update($id = null)
     {
-        $this->_check_admin();
+        $this->_check_management_access(); // <--- UPDATED
 
         if ($this->io->method() !== 'POST') {
             redirect('management/services'); // Ensure only POST is processed here
         }
 
         $data = $this->io->post();
-
+        // ... (rest of method)
         $this->form_validation
             ->name('name|Service Name')->required()
             ->name('price|Price')->required()->numeric()
@@ -254,10 +259,9 @@ class Management extends Controller
         redirect('management/services');
     }
 
-    // **FIXED:** Delete service by explicitly deleting dependent appointments first.
     public function service_delete($id)
     {
-        $this->_check_admin(); // Auth check
+        $this->_check_admin(); // <--- RESTRICTED TO ADMIN ONLY (No Change)
 
         if (!$this->ServiceModel->find($id)) {
             $this->session->set_flashdata('error_message', 'Service not found.');

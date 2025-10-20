@@ -53,91 +53,111 @@ $all_users = $all_users ?? [];
                 Go to Appointment List
             </a>
         </div>
-        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-10">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">User Accounts Overview</h2>
 
-            <p class="text-gray-600 mb-4">
-                This table shows **registered patient/user accounts** for quick reference and identity verification.
-            </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            <div class="bg-blue-500 p-6 rounded-xl shadow-lg border border-blue-600 hover:bg-blue-600 transition duration-150">
+                <h2 class="text-xl font-extrabold text-white mb-2">Doctor Records</h2>
+                <p class="text-blue-100 mb-4">View and edit doctor details (no delete privilege).</p>
+                <a href="<?= site_url('management/doctors') ?>"
+                    class="inline-block px-6 py-2.5 bg-white text-blue-700 font-bold rounded-lg shadow-md hover:text-blue-900 transition">
+                    Manage Doctors
+                </a>
+            </div>
 
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                ID
-                            </th>
-                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Username
-                            </th>
-                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Full Name
-                            </th>
-                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Email
-                            </th>
-                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Role
-                            </th>
-                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Joined Date
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <?php if (!empty($all_users)): ?>
-                            <?php foreach ($all_users as $user): ?>
-                                <tr>
-                                    <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        <?= html_escape($user['id']) ?>
-                                    </td>
-                                    <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        <?= html_escape($user['username']) ?>
-                                    </td>
-                                    <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        <?= html_escape($user['full_name'] ?? 'N/A') ?>
-                                    </td>
-                                    <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        <?= html_escape($user['email'] ?? 'N/A') ?>
-                                    </td>
-                                    <td class="px-3 py-4 whitespace-nowrap">
-                                        <?php
-                                        // Determine role badge color
-                                        $role_class = match ($user['role']) {
-                                            'admin' => 'bg-red-100 text-red-800',
-                                            'staff' => 'bg-blue-100 text-blue-800',
-                                            default => 'bg-gray-100 text-gray-800',
-                                        };
-                                        ?>
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $role_class ?>">
-                                            <?= html_escape(ucfirst($user['role'])) ?>
-                                        </span>
-                                    </td>
-                                    <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <?= html_escape($user['created_at']) ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="6" class="px-3 py-4 text-center text-gray-500">No registered accounts found.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+            <div class="bg-yellow-500 p-6 rounded-xl shadow-lg border border-yellow-600 hover:bg-yellow-600 transition duration-150">
+                <h2 class="text-xl font-extrabold text-white mb-2">Service Records</h2>
+                <p class="text-yellow-100 mb-4">View and edit service details (no delete privilege).</p>
+                <a href="<?= site_url('management/services') ?>"
+                    class="inline-block px-6 py-2.5 bg-white text-yellow-700 font-bold rounded-lg shadow-md hover:text-yellow-900 transition">
+                    Manage Services
+                </a>
             </div>
         </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-10">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">User Accounts Overview</h2>
 
-        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Staff Privileges</h2>
-            <p class="text-gray-600 mb-4">You have limited operational access focused on patient and appointment review.</p>
-            <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li class="font-medium">✅ View all Patient Records (Read Access).</li>
-                <li class="font-medium">✅ View and manage appointments (Ready to use at the top of this page).</li>
-                <li>❌ Cannot manage user roles or edit system configurations.</li>
-            </ul>
+                <p class="text-gray-600 mb-4">
+                    This table shows **registered patient/user accounts** for quick reference and identity verification.
+                </p>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    ID
+                                </th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Username
+                                </th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Full Name
+                                </th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Email
+                                </th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Role
+                                </th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Joined Date
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <?php if (!empty($all_users)): ?>
+                                <?php foreach ($all_users as $user): ?>
+                                    <tr>
+                                        <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            <?= html_escape($user['id']) ?>
+                                        </td>
+                                        <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
+                                            <?= html_escape($user['username']) ?>
+                                        </td>
+                                        <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
+                                            <?= html_escape($user['full_name'] ?? 'N/A') ?>
+                                        </td>
+                                        <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
+                                            <?= html_escape($user['email'] ?? 'N/A') ?>
+                                        </td>
+                                        <td class="px-3 py-4 whitespace-nowrap">
+                                            <?php
+                                            // Determine role badge color
+                                            $role_class = match ($user['role']) {
+                                                'admin' => 'bg-red-100 text-red-800',
+                                                'staff' => 'bg-blue-100 text-blue-800',
+                                                default => 'bg-gray-100 text-gray-800',
+                                            };
+                                            ?>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $role_class ?>">
+                                                <?= html_escape(ucfirst($user['role'])) ?>
+                                            </span>
+                                        </td>
+                                        <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <?= html_escape($user['created_at']) ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="6" class="px-3 py-4 text-center text-gray-500">No registered accounts found.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Staff Privileges</h2>
+                <p class="text-gray-600 mb-4">You have limited operational access focused on patient and appointment review.</p>
+                <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                    <li class="font-medium">✅ View all Patient Records (Read Access).</li>
+                    <li class="font-medium">✅ View and manage appointments (Ready to use at the top of this page).</li>
+                    <li>❌ Cannot manage user roles or edit system configurations.</li>
+                </ul>
+            </div>
         </div>
-    </div>
 </body>
 
 </html>

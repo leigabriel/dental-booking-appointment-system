@@ -1,7 +1,7 @@
 <?php
 defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 $LAVA = lava_instance();
-
+$role = $LAVA->session->userdata('role'); // <--- ADDED
 // Data variables
 $doctors = $doctors ?? [];
 // New: We no longer check for $is_edit here.
@@ -130,7 +130,9 @@ function display_errors($errors)
                                     <td class="px-3 py-4 text-sm text-gray-600"><?= html_escape($d['email']) ?></td>
                                     <td class="px-3 py-4 text-sm space-x-3">
                                         <a href="<?= site_url('management/doctor_edit/' . $d['id']) ?>" class="text-blue-600 hover:text-blue-800">Edit</a>
-                                        <a href="<?= site_url('management/doctor_delete/' . $d['id']) ?>" onclick="return confirm('Are you sure you want to delete Dr. <?= html_escape($d['name']) ?>?')" class="text-red-600 hover:text-red-800">Delete</a>
+                                        <?php if ($role === 'admin'): ?>
+                                            <a href="<?= site_url('management/doctor_delete/' . $d['id']) ?>" onclick="return confirm('Are you sure you want to delete Dr. <?= html_escape($d['name']) ?>?')" class="text-red-600 hover:text-red-800">Delete</a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

@@ -1,8 +1,10 @@
 <?php
 defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 $LAVA = lava_instance();
-$services = $services ?? [];
+// Retrieve the current user's role
+$role = $LAVA->session->userdata('role'); // <--- ADDED
 
+$services = $services ?? [];
 // Repopulate logic for failed Add form submission
 $errors = $errors ?? [];
 $post_data = $post_data ?? [];
@@ -130,8 +132,11 @@ function display_errors($errors)
                                     <td class="px-3 py-4 text-sm text-gray-600"><?= html_escape($s['duration_mins']) ?></td>
                                     <td class="px-3 py-4 text-sm space-x-3">
                                         <a href="<?= site_url('management/service_edit/' . $s['id']) ?>" class="text-blue-600 hover:text-blue-800">Edit</a>
-                                        <a href="<?= site_url('management/service_delete/' . $s['id']) ?>" onclick="return confirm('Are you sure you want to delete service: <?= html_escape($s['name']) ?>?')" class="text-red-600 hover:text-red-800">Delete</a>
+                                        <?php if ($role === 'admin'): ?>
+                                            <a href="<?= site_url('management/service_delete/' . $s['id']) ?>" onclick="return confirm('Are you sure you want to delete service: <?= html_escape($s['name']) ?>?')" class="text-red-600 hover:text-red-800">Delete</a>
+                                        <?php endif; ?>
                                     </td>
+
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
