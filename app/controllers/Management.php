@@ -7,23 +7,38 @@ class Management extends Controller
     {
         parent::__construct();
 
-        // Authorization check: Only Admin can access these tools
-        if ($this->session->userdata('role') !== 'admin') {
-            redirect('login');
-        }
-
         // Load all management dependencies
         $this->call->model(['DoctorModel', 'ServiceModel', 'AppointmentModel', 'UserModel']);
         $this->call->library('Form_validation');
-        $this->call->database();
+        $this->call->database(); // Explicitly ensures DB is available for actions
         $this->call->helper(['url', 'language']);
     }
 
-    // --- 1. Appointments Overview (Read All) ---
+    // --- UTILITY: Authorization Check ---
+    private function _check_admin_or_staff()
+    {
+        $role = $this->session->userdata('role');
+        if ($role !== 'admin' && $role !== 'staff') {
+            $this->session->set_flashdata('error_message', 'Access denied.');
+            redirect('login');
+        }
+    }
+
+    private function _check_admin()
+    {
+        $role = $this->session->userdata('role');
+        if ($role !== 'admin') {
+            $this->session->set_flashdata('error_message', 'Access denied. Admin privileges required.');
+            redirect('login');
+        }
+    }
+
+    // --- 1. Appointments Overview ---
 
     public function appointments()
     {
-        // ... (data fetching remains the same) ...
+        $this->_check_admin_or_staff(); // Auth check
+
         $data['appointments'] = $this->AppointmentModel->all();
         $data['doctors'] = array_column($this->DoctorModel->all() ?? [], null, 'id');
         $data['services'] = array_column($this->ServiceModel->all() ?? [], null, 'id');
@@ -32,40 +47,52 @@ class Management extends Controller
         $this->call->view('admin/appointments', $data);
     }
 
-    // --- NEW: Confirm Appointment ---
+    // --- Action: Confirm Appointment (FIXED) ---
     public function appointment_confirm($id)
     {
+        $this->_check_admin_or_staff(); // Auth check
+
         if (!$id) {
+            $this->session->set_flashdata('error_message', 'Invalid appointment ID.');
             redirect('management/appointments');
         }
 
         $this->AppointmentModel->update($id, ['status' => 'confirmed']);
-        $this->session->set_flashdata('success_message', "Appointment #{$id} confirmed.");
+
+        $this->session->set_flashdata('success_message', "Appointment #{$id} confirmed successfully.");
         redirect('management/appointments');
     }
 
-    // --- NEW: Cancel Appointment ---
+    // --- Action: Cancel Appointment (FIXED) ---
     public function appointment_cancel($id)
     {
+        $this->_check_admin_or_staff(); // Auth check
+
         if (!$id) {
+            $this->session->set_flashdata('error_message', 'Invalid appointment ID.');
             redirect('management/appointments');
         }
 
         $this->AppointmentModel->update($id, ['status' => 'cancelled']);
-        $this->session->set_flashdata('success_message', "Appointment #{$id} cancelled.");
+
+        $this->session->set_flashdata('success_message', "Appointment #{$id} cancelled successfully.");
         redirect('management/appointments');
     }
 
-    // --- 2. Doctor Management CRUD ---
+    // --- 2. Doctor Management CRUD (Admin Only) ---
 
     public function doctors()
     {
+        $this->_check_admin(); // Auth check
+
         $data['doctors'] = $this->DoctorModel->all();
         $this->call->view('admin/doctor_management', $data);
     }
 
     public function doctor_add_update($id = null)
     {
+        $this->_check_admin(); // Auth check
+
         $data = $this->io->post();
 
         $this->form_validation
@@ -80,9 +107,9 @@ class Management extends Controller
         if ($this->form_validation->run()) {
             $save_data = $this->io->post();
 
-            // CRITICAL FIX: Remove ALL potential CSRF token keys from the array
-            unset($save_data['lava_csrf_token']); // Targets the name shown in the error trace
-            unset($save_data[config_item('csrf_token_name')]); // Targets the configured name
+            // Remove CSRF token keys
+            unset($save_data['lava_csrf_token']);
+            unset($save_data[config_item('csrf_token_name')]);
 
             if ($id) {
                 $this->DoctorModel->update($id, $save_data);
@@ -99,21 +126,27 @@ class Management extends Controller
 
     public function doctor_delete($id)
     {
+        $this->_check_admin(); // Auth check
+
         $this->DoctorModel->delete($id);
         $this->session->set_flashdata('success_message', 'Doctor deleted successfully.');
         redirect('management/doctors');
     }
 
-    // --- 3. Service Management CRUD ---
+    // --- 3. Service Management CRUD (Admin Only) ---
 
     public function services()
     {
+        $this->_check_admin(); // Auth check
+
         $data['services'] = $this->ServiceModel->all();
         $this->call->view('admin/service_management', $data);
     }
 
     public function service_add_update($id = null)
     {
+        $this->_check_admin(); // Auth check
+
         $data = $this->io->post();
 
         $this->form_validation
@@ -128,9 +161,9 @@ class Management extends Controller
         if ($this->form_validation->run()) {
             $save_data = $this->io->post();
 
-            // CRITICAL FIX: Remove ALL potential CSRF token keys from the array
-            unset($save_data['lava_csrf_token']); // Targets the name shown in the error trace
-            unset($save_data[config_item('csrf_token_name')]); // Targets the configured name
+            // Remove CSRF token keys
+            unset($save_data['lava_csrf_token']);
+            unset($save_data[config_item('csrf_token_name')]);
 
             if ($id) {
                 $this->ServiceModel->update($id, $save_data);
@@ -147,6 +180,8 @@ class Management extends Controller
 
     public function service_delete($id)
     {
+        $this->_check_admin(); // Auth check
+
         $this->ServiceModel->delete($id);
         $this->session->set_flashdata('success_message', 'Service deleted successfully.');
         redirect('management/services');

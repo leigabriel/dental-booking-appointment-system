@@ -1,5 +1,5 @@
 <?php
-defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
+defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 /**
  * ------------------------------------------------------------------
  * LavaLust - an opensource lightweight PHP MVC Framework
@@ -62,30 +62,39 @@ $router->post('/book/submit', 'Booking::submit');
 // --- ADMIN MANAGEMENT ROUTES (Handled by Management Controller) ---
 // -----------------------------------------------------------------
 
+// NEW: Redirect base /management to appointments
+$router->get('/management', function () {
+  redirect('management/appointments');
+});
+
 // 1. Appointments Overview (View all bookings)
 $router->get('/management/appointments', 'Management::appointments');
 
-// NEW: Appointment Actions
-$router->get('/management/appointment_confirm/(:num)', 'Management::appointment_confirm/$1')
-  ->where_number('num');
-$router->get('/management/appointment_cancel/(:num)', 'Management::appointment_cancel/$1')
-  ->where_number('num');
-  
+// **FIXED APPOINTMENT ACTIONS:** Using explicit {id} placeholder.
+$router->get('/management/appointment_confirm/{id}', 'Management::appointment_confirm')
+  ->where_number('id');
+$router->get('/management/appointment_cancel/{id}', 'Management::appointment_cancel')
+  ->where_number('id');
+
 // 2. Doctor CRUD
 $router->get('/management/doctors', 'Management::doctors'); // Read: List all doctors
 $router->match('/management/doctor_add_update', 'Management::doctor_add_update', 'GET|POST'); // Add new doctor
-$router->match('/management/doctor_add_update/(:num)', 'Management::doctor_add_update/$1', 'GET|POST') // Update existing doctor
-  ->where_number('num');
-$router->get('/management/doctor_delete/(:num)', 'Management::doctor_delete/$1') // Delete doctor
-  ->where_number('num');
+// **FIXED DOCTOR UPDATE:** Using explicit {id} placeholder.
+$router->match('/management/doctor_add_update/{id}', 'Management::doctor_add_update', 'GET|POST') // Update existing doctor
+  ->where_number('id');
+// **FIXED DOCTOR DELETE:** Using explicit {id} placeholder.
+$router->get('/management/doctor_delete/{id}', 'Management::doctor_delete') // Delete doctor
+  ->where_number('id');
 
 // 3. Service CRUD
 $router->get('/management/services', 'Management::services'); // Read: List all services
 $router->match('/management/service_add_update', 'Management::service_add_update', 'GET|POST'); // Add new service
-$router->match('/management/service_add_update/(:num)', 'Management::service_add_update/$1', 'GET|POST') // Update existing service
-  ->where_number('num');
-$router->get('/management/service_delete/(:num)', 'Management::service_delete/$1') // Delete service
-  ->where_number('num');
+// **FIXED SERVICE UPDATE:** Using explicit {id} placeholder.
+$router->match('/management/service_add_update/{id}', 'Management::service_add_update', 'GET|POST') // Update existing service
+  ->where_number('id');
+// **FIXED SERVICE DELETE:** Using explicit {id} placeholder.
+$router->get('/management/service_delete/{id}', 'Management::service_delete') // Delete service
+  ->where_number('id');
 
 // -----------------------------------------------------------------
 // --- DASHBOARD ACCESS (Requires Authorization) ---

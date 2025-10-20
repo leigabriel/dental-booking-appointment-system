@@ -45,8 +45,16 @@ $all_users = $all_users ?? [];
             </div>
         </div>
 
+        <div class="bg-green-500 p-6 rounded-xl shadow-lg border border-green-600 mb-8 hover:bg-green-600 transition duration-150">
+            <h2 class="text-2xl font-extrabold text-white mb-2">Manage Appointments</h2>
+            <p class="text-green-100 mb-4">View, confirm, or cancel all scheduled patient bookings.</p>
+            <a href="<?= site_url('management/appointments') ?>"
+                class="inline-block px-6 py-2.5 bg-white text-green-700 font-bold rounded-lg shadow-md hover:text-green-900 transition">
+                Go to Appointment List
+            </a>
+        </div>
         <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-10">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Patient Accounts Overview</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">User Accounts Overview</h2>
 
             <p class="text-gray-600 mb-4">
                 This table shows **registered patient/user accounts** for quick reference and identity verification.
@@ -125,7 +133,7 @@ $all_users = $all_users ?? [];
             <p class="text-gray-600 mb-4">You have limited operational access focused on patient and appointment review.</p>
             <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
                 <li class="font-medium">✅ View all Patient Records (Read Access).</li>
-                <li class="font-medium">✅ View and manage appointments (To be implemented).</li>
+                <li class="font-medium">✅ View and manage appointments (Ready to use at the top of this page).</li>
                 <li>❌ Cannot manage user roles or edit system configurations.</li>
             </ul>
         </div>
