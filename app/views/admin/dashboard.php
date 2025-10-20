@@ -64,7 +64,7 @@ $all_users = $all_users ?? [];
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-[--accent-light]">
-                <p class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Total Patients/Users</p>
+                <p class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Total Users</p>
                 <p class="text-5xl font-extrabold text-gray-900 mt-2"><?= html_escape($total_users) ?></p>
             </div>
         </div>

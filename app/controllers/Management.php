@@ -33,7 +33,7 @@ class Management extends Controller
         }
     }
 
-    // --- 1. Appointments Overview ---
+    // --- 1. Appointments Overview (No Change) ---
 
     public function appointments()
     {
@@ -81,17 +81,46 @@ class Management extends Controller
 
     // --- 2. Doctor Management CRUD (Admin Only) ---
 
+    // New/Updated: Main view (List and Add Form)
     public function doctors()
     {
         $this->_check_admin(); // Auth check
 
         $data['doctors'] = $this->DoctorModel->all();
+        // Pass any lingering flash data (errors or old input)
+        $data['errors'] = $this->session->flashdata('errors');
+        $data['post_data'] = $this->session->flashdata('post_data');
+
         $this->call->view('admin/doctor_management', $data);
     }
 
+    // New: Dedicated view for editing a single doctor (GET request)
+    public function doctor_edit($id)
+    {
+        $this->_check_admin();
+        $data['doctor'] = $this->DoctorModel->find($id);
+
+        if (!$data['doctor']) {
+            $this->session->set_flashdata('error_message', 'Doctor not found.');
+            redirect('management/doctors');
+        }
+
+        // Pass existing flash data from failed submission, if present
+        $data['errors'] = $this->session->flashdata('errors');
+        $data['post_data'] = $this->session->flashdata('post_data');
+
+        // Use a dedicated view template for the edit form.
+        $this->call->view('admin/doctor_edit_form', $data);
+    }
+
+    // Updated: Submission handler (POST request for Add/Update)
     public function doctor_add_update($id = null)
     {
-        $this->_check_admin(); // Auth check
+        $this->_check_admin();
+
+        if ($this->io->method() !== 'POST') {
+            redirect('management/doctors'); // Ensure only POST is processed here
+        }
 
         $data = $this->io->post();
 
@@ -100,14 +129,10 @@ class Management extends Controller
             ->name('specialty|Specialty')->required()
             ->name('email|Email')->required()->valid_email();
 
-        if ($id) {
-            $data['doctor'] = $this->DoctorModel->find($id);
-        }
-
         if ($this->form_validation->run()) {
             $save_data = $this->io->post();
 
-            // Remove CSRF token keys
+            // Clean data for model
             unset($save_data['lava_csrf_token']);
             unset($save_data[config_item('csrf_token_name')]);
 
@@ -118,15 +143,33 @@ class Management extends Controller
                 $this->DoctorModel->insert($save_data);
                 $this->session->set_flashdata('success_message', 'New doctor added successfully.');
             }
-            redirect('management/doctors');
+        } else {
+            // If validation fails, flash errors and old input, then redirect to the correct form.
+            $this->session->set_flashdata('errors', $this->form_validation->get_errors());
+            $this->session->set_flashdata('post_data', $this->io->post());
+            $this->session->set_flashdata('error_message', 'Validation failed. Please check the form.');
+
+            $redirect_url = $id ? 'management/doctor_edit/' . $id : 'management/doctors';
+            redirect($redirect_url);
         }
 
-        $this->call->view('admin/doctor_management', array_merge($data, ['errors' => $this->form_validation->get_errors()]));
+        // Redirect to the main listing page after success
+        redirect('management/doctors');
     }
 
+    // **FIXED:** Delete doctor by explicitly deleting dependent appointments first.
     public function doctor_delete($id)
     {
         $this->_check_admin(); // Auth check
+
+        if (!$this->DoctorModel->find($id)) {
+            $this->session->set_flashdata('error_message', 'Doctor not found.');
+            redirect('management/doctors');
+        }
+
+        // FIX: Explicitly delete appointments linked to this doctor.
+        // The filter() method returns the underlying database object ($this->db) with the WHERE clause set.
+        $this->AppointmentModel->filter(['doctor_id' => $id])->delete();
 
         $this->DoctorModel->delete($id);
         $this->session->set_flashdata('success_message', 'Doctor deleted successfully.');
@@ -135,17 +178,46 @@ class Management extends Controller
 
     // --- 3. Service Management CRUD (Admin Only) ---
 
+    // New/Updated: Main view (List and Add Form)
     public function services()
     {
         $this->_check_admin(); // Auth check
 
         $data['services'] = $this->ServiceModel->all();
+        // Pass any lingering flash data (errors or old input)
+        $data['errors'] = $this->session->flashdata('errors');
+        $data['post_data'] = $this->session->flashdata('post_data');
+
         $this->call->view('admin/service_management', $data);
     }
 
+    // New: Dedicated view for editing a single service (GET request)
+    public function service_edit($id)
+    {
+        $this->_check_admin();
+        $data['service'] = $this->ServiceModel->find($id);
+
+        if (!$data['service']) {
+            $this->session->set_flashdata('error_message', 'Service not found.');
+            redirect('management/services');
+        }
+
+        // Pass existing flash data from failed submission, if present
+        $data['errors'] = $this->session->flashdata('errors');
+        $data['post_data'] = $this->session->flashdata('post_data');
+
+        // Use a dedicated view template for the edit form.
+        $this->call->view('admin/service_edit_form', $data);
+    }
+
+    // Updated: Submission handler (POST request for Add/Update)
     public function service_add_update($id = null)
     {
-        $this->_check_admin(); // Auth check
+        $this->_check_admin();
+
+        if ($this->io->method() !== 'POST') {
+            redirect('management/services'); // Ensure only POST is processed here
+        }
 
         $data = $this->io->post();
 
@@ -154,14 +226,10 @@ class Management extends Controller
             ->name('price|Price')->required()->numeric()
             ->name('duration_mins|Duration')->required()->numeric();
 
-        if ($id) {
-            $data['service'] = $this->ServiceModel->find($id);
-        }
-
         if ($this->form_validation->run()) {
             $save_data = $this->io->post();
 
-            // Remove CSRF token keys
+            // Clean data for model
             unset($save_data['lava_csrf_token']);
             unset($save_data[config_item('csrf_token_name')]);
 
@@ -172,15 +240,33 @@ class Management extends Controller
                 $this->ServiceModel->insert($save_data);
                 $this->session->set_flashdata('success_message', 'New service added successfully.');
             }
-            redirect('management/services');
+        } else {
+            // If validation fails, flash errors and old input, then redirect to the correct form.
+            $this->session->set_flashdata('errors', $this->form_validation->get_errors());
+            $this->session->set_flashdata('post_data', $this->io->post());
+            $this->session->set_flashdata('error_message', 'Validation failed. Please check the form.');
+
+            $redirect_url = $id ? 'management/service_edit/' . $id : 'management/services';
+            redirect($redirect_url);
         }
 
-        $this->call->view('admin/service_management', array_merge($data, ['errors' => $this->form_validation->get_errors()]));
+        // Redirect to the main listing page after success
+        redirect('management/services');
     }
 
+    // **FIXED:** Delete service by explicitly deleting dependent appointments first.
     public function service_delete($id)
     {
         $this->_check_admin(); // Auth check
+
+        if (!$this->ServiceModel->find($id)) {
+            $this->session->set_flashdata('error_message', 'Service not found.');
+            redirect('management/services');
+        }
+
+        // FIX: Explicitly delete appointments linked to this service.
+        // The filter() method returns the underlying database object ($this->db) with the WHERE clause set.
+        $this->AppointmentModel->filter(['service_id' => $id])->delete();
 
         $this->ServiceModel->delete($id);
         $this->session->set_flashdata('success_message', 'Service deleted successfully.');

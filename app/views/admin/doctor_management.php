@@ -4,16 +4,30 @@ $LAVA = lava_instance();
 
 // Data variables
 $doctors = $doctors ?? [];
-$is_edit = isset($doctor['id']);
-$doctor_data = $doctor ?? [];
-
-// Repopulate logic for form fields (safe access via coalescing)
-$name = $name ?? $doctor_data['name'] ?? '';
-$specialty = $specialty ?? $doctor_data['specialty'] ?? '';
-$email = $email ?? $doctor_data['email'] ?? '';
-
+// New: We no longer check for $is_edit here.
 $errors = $errors ?? [];
+$post_data = $post_data ?? []; // New variable for repopulating failed ADD form
 $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session->flashdata('error_message');
+
+// Repopulate logic for failed Add form submission
+$name = $post_data['name'] ?? '';
+$specialty = $post_data['specialty'] ?? '';
+$email = $post_data['email'] ?? '';
+
+// Check if a failed submission was for the Add form (ID is null)
+$show_add_errors = !empty($errors) && empty($post_data['id']);
+
+function display_errors($errors)
+{
+    if (!empty($errors)) {
+        echo '<div class="p-3 mb-4 rounded-lg bg-red-100 text-red-700 border border-red-300">';
+        echo '<ul>';
+        foreach ($errors as $error) {
+            echo '<li>' . html_escape($error) . '</li>';
+        }
+        echo '</ul></div>';
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,16 +67,17 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
         <?php endif; ?>
 
         <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6"><?= $is_edit ? 'Edit Doctor: ' . html_escape($doctor_data['name']) : 'Add New Doctor' ?></h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Add New Doctor</h2>
 
-            <?php // Display validation errors
-            if (!empty($errors)): ?>
+            <?php // Display validation errors only for the Add form (when $show_add_errors is true)
+            if ($show_add_errors): ?>
                 <div class="p-3 mb-4 rounded-lg bg-red-100 text-red-700 border border-red-300">
-                    Validation failed: <?= html_escape(implode(', ', $errors)) ?>
+                    Validation failed for Add Doctor:
+                    <?php display_errors($errors); ?>
                 </div>
             <?php endif; ?>
 
-            <form method="POST" action="<?= site_url('management/doctor_add_update/' . ($is_edit ? $doctor_data['id'] : '')) ?>" class="space-y-4">
+            <form method="POST" action="<?= site_url('management/doctor_add_update') ?>" class="space-y-4">
                 <?= csrf_field() ?>
 
                 <div>
@@ -87,7 +102,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                 </div>
 
                 <button type="submit" class="w-full bg-[--primary-color] text-white py-2.5 rounded-lg font-semibold hover:bg-[--primary-hover] transition">
-                    <?= $is_edit ? 'Save Changes' : 'Add Doctor' ?>
+                    Add Doctor
                 </button>
             </form>
         </div>
@@ -114,8 +129,8 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                                     <td class="px-3 py-4 text-sm text-gray-600"><?= html_escape($d['specialty']) ?></td>
                                     <td class="px-3 py-4 text-sm text-gray-600"><?= html_escape($d['email']) ?></td>
                                     <td class="px-3 py-4 text-sm space-x-3">
-                                        <a href="<?= site_url('management/doctor_add_update/' . $d['id']) ?>" class="text-blue-600 hover:text-blue-800">Edit</a>
-                                        <a href="<?= site_url('management/doctor_delete/' . $d['id']) ?>" onclick="return confirm('Are you sure you want to delete this doctor?')" class="text-red-600 hover:text-red-800">Delete</a>
+                                        <a href="<?= site_url('management/doctor_edit/' . $d['id']) ?>" class="text-blue-600 hover:text-blue-800">Edit</a>
+                                        <a href="<?= site_url('management/doctor_delete/' . $d['id']) ?>" onclick="return confirm('Are you sure you want to delete Dr. <?= html_escape($d['name']) ?>?')" class="text-red-600 hover:text-red-800">Delete</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

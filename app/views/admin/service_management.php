@@ -2,16 +2,31 @@
 defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 $LAVA = lava_instance();
 $services = $services ?? [];
-$is_edit = isset($service['id']);
-$service_data = $service ?? [];
 
-// Repopulate logic for form fields
-$name = $name ?? $service_data['name'] ?? '';
-$price = $price ?? $service_data['price'] ?? '';
-$duration_mins = $duration_mins ?? $service_data['duration_mins'] ?? '';
-
+// Repopulate logic for failed Add form submission
 $errors = $errors ?? [];
+$post_data = $post_data ?? [];
+
+$name = $post_data['name'] ?? '';
+$price = $post_data['price'] ?? '';
+$duration_mins = $post_data['duration_mins'] ?? '';
+
+// Check if a failed submission was for the Add form (ID is null)
+$show_add_errors = !empty($errors) && empty($post_data['id']);
+
 $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session->flashdata('error_message');
+
+function display_errors($errors)
+{
+    if (!empty($errors)) {
+        echo '<div class="p-3 mb-4 rounded-lg bg-red-100 text-red-700 border border-red-300">';
+        echo '<ul>';
+        foreach ($errors as $error) {
+            echo '<li>' . html_escape($error) . '</li>';
+        }
+        echo '</ul></div>';
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,16 +66,17 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
         <?php endif; ?>
 
         <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6"><?= $is_edit ? 'Edit Service: ' . html_escape($service_data['name']) : 'Add New Service' ?></h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Add New Service</h2>
 
-            <?php // Display validation errors
-            if (!empty($errors)): ?>
+            <?php // Display validation errors only for the Add form (when $show_add_errors is true)
+            if ($show_add_errors): ?>
                 <div class="p-3 mb-4 rounded-lg bg-red-100 text-red-700 border border-red-300">
-                    Validation failed: <?= html_escape(implode(', ', $errors)) ?>
+                    Validation failed for Add Service:
+                    <?php display_errors($errors); ?>
                 </div>
             <?php endif; ?>
 
-            <form method="POST" action="<?= site_url('management/service_add_update/' . ($is_edit ? $service_data['id'] : '')) ?>" class="space-y-4">
+            <form method="POST" action="<?= site_url('management/service_add_update') ?>" class="space-y-4">
                 <?= csrf_field() ?>
 
                 <div>
@@ -86,7 +102,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                 </div>
 
                 <button type="submit" class="w-full bg-[--primary-color] text-white py-2.5 rounded-lg font-semibold hover:bg-[--primary-hover] transition">
-                    <?= $is_edit ? 'Save Changes' : 'Add Service' ?>
+                    Add Service
                 </button>
             </form>
         </div>
@@ -113,8 +129,8 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                                     <td class="px-3 py-4 text-sm text-gray-600">$<?= html_escape(number_format($s['price'], 2)) ?></td>
                                     <td class="px-3 py-4 text-sm text-gray-600"><?= html_escape($s['duration_mins']) ?></td>
                                     <td class="px-3 py-4 text-sm space-x-3">
-                                        <a href="<?= site_url('management/service_add_update/' . $s['id']) ?>" class="text-blue-600 hover:text-blue-800">Edit</a>
-                                        <a href="<?= site_url('management/service_delete/' . $s['id']) ?>" onclick="return confirm('Are you sure you want to delete this service?')" class="text-red-600 hover:text-red-800">Delete</a>
+                                        <a href="<?= site_url('management/service_edit/' . $s['id']) ?>" class="text-blue-600 hover:text-blue-800">Edit</a>
+                                        <a href="<?= site_url('management/service_delete/' . $s['id']) ?>" onclick="return confirm('Are you sure you want to delete service: <?= html_escape($s['name']) ?>?')" class="text-red-600 hover:text-red-800">Delete</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

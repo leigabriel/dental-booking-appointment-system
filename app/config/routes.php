@@ -77,22 +77,26 @@ $router->get('/management/appointment_cancel/{id}', 'Management::appointment_can
   ->where_number('id');
 
 // 2. Doctor CRUD
-$router->get('/management/doctors', 'Management::doctors'); // Read: List all doctors
-$router->match('/management/doctor_add_update', 'Management::doctor_add_update', 'GET|POST'); // Add new doctor
-// **FIXED DOCTOR UPDATE:** Using explicit {id} placeholder.
-$router->match('/management/doctor_add_update/{id}', 'Management::doctor_add_update', 'GET|POST') // Update existing doctor
+$router->get('/management/doctors', 'Management::doctors'); // Read: List all doctors and show Add form
+$router->post('/management/doctor_add_update', 'Management::doctor_add_update'); // Add new doctor (POST submission)
+// NEW: Route for displaying the dedicated Edit form view
+$router->get('/management/doctor_edit/{id}', 'Management::doctor_edit')
   ->where_number('id');
-// **FIXED DOCTOR DELETE:** Using explicit {id} placeholder.
+// FIX: Route for handling the Edit form submission (POST update)
+$router->post('/management/doctor_add_update/{id}', 'Management::doctor_add_update')
+  ->where_number('id');
 $router->get('/management/doctor_delete/{id}', 'Management::doctor_delete') // Delete doctor
   ->where_number('id');
 
 // 3. Service CRUD
-$router->get('/management/services', 'Management::services'); // Read: List all services
-$router->match('/management/service_add_update', 'Management::service_add_update', 'GET|POST'); // Add new service
-// **FIXED SERVICE UPDATE:** Using explicit {id} placeholder.
-$router->match('/management/service_add_update/{id}', 'Management::service_add_update', 'GET|POST') // Update existing service
+$router->get('/management/services', 'Management::services'); // Read: List all services and show Add form
+$router->post('/management/service_add_update', 'Management::service_add_update'); // Add new service (POST submission)
+// NEW: Route for displaying the dedicated Edit form view
+$router->get('/management/service_edit/{id}', 'Management::service_edit')
   ->where_number('id');
-// **FIXED SERVICE DELETE:** Using explicit {id} placeholder.
+// FIX: Route for handling the Edit form submission (POST update)
+$router->post('/management/service_add_update/{id}', 'Management::service_add_update')
+  ->where_number('id');
 $router->get('/management/service_delete/{id}', 'Management::service_delete') // Delete service
   ->where_number('id');
 
