@@ -8,7 +8,7 @@ $role = $LAVA->session->userdata('role');
 $total_users = $total_users ?? 0;
 $total_staff = $total_staff ?? 0;
 $total_admin = $total_admin ?? 0;
-$all_users = $all_users ?? []; // Retrieve the list of users
+$all_users = $all_users ?? [];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,26 +17,27 @@ $all_users = $all_users ?? []; // Retrieve the list of users
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Define the Primary Blue Color Theme */
+        /* Define the Primary Color Theme: Sky Blue */
         :root {
-            --primary-color: #2563eb;
-            /* Tailwind Blue-600 */
-            --primary-hover: #1d4ed8;
-            /* Tailwind Blue-700 */
+            --primary-color: #0EA5E9;
+            /* Tailwind Sky-500 (Main Accent) */
+            --primary-hover: #0284C7;
+            /* Tailwind Sky-600 */
+            --accent-light: #38BDF8;
+            /* Tailwind Sky-400 */
         }
 
         body {
             font-family: 'JetBrains Mono', monospace;
+            /* Applying requested font */
         }
     </style>
 </head>
 
 <body class="bg-gray-50 p-6 sm:p-10 min-h-screen">
     <div class="max-w-7xl mx-auto">
-        <!-- Header -->
         <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-8">
             <h1 class="text-3xl font-extrabold text-[--primary-color]">
                 Admin Dashboard
@@ -50,31 +51,26 @@ $all_users = $all_users ?? []; // Retrieve the list of users
             </div>
         </div>
 
-        <!-- User Statistics Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 
-            <!-- Card 1: Total Administrators -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-blue-200">
-                <p class="text-sm font-semibold text-blue-600 uppercase tracking-wider">Total Administrators</p>
+            <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-[--primary-color]">
+                <p class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Total Administrators</p>
                 <p class="text-5xl font-extrabold text-gray-900 mt-2"><?= html_escape($total_admin) ?></p>
             </div>
 
-            <!-- Card 2: Total Staff -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-green-200">
+            <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-green-400">
                 <p class="text-sm font-semibold text-green-600 uppercase tracking-wider">Total Staff Accounts</p>
                 <p class="text-5xl font-extrabold text-gray-900 mt-2"><?= html_escape($total_staff) ?></p>
             </div>
 
-            <!-- Card 3: Total Users -->
-            <div class="bg-white p-6 rounded-xl shadow-md border border-gray-300">
+            <div class="bg-white p-6 rounded-xl shadow-md border-b-4 border-[--accent-light]">
                 <p class="text-sm font-semibold text-gray-600 uppercase tracking-wider">Total Patients/Users</p>
                 <p class="text-5xl font-extrabold text-gray-900 mt-2"><?= html_escape($total_users) ?></p>
             </div>
         </div>
 
-        <!-- Registered Accounts Table -->
         <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-10">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Registered Accounts</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Registered Accounts Overview</h2>
 
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -144,15 +140,14 @@ $all_users = $all_users ?? []; // Retrieve the list of users
             </div>
         </div>
 
-        <!-- Operations Panel -->
         <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Admin Operations</h2>
-            <p class="text-gray-600 mb-4">This panel provides administrative control over the entire system.</p>
-            <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                <li class="font-medium">Full **CRUD** access to all data (Appointments, Doctors, Patients).</li>
-                <li>System Configuration & Audit Logs.</li>
-                <li>User & Role Management.</li>
-            </ul>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Core Management Tools</h2>
+            <p class="text-gray-600 mb-4">This panel provides full administrative control over the system data.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="<?= site_url('management/doctors') ?>" class="text-center bg-[--primary-color] hover:bg-[--primary-hover] text-white font-bold py-3 px-4 rounded-lg transition">Manage Doctors (CRUD)</a>
+                <a href="<?= site_url('management/services') ?>" class="text-center bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transition">Manage Services (CRUD)</a>
+                <a href="<?= site_url('management/appointments') ?>" class="text-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition">View Appointments</a>
+            </div>
         </div>
     </div>
 </body>

@@ -54,16 +54,50 @@ $router->post('/register/submit', 'Auth::register_submit');
 
 $router->get('/logout', 'Auth::logout');
 
-// Role-Based Dashboards (Protected)
-// Admin: Full Access
+// --- APPOINTMENT BOOKING ROUTES ---
+$router->get('/book', 'Booking::index');
+$router->post('/book/submit', 'Booking::submit');
+
+// -----------------------------------------------------------------
+// --- ADMIN MANAGEMENT ROUTES (Handled by Management Controller) ---
+// -----------------------------------------------------------------
+
+// 1. Appointments Overview (View all bookings)
+$router->get('/management/appointments', 'Management::appointments');
+
+// NEW: Appointment Actions
+$router->get('/management/appointment_confirm/(:num)', 'Management::appointment_confirm/$1')
+  ->where_number('num');
+$router->get('/management/appointment_cancel/(:num)', 'Management::appointment_cancel/$1')
+  ->where_number('num');
+  
+// 2. Doctor CRUD
+$router->get('/management/doctors', 'Management::doctors'); // Read: List all doctors
+$router->match('/management/doctor_add_update', 'Management::doctor_add_update', 'GET|POST'); // Add new doctor
+$router->match('/management/doctor_add_update/(:num)', 'Management::doctor_add_update/$1', 'GET|POST') // Update existing doctor
+  ->where_number('num');
+$router->get('/management/doctor_delete/(:num)', 'Management::doctor_delete/$1') // Delete doctor
+  ->where_number('num');
+
+// 3. Service CRUD
+$router->get('/management/services', 'Management::services'); // Read: List all services
+$router->match('/management/service_add_update', 'Management::service_add_update', 'GET|POST'); // Add new service
+$router->match('/management/service_add_update/(:num)', 'Management::service_add_update/$1', 'GET|POST') // Update existing service
+  ->where_number('num');
+$router->get('/management/service_delete/(:num)', 'Management::service_delete/$1') // Delete service
+  ->where_number('num');
+
+// -----------------------------------------------------------------
+// --- DASHBOARD ACCESS (Requires Authorization) ---
+// -----------------------------------------------------------------
+
+// Admin Dashboard Access
 $router->get('/admin/dashboard', function () {
   $LAVA = lava_instance();
-  // Must load helper and library inside closure if not globally autoloaded
   $LAVA->call->helper('url');
   $LAVA->call->library('session');
 
   if ($LAVA->session->userdata('role') === 'admin') {
-    // Forward the request to the dedicated Admin Controller method
     $LAVA->call->controller('Admin', 'dashboard');
   } else {
     redirect('login');
@@ -95,3 +129,7 @@ $router->get('/', function () {
 $router->get('/profile', 'Auth::profile');
 $router->post('/profile/update', 'Auth::profile_edit_submit');
 $router->get('/profile/delete', 'Auth::profile_delete');
+
+// --- NEW FEATURE ROUTES: APPOINTMENTS ---
+$router->get('/book', 'Booking::index');
+$router->post('/book/submit', 'Booking::submit');

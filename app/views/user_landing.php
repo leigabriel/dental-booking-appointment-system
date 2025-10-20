@@ -13,8 +13,6 @@ $role = $LAVA->session->userdata('role');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DENTALCARE</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --primary-color: #2563eb;
@@ -73,12 +71,15 @@ $role = $LAVA->session->userdata('role');
                     <a href="#about" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">About Us</a>
                     <a href="#services" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Services / Booking</a>
                     <a href="#contact" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Contact</a>
+                    <a href="<?= site_url('book') ?>" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Book</a>
 
+                    <!--
                     <?php if ($is_logged_in && $role !== 'user'): ?>
                         <a href="<?= site_url($role . '/dashboard') ?>" class="px-3 py-1 text-sm font-semibold rounded-md bg-green-500 text-white hover:bg-green-600 transition shadow-sm">
                             Go to Dashboard
                         </a>
                     <?php endif; ?>
+                    -->
                 </div>
             </div>
         </nav>
@@ -173,7 +174,7 @@ $role = $LAVA->session->userdata('role');
         <div class="mt-12 text-center">
             <p class="text-2xl font-semibold text-gray-800 mb-4">Ready to book?</p>
             <?php if ($is_logged_in): ?>
-                <a href="<?= site_url('profile') ?>" class="inline-block px-8 py-3 text-lg font-bold rounded-lg bg-green-500 text-white hover:bg-green-600 transition shadow-lg">
+                <a href="<?= site_url('/book') ?>" class="inline-block px-8 py-3 text-lg font-bold rounded-lg bg-green-500 text-white hover:bg-green-600 transition shadow-lg">
                     Schedule Your Visit Now
                 </a>
                 <p class="text-sm text-gray-500 mt-2">You are logged in as <?= html_escape($username) ?>.</p>

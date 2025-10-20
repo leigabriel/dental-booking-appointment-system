@@ -167,7 +167,7 @@ class Auth extends Controller
         $this->session->sess_destroy();
         redirect('login');
     }
-
+    
     public function profile()
     {
         // Redirect if not logged in
@@ -175,10 +175,19 @@ class Auth extends Controller
             redirect('login');
         }
 
+        // Load Appointment and related Models
+        $this->call->model(['AppointmentModel', 'DoctorModel', 'ServiceModel']);
+
         $user_id = $this->session->userdata('user_id');
         $data['user'] = $this->UserModel->find($user_id);
 
-        // This is a new view we need to create
+        // Fetch only appointments belonging to the current user
+        $data['appointments'] = $this->AppointmentModel->filter(['user_id' => $user_id])->get_all();
+
+        // Fetch lookup data for display (doctors and services)
+        $data['doctors'] = array_column($this->DoctorModel->all() ?? [], null, 'id');
+        $data['services'] = array_column($this->ServiceModel->all() ?? [], null, 'id');
+
         $this->call->view('auth/profile', $data);
     }
 
