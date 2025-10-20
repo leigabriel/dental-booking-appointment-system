@@ -102,7 +102,7 @@ $role = $LAVA->session->userdata('role');
 
         <!-- Content -->
         <div class="relative max-w-7xl w-full text-center md:text-left flex flex-col justify-between pt-16 pb-12">
-            <h1 class="text-6xl sm:text-7xl md:text-8xl font-extrabold leading-tight tracking-tight">
+            <h1 class="text-8xl sm:text-7xl md:text-8xl font-extrabold leading-tight tracking-tight">
                 HEALTHY TEETH,<br>HAPPY LIFE
             </h1>
 
@@ -114,7 +114,7 @@ $role = $LAVA->session->userdata('role');
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.43 1.05a11.001 11.001 0 006.84 6.84l1.05-2.43a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z"></path>
                         </svg>
-                        <span class="text-lg font-semibold text-sky-200">(555) 123-4567</span>
+                        <span class="text-lg font-semibold text-sky-200">0963-405-5941</span>
                     </div>
                     <p class="text-sm text-gray-100">
                         Experience world-class dental care in a welcoming environment. Achieve the smile you deserve.
@@ -123,10 +123,10 @@ $role = $LAVA->session->userdata('role');
 
                 <!-- Right -->
                 <div class="text-center md:text-right space-y-4">
-                    <p class="text-sm font-semibold text-gray-200">123 MAIN STREET, CITYVILLE, USA</p>
+                    <p class="text-sm font-semibold text-gray-200">5204 Naujan, Oriental Mindoro</p>
                     <a href="#about"
-                        class="inline-flex items-center space-x-2 text-sm font-semibold text-sky-300 hover:text-white transition">
-                        <span>ABOUT THE CLINIC</span>
+                        class="inline-flex items-center space-x-2 text-md font-semibold text-sky-300 hover:text-white transition">
+                        <span>ABOUT DENTALCARE</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -139,24 +139,24 @@ $role = $LAVA->session->userdata('role');
 
     <!-- ABOUT -->
     <section id="about" class="min-h-screen bg-white flex items-center justify-center p-8">
-        <div class="max-w-4xl">
-            <h2 class="text-4xl font-bold text-[--primary-color] mb-6 border-b-2 border-gray-200 pb-2">
-                About Our Clinic
+        <div class="max-w-7xl">
+            <h2 class="text-6xl font-bold text-[--primary-color] mb-6 border-b-2 border-gray-200 pb-2">
+                About DENTALCARE
             </h2>
-            <p class="text-gray-700 text-lg mb-4">
+            <p class="text-gray-700 text-2xl mb-4">
                 We are committed to providing personalized and high-quality dental care in a comfortable and welcoming environment. Our team of experienced dentists uses the latest technology to ensure the best results for your oral health.
             </p>
-            <p class="text-gray-700 text-lg">
+            <p class="text-gray-700 text-2xl">
                 Since opening our doors in 2015, we've served thousands of happy patients, helping them achieve healthy and confident smiles. We prioritize patient education and preventative care above all else.
             </p>
         </div>
     </section>
 
     <!-- SERVICES -->
-    <section id="services" class="min-h-screen bg-gray-100 flex flex-col items-center p-8 pt-24">
-        <h2 class="text-4xl font-bold text-[--primary-color] mb-12">Our Services & Booking</h2>
+    <section id="services" class="min-h-screen bg-blue-700 flex flex-col items-center p-8 pt-24">
+        <h2 class="text-4xl font-bold text-white mb-12">Our Services & Booking</h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl w-full">
             <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-[--accent-light] hover:shadow-xl transition">
                 <h3 class="text-xl font-bold text-gray-800 mb-2">General Dentistry</h3>
                 <p class="text-gray-600">Check-ups, cleanings, X-rays, and basic restorative procedures.</p>
@@ -172,12 +172,12 @@ $role = $LAVA->session->userdata('role');
         </div>
 
         <div class="mt-12 text-center">
-            <p class="text-2xl font-semibold text-gray-800 mb-4">Ready to book?</p>
+            <p class="text-2xl font-semibold text-white mb-4">Ready to book?</p>
             <?php if ($is_logged_in): ?>
                 <a href="<?= site_url('/book') ?>" class="inline-block px-8 py-3 text-lg font-bold rounded-lg bg-green-500 text-white hover:bg-green-600 transition shadow-lg">
                     Schedule Your Visit Now
                 </a>
-                <p class="text-sm text-gray-500 mt-2">You are logged in as <?= html_escape($username) ?>.</p>
+                <p class="text-sm text-gray-400 mt-2">You are logged in as <?= html_escape($username) ?>.</p>
             <?php else: ?>
                 <a href="<?= site_url('login') ?>" class="inline-block px-8 py-3 text-lg font-bold rounded-lg bg-[--primary-color] text-white shadow-xl hover:bg-[--primary-hover] transition duration-300">
                     Login to Book
