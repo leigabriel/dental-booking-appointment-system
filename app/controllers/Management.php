@@ -93,9 +93,14 @@ class Management extends Controller
 
     public function doctors()
     {
-        $this->_check_management_access(); // <--- UPDATED
-        // ... (rest of method)
-        $data['doctors'] = $this->DoctorModel->all();
+        $this->_check_management_access();
+
+        $doctors_list = $this->DoctorModel->all();
+
+        // Convert to an associative array keyed by ID for easy JS lookup in the view/modal
+        $data['doctors_list_json'] = json_encode(array_column($doctors_list, null, 'id'));
+        $data['doctors'] = $doctors_list;
+
         // Pass any lingering flash data (errors or old input)
         $data['errors'] = $this->session->flashdata('errors');
         $data['post_data'] = $this->session->flashdata('post_data');
@@ -103,39 +108,27 @@ class Management extends Controller
         $this->call->view('admin/doctor_management', $data);
     }
 
-    public function doctor_edit($id)
-    {
-        $this->_check_management_access(); // <--- UPDATED
-        // ... (rest of method)
-        $data['doctor'] = $this->DoctorModel->find($id);
-
-        if (!$data['doctor']) {
-            $this->session->set_flashdata('error_message', 'Doctor not found.');
-            redirect('management/doctors');
-        }
-
-        // Pass existing flash data from failed submission, if present
-        $data['errors'] = $this->session->flashdata('errors');
-        $data['post_data'] = $this->session->flashdata('post_data');
-
-        // Use a dedicated view template for the edit form.
-        $this->call->view('admin/doctor_edit_form', $data);
-    }
+    // REMOVED: public function doctor_edit($id) {}
 
     public function doctor_add_update($id = null)
     {
-        $this->_check_management_access(); // <--- UPDATED
+        $this->_check_management_access();
 
         if ($this->io->method() !== 'POST') {
-            redirect('management/doctors'); // Ensure only POST is processed here
+            redirect('management/doctors');
         }
 
         $data = $this->io->post();
-        // ... (rest of method)
+
         $this->form_validation
             ->name('name|Doctor Name')->required()->valid_name()
             ->name('specialty|Specialty')->required()
             ->name('email|Email')->required()->valid_email();
+
+        // Conditionally check uniqueness only for ADD 
+        if (empty($id)) {
+            $this->form_validation->is_unique('doctors', 'email', $data['email']);
+        }
 
         if ($this->form_validation->run()) {
             $save_data = $this->io->post();
@@ -143,6 +136,7 @@ class Management extends Controller
             // Clean data for model
             unset($save_data['lava_csrf_token']);
             unset($save_data[config_item('csrf_token_name')]);
+            unset($save_data['id']); // Clean out temporary ID field if present
 
             if ($id) {
                 $this->DoctorModel->update($id, $save_data);
@@ -156,12 +150,9 @@ class Management extends Controller
             $this->session->set_flashdata('errors', $this->form_validation->get_errors());
             $this->session->set_flashdata('post_data', $this->io->post());
             $this->session->set_flashdata('error_message', 'Validation failed. Please check the form.');
-
-            $redirect_url = $id ? 'management/doctor_edit/' . $id : 'management/doctors';
-            redirect($redirect_url);
         }
 
-        // Redirect to the main listing page after success
+        // Redirect to the main listing page after action
         redirect('management/doctors');
     }
 
@@ -175,7 +166,6 @@ class Management extends Controller
         }
 
         // FIX: Explicitly delete appointments linked to this doctor.
-        // The filter() method returns the underlying database object ($this->db) with the WHERE clause set.
         $this->AppointmentModel->filter(['doctor_id' => $id])->delete();
 
         $this->DoctorModel->delete($id);
@@ -183,49 +173,36 @@ class Management extends Controller
         redirect('management/doctors');
     }
 
-    // --- 3. Service Management CRUD (Admin/Staff for everything but Delete) ---
+    // --- 3. Service Management CRUD (Modifications applied here) ---
 
     public function services()
     {
-        $this->_check_management_access(); // <--- UPDATED
-        // ... (rest of method)
-        $data['services'] = $this->ServiceModel->all();
-        // Pass any lingering flash data (errors or old input)
+        $this->_check_management_access();
+
+        $services_list = $this->ServiceModel->all();
+
+        // CONSOLIDATION CHANGE: Pass services as JSON for modal/JS lookup
+        $data['services_list_json'] = json_encode(array_column($services_list, null, 'id'));
+        $data['services'] = $services_list;
+
         $data['errors'] = $this->session->flashdata('errors');
         $data['post_data'] = $this->session->flashdata('post_data');
 
         $this->call->view('admin/service_management', $data);
     }
 
-    public function service_edit($id)
-    {
-        $this->_check_management_access(); // <--- UPDATED
-        // ... (rest of method)
-        $data['service'] = $this->ServiceModel->find($id);
-
-        if (!$data['service']) {
-            $this->session->set_flashdata('error_message', 'Service not found.');
-            redirect('management/services');
-        }
-
-        // Pass existing flash data from failed submission, if present
-        $data['errors'] = $this->session->flashdata('errors');
-        $data['post_data'] = $this->session->flashdata('post_data');
-
-        // Use a dedicated view template for the edit form.
-        $this->call->view('admin/service_edit_form', $data);
-    }
+    // REMOVED: public function service_edit($id) {} is no longer needed
 
     public function service_add_update($id = null)
     {
-        $this->_check_management_access(); // <--- UPDATED
+        $this->_check_management_access();
 
         if ($this->io->method() !== 'POST') {
-            redirect('management/services'); // Ensure only POST is processed here
+            redirect('management/services');
         }
 
         $data = $this->io->post();
-        // ... (rest of method)
+
         $this->form_validation
             ->name('name|Service Name')->required()
             ->name('price|Price')->required()->numeric()
@@ -234,9 +211,9 @@ class Management extends Controller
         if ($this->form_validation->run()) {
             $save_data = $this->io->post();
 
-            // Clean data for model
             unset($save_data['lava_csrf_token']);
             unset($save_data[config_item('csrf_token_name')]);
+            unset($save_data['id']); // Clean out temporary ID field if present
 
             if ($id) {
                 $this->ServiceModel->update($id, $save_data);
@@ -246,30 +223,28 @@ class Management extends Controller
                 $this->session->set_flashdata('success_message', 'New service added successfully.');
             }
         } else {
-            // If validation fails, flash errors and old input, then redirect to the correct form.
+            // If validation fails, flash errors and old input, then redirect to the correct page.
             $this->session->set_flashdata('errors', $this->form_validation->get_errors());
             $this->session->set_flashdata('post_data', $this->io->post());
             $this->session->set_flashdata('error_message', 'Validation failed. Please check the form.');
 
-            $redirect_url = $id ? 'management/service_edit/' . $id : 'management/services';
-            redirect($redirect_url);
+            // CONSOLIDATION CHANGE: Always redirect to the base list page
+            redirect('management/services');
         }
 
-        // Redirect to the main listing page after success
+        // CONSOLIDATION CHANGE: Always redirect to the base list page after success
         redirect('management/services');
     }
 
     public function service_delete($id)
     {
-        $this->_check_admin(); // <--- RESTRICTED TO ADMIN ONLY (No Change)
+        $this->_check_admin();
 
         if (!$this->ServiceModel->find($id)) {
             $this->session->set_flashdata('error_message', 'Service not found.');
             redirect('management/services');
         }
 
-        // FIX: Explicitly delete appointments linked to this service.
-        // The filter() method returns the underlying database object ($this->db) with the WHERE clause set.
         $this->AppointmentModel->filter(['service_id' => $id])->delete();
 
         $this->ServiceModel->delete($id);

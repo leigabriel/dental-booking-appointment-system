@@ -72,16 +72,29 @@ class Auth extends Controller
         $this->_check_logged_in();
         $data = $this->io->post();
 
-        // 1. Set Validation Rules
+        $identifier = $data['username'] ?? ''; // Renamed 'username' to be the identifier field
+
+        // 1. Set Validation Rules: Only ensure the identifier and password are present.
         $this->form_validation
-            ->name('username|Username')->required()->alpha_numeric()
+            ->name('username|Username or Email')->required() // Updated label to reflect dual use
             ->name('password|Password')->required();
 
         if ($this->form_validation->run()) {
 
-            // 2. Fetch User and Verify Password
-            $user = $this->UserModel->find_by_username($data['username']);
+            // --- 2. Fetch User by Username OR Email ---
+            $user = null;
 
+            // Check if identifier looks like an email
+            if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+                $user = $this->UserModel->filter(['email' => $identifier])->get();
+            }
+
+            // If not found by email, or if it's not an email, try finding by username
+            if (!$user) {
+                $user = $this->UserModel->find_by_username($identifier);
+            }
+
+            // Final check: did we find a user AND is the password correct?
             if ($user && password_verify($data['password'], $user['password'])) {
 
                 // 3. Success: Set Session Data and Redirect
@@ -97,14 +110,14 @@ class Auth extends Controller
                 $this->_redirect_by_role($user['role']);
             } else {
                 // Failure: Invalid Credentials
-                $data['error'] = 'Invalid username or password.';
-                $data['username'] = $this->io->post('username');
+                $data['error'] = 'Invalid username/email or password.';
+                $data['username'] = $identifier; // Pass back identifier for repopulation
                 $this->call->view('auth/login', $data);
             }
         } else {
             // 4. Validation Failed (e.g., empty fields)
             $data['error'] = $this->form_validation->errors();
-            $data['username'] = $this->io->post('username');
+            $data['username'] = $identifier; // Pass back identifier for repopulation
             $this->call->view('auth/login', $data);
         }
     }
@@ -118,8 +131,7 @@ class Auth extends Controller
         $this->form_validation
             // NEW VALIDATION RULES
             ->name('full_name|Full Name')->required()->valid_name() // Check for letters and spaces only
-            ->name('email|Email')->required()->valid_email()        // Check for valid email format
-
+            ->name('email|Email')->required()->valid_email()->is_unique('users', 'email', $data['email']) // Added unique check for email
             ->name('username|Username')->required()->alpha_numeric()->is_unique('users', 'username', $data['username'])
             ->name('password|Password')->required()->min_length(6)
             ->name('confirm_password|Confirm Password')->required()->matches('password');
@@ -167,7 +179,7 @@ class Auth extends Controller
         $this->session->sess_destroy();
         redirect('login');
     }
-    
+
     public function profile()
     {
         // Redirect if not logged in
