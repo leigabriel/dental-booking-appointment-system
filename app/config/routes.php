@@ -67,6 +67,13 @@ $router->get('/management', function () {
   redirect('management/appointments');
 });
 
+// Admin/Staff Management (New Routes)
+$router->post('/admin/admin_staff_add_update', 'Admin::admin_staff_add_update');
+$router->post('/admin/admin_staff_add_update/{id}', 'Admin::admin_staff_add_update')
+  ->where_number('id');
+$router->get('/admin/admin_staff_delete/{id}', 'Admin::admin_staff_delete')
+  ->where_number('id');
+
 // 1. Appointments Overview (View all bookings)
 $router->get('/management/appointments', 'Management::appointments');
 
