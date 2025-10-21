@@ -17,6 +17,10 @@ function display_flashdata($session)
         echo '<div class="p-3 mb-4 rounded-lg border ' . $color_class . '">' . html_escape($message) . '</div>';
     }
 }
+
+// Define image URLs
+$hide_pass_icon = 'https://cdn-icons-png.flaticon.com/128/2767/2767146.png'; // Current: Hide
+$show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png'; // Click to Show
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +29,6 @@ function display_flashdata($session)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DENTALCARE: Login</title>
-    <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* CRITICAL CHANGE: Set primary color to Blue */
@@ -57,20 +60,24 @@ function display_flashdata($session)
             ?>
 
             <div>
-                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username or Email</label>
                 <input type="text" id="username" name="username"
                     value="<?= html_escape($username ?? '') ?>" required
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition"
-                    placeholder="Enter your username">
+                    placeholder="Enter username or email">
             </div>
 
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <input type="password" id="password" name="password" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition"
-                    placeholder="••••••••">
+                <div class="relative">
+                    <input type="password" id="password" name="password" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition pr-10"
+                        placeholder="••••••••">
+                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 hover:text-[--primary-hover] focus:outline-none">
+                        <img id="eye-icon" class="h-5 w-5" src="<?= $hide_pass_icon ?>" alt="Toggle Visibility">
+                    </button>
+                </div>
             </div>
-
             <button type="submit"
                 class="w-full bg-[--primary-color] text-white py-2.5 rounded-lg font-semibold hover:bg-[--primary-hover] transition duration-200 shadow-md shadow-blue-300/50">
                 Sign In
@@ -84,6 +91,28 @@ function display_flashdata($session)
             </a>
         </div>
     </div>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const toggleButton = document.getElementById('togglePassword');
+        const eyeIcon = document.getElementById('eye-icon');
+        const showIconUrl = '<?= $show_pass_icon ?>';
+        const hideIconUrl = '<?= $hide_pass_icon ?>';
+
+        toggleButton.addEventListener('click', function(e) {
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+
+            if (isPassword) {
+                passwordInput.setAttribute('type', 'text');
+                eyeIcon.src = showIconUrl; // Change to 'eye open' icon
+                eyeIcon.alt = 'Hide Password';
+            } else {
+                passwordInput.setAttribute('type', 'password');
+                eyeIcon.src = hideIconUrl; // Change to 'eye closed' icon
+                eyeIcon.alt = 'Show Password';
+            }
+        });
+    </script>
 </body>
 
 </html>

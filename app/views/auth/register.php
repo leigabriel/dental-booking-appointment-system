@@ -13,6 +13,10 @@ function display_validation_errors($errors)
         echo '</ul></div>';
     }
 }
+
+// Define image URLs
+$hide_pass_icon = 'https://cdn-icons-png.flaticon.com/128/2767/2767146.png'; // Current: Hide
+$show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png'; // Click to Show
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,18 +76,26 @@ function display_validation_errors($errors)
 
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <input type="password" id="password" name="password" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition"
-                    placeholder="••••••••">
+                <div class="relative">
+                    <input type="password" id="password_reg" name="password" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition pr-10"
+                        placeholder="••••••••">
+                    <button type="button" data-target="password_reg" class="toggle-password absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 hover:text-[--primary-hover] focus:outline-none">
+                        <img class="h-5 w-5 eye-icon-reg" src="<?= $hide_pass_icon ?>" alt="Toggle Visibility">
+                    </button>
+                </div>
             </div>
-
             <div>
                 <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition"
-                    placeholder="••••••••">
+                <div class="relative">
+                    <input type="password" id="confirm_password_reg" name="confirm_password" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition pr-10"
+                        placeholder="••••••••">
+                    <button type="button" data-target="confirm_password_reg" class="toggle-password absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 hover:text-[--primary-hover] focus:outline-none">
+                        <img class="h-5 w-5 eye-icon-reg" src="<?= $hide_pass_icon ?>" alt="Toggle Visibility">
+                    </button>
+                </div>
             </div>
-
             <div hidden>
                 <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Select Role</label>
                 <select id="role" name="role" required
@@ -107,6 +119,33 @@ function display_validation_errors($errors)
             </a>
         </div>
     </div>
+
+    <script>
+        const showIconUrl = '<?= $show_pass_icon ?>';
+        const hideIconUrl = '<?= $hide_pass_icon ?>';
+
+        document.querySelectorAll('.toggle-password').forEach(toggleButton => {
+            toggleButton.addEventListener('click', function(e) {
+                // Get the target input ID from the data attribute
+                const targetId = this.getAttribute('data-target');
+                const passwordInput = document.getElementById(targetId);
+                const eyeIcon = this.querySelector('.eye-icon-reg');
+
+                // Toggle the type attribute
+                const isPassword = passwordInput.getAttribute('type') === 'password';
+
+                if (isPassword) {
+                    passwordInput.setAttribute('type', 'text');
+                    eyeIcon.src = showIconUrl; // Change to 'eye open' icon
+                    eyeIcon.alt = 'Hide Password';
+                } else {
+                    passwordInput.setAttribute('type', 'password');
+                    eyeIcon.src = hideIconUrl; // Change to 'eye closed' icon
+                    eyeIcon.alt = 'Show Password';
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
