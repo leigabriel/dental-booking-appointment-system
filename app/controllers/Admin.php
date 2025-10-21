@@ -6,7 +6,6 @@ class Admin extends Controller
     public function __construct()
     {
         parent::__construct();
-        // Ensure all necessary dependencies are loaded
         $this->call->model('UserModel');
         $this->call->library('Form_validation');
         $this->call->helper('url');
@@ -23,7 +22,6 @@ class Admin extends Controller
     {
         $LAVA = lava_instance();
 
-        // Ensure database connection is active 
         if (!isset($LAVA->db)) {
             $this->call->database();
         }
@@ -50,11 +48,10 @@ class Admin extends Controller
         $this->call->view('admin/dashboard', $data);
     }
 
-    // --- ADMIN/STAFF CRUD ---
+    // ADMIN/STAFF CRUD
 
     /**
      * Handles adding or updating a user's role and details.
-     * Assumes an Admin is logged in.
      */
     public function admin_staff_add_update($id = null)
     {
@@ -71,7 +68,7 @@ class Admin extends Controller
             ->name('email|Email')->required()->valid_email()
             ->name('role|Role')->required()->in_list('admin,staff');
 
-        // Validation rules specific to ADD operation (new user)
+        // Validation rules specific to ADD operation
         if (!$is_update) {
             $this->form_validation
                 ->name('username|Username')->required()->alpha_numeric()->is_unique('users', 'username', $post_data['username'])
@@ -118,7 +115,6 @@ class Admin extends Controller
 
     /**
      * Handles deleting a staff or admin user.
-     * Assumes an Admin is logged in.
      */
     public function admin_staff_delete($id)
     {

@@ -6,15 +6,8 @@ class Auth extends Controller
     public function __construct()
     {
         parent::__construct();
-
-        // CRITICAL FIX: Explicitly load the model and validation library here.
-        // This ensures $this->UserModel and $this->form_validation are available 
-        // immediately in all methods that run afterward.
         $this->call->model('UserModel');
         $this->call->library('Form_validation');
-
-        // NOTE: We don't need to load Session here because it's in autoload.php
-        // but we must ensure dependencies required by the parent's __get method are met.
     }
 
     /**
@@ -33,7 +26,7 @@ class Auth extends Controller
                 break;
             case 'user':
             default:
-                redirect('/'); // Default user landing page
+                redirect('/');
                 break;
         }
     }
@@ -45,15 +38,13 @@ class Auth extends Controller
      */
     private function _check_logged_in()
     {
-        // FIX: The session object relies on being loaded in autoload.php. 
-        // We will now rely on that global instance.
         $role = $this->session->userdata('role');
         if ($this->session->userdata('is_logged_in')) {
             $this->_redirect_by_role($role);
         }
     }
 
-    // --- PUBLIC ROUTES ---
+    // PUBLIC ROUTES
 
     public function login()
     {
@@ -81,7 +72,7 @@ class Auth extends Controller
 
         if ($this->form_validation->run()) {
 
-            // --- 2. Fetch User by Username OR Email ---
+            // 2. Fetch User by Username OR Email
             $user = null;
 
             // Check if identifier looks like an email
@@ -94,14 +85,13 @@ class Auth extends Controller
                 $user = $this->UserModel->find_by_username($identifier);
             }
 
-            // Final check: did we find a user AND is the password correct?
             if ($user && password_verify($data['password'], $user['password'])) {
 
                 // 3. Success: Set Session Data and Redirect
                 $session_data = [
                     'user_id' => $user['id'],
                     'username' => $user['username'],
-                    'role' => $user['role'], // Get role from database
+                    'role' => $user['role'],
                     'is_logged_in' => TRUE
                 ];
                 $this->session->set_userdata($session_data);
@@ -111,13 +101,13 @@ class Auth extends Controller
             } else {
                 // Failure: Invalid Credentials
                 $data['error'] = 'Invalid username/email or password.';
-                $data['username'] = $identifier; // Pass back identifier for repopulation
+                $data['username'] = $identifier;
                 $this->call->view('auth/login', $data);
             }
         } else {
-            // 4. Validation Failed (e.g., empty fields)
+            // 4. Validation Failed
             $data['error'] = $this->form_validation->errors();
-            $data['username'] = $identifier; // Pass back identifier for repopulation
+            $data['username'] = $identifier;
             $this->call->view('auth/login', $data);
         }
     }
@@ -127,7 +117,7 @@ class Auth extends Controller
         $this->_check_logged_in();
         $data = $this->io->post();
 
-        // 1. Set Validation Rules (UPDATED)
+        // 1. Set Validation Rules
         $this->form_validation
             // NEW VALIDATION RULES
             ->name('full_name|Full Name')->required()->valid_name() // Check for letters and spaces only
@@ -141,16 +131,14 @@ class Auth extends Controller
 
         if ($this->form_validation->run()) {
 
-            // 2. Prepare Data and Save (UPDATED)
+            // 2. Prepare Data and Save
             $hashed_password = password_hash($data['password'], PASSWORD_BCRYPT);
 
             $final_role = $this->io->post('role');
 
             $new_user_data = [
-                // NEW FIELDS ADDED HERE
                 'full_name' => $this->io->post('full_name'),
                 'email'     => $this->io->post('email'),
-
                 'username' => $data['username'],
                 'password' => $hashed_password,
                 'role' => $final_role
@@ -164,7 +152,7 @@ class Auth extends Controller
                 redirect('register');
             }
         } else {
-            // 3. Validation Failed (Pass back all entered data for convenience)
+            // 3. Validation Failed
             $data['errors'] = $this->form_validation->get_errors();
             $data['username'] = $this->io->post('username');
             $data['full_name'] = $this->io->post('full_name');
@@ -187,7 +175,6 @@ class Auth extends Controller
             redirect('login');
         }
 
-        // Load Appointment and related Models
         $this->call->model(['AppointmentModel', 'DoctorModel', 'ServiceModel']);
 
         $user_id = $this->session->userdata('user_id');
@@ -204,7 +191,7 @@ class Auth extends Controller
     }
 
     /**
-     * Handles profile update submission (Update: Full Name and Email).
+     * Handles profile update submission
      */
     public function profile_edit_submit()
     {
@@ -219,10 +206,6 @@ class Auth extends Controller
         $this->form_validation
             ->name('full_name|Full Name')->required()->valid_name()
             ->name('email|Email')->required()->valid_email();
-
-        // Optional: Add validation for unique email if user changes it
-        // The is_unique validation needs custom logic to ignore the current user's email.
-        // For simplicity in the MVP, we skip the unique check here.
 
         if ($this->form_validation->run()) {
 

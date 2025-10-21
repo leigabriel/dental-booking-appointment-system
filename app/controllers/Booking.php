@@ -13,7 +13,6 @@ class Booking extends Controller
             redirect('login');
         }
 
-        // Load Models and Libraries
         $this->call->model(['DoctorModel', 'ServiceModel', 'AppointmentModel']);
         $this->call->library('Form_validation');
         $this->call->helper(['url', 'language']);
@@ -36,7 +35,7 @@ class Booking extends Controller
         $user_id = $this->session->userdata('user_id');
         $post = $this->io->post();
 
-        // --- 1. Validation ---
+        // 1. Validation
         $this->form_validation
             ->name('doctor_id|Doctor')->required()->numeric()
             ->name('service_id|Service')->required()->numeric()
@@ -45,13 +44,13 @@ class Booking extends Controller
 
         if ($this->form_validation->run()) {
 
-            // --- 2. Check Availability (Custom Logic) ---
+            // 2. Check Availability
             if ($this->AppointmentModel->is_slot_booked($post['doctor_id'], $post['appointment_date'], $post['time_slot'])) {
                 $this->session->set_flashdata('error_message', 'The selected time slot is already taken. Please choose another.');
                 redirect('book');
             }
 
-            // --- 3. Insert Appointment ---
+            // 3. Insert Appointment
             $booking_data = [
                 'user_id' => $user_id,
                 'doctor_id' => $post['doctor_id'],
@@ -70,13 +69,11 @@ class Booking extends Controller
             }
             redirect('book');
         } else {
-            // 4. Validation Failed (Return to form with errors)
+            // 4. Validation Failed
             $data['doctors'] = $this->DoctorModel->all();
             $data['services'] = $this->ServiceModel->all();
             $data['errors'] = $this->form_validation->get_errors();
 
-            // Pass post data back to repopulate fields
-            // Accessing data passed via global access is non-standard but functional in this context
             global $data;
             $data = array_merge($data, $post);
 

@@ -7,14 +7,13 @@ class Management extends Controller
     {
         parent::__construct();
 
-        // Load all management dependencies
         $this->call->model(['DoctorModel', 'ServiceModel', 'AppointmentModel', 'UserModel']);
         $this->call->library('Form_validation');
-        $this->call->database(); // Explicitly ensures DB is available for actions
+        $this->call->database();
         $this->call->helper(['url', 'language']);
     }
 
-    // --- UTILITY: Authorization Check ---
+    // UTILITY: Authorization Check
     private function _check_admin_or_staff()
     {
         $role = $this->session->userdata('role');
@@ -33,7 +32,7 @@ class Management extends Controller
         }
     }
 
-    // NEW FUNCTION: Allows Staff for Read/Update access to management pages
+    // FUNCTION: Allows Staff for Read/Update access to management pages
     private function _check_management_access()
     {
         $role = $this->session->userdata('role');
@@ -43,7 +42,7 @@ class Management extends Controller
         }
     }
 
-    // --- 1. Appointments Overview ---
+    // 1. Appointments Overview
 
     public function appointments()
     {
@@ -57,7 +56,7 @@ class Management extends Controller
         $this->call->view('admin/appointments', $data);
     }
 
-    // --- Action: Confirm Appointment ---
+    // Action: Confirm Appointment
     public function appointment_confirm($id)
     {
         $this->_check_admin_or_staff(); // Auth check
@@ -73,7 +72,7 @@ class Management extends Controller
         redirect('management/appointments');
     }
 
-    // --- Action: Cancel Appointment ---
+    // Action: Cancel Appointment
     public function appointment_cancel($id)
     {
         $this->_check_admin_or_staff(); // Auth check
@@ -89,7 +88,7 @@ class Management extends Controller
         redirect('management/appointments');
     }
 
-    // --- 2. Doctor Management CRUD (Admin/Staff for everything but Delete) ---
+    // 2. Doctor Management CRUD (Admin/Staff for everything but Delete)
 
     public function doctors()
     {
@@ -158,14 +157,14 @@ class Management extends Controller
 
     public function doctor_delete($id)
     {
-        $this->_check_admin(); // <--- RESTRICTED TO ADMIN ONLY (No Change)
+        $this->_check_admin();
 
         if (!$this->DoctorModel->find($id)) {
             $this->session->set_flashdata('error_message', 'Doctor not found.');
             redirect('management/doctors');
         }
 
-        // FIX: Explicitly delete appointments linked to this doctor.
+        // Explicitly delete appointments linked to this doctor.
         $this->AppointmentModel->filter(['doctor_id' => $id])->delete();
 
         $this->DoctorModel->delete($id);
@@ -173,7 +172,7 @@ class Management extends Controller
         redirect('management/doctors');
     }
 
-    // --- 3. Service Management CRUD (Modifications applied here) ---
+    // 3. Service Management CRUD (Modifications applied here)
 
     public function services()
     {
@@ -181,10 +180,8 @@ class Management extends Controller
 
         $services_list = $this->ServiceModel->all();
 
-        // CONSOLIDATION CHANGE: Pass services as JSON for modal/JS lookup
         $data['services_list_json'] = json_encode(array_column($services_list, null, 'id'));
         $data['services'] = $services_list;
-
         $data['errors'] = $this->session->flashdata('errors');
         $data['post_data'] = $this->session->flashdata('post_data');
 
