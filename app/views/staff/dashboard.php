@@ -22,19 +22,15 @@ $services_img = 'https://cdn-icons-png.flaticon.com/128/1041/1041898.png';
     <title>Staff Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Define the Primary Color Theme: Sky Blue (matching Admin) */
         :root {
             --primary-color: #0EA5E9;
-            /* Tailwind Sky-500 */
             --primary-hover: #0284C7;
-            /* Tailwind Sky-600 */
         }
 
         body {
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Custom Blue for Doctor Card (matching Admin) */
         .card-blue {
             background-color: #3B82F6;
             border-color: #2563EB;
@@ -51,7 +47,7 @@ $services_img = 'https://cdn-icons-png.flaticon.com/128/1041/1041898.png';
 
         <header class="flex justify-between items-center bg-white p-6 rounded-xl shadow-2xl border border-gray-200 mb-10">
             <h1 class="text-4xl font-extrabold text-gray-900 flex items-center space-x-3">
-                <span class="uppercase">DENTALCARE STAFF PANEL</span>
+                <span class="uppercase">DENTALCARE STAFF: <?= html_escape($username) ?></span>
             </h1>
             <div class="text-right">
                 <p class="text-lg font-bold text-[--primary-color]">Hello, <?= html_escape($username) ?></p>
@@ -81,7 +77,7 @@ $services_img = 'https://cdn-icons-png.flaticon.com/128/1041/1041898.png';
                     <h3 class="text-xl font-extrabold text-white mb-2 flex items-center space-x-3">
                         <span>Doctor Records</span>
                     </h3>
-                    <p class="text-blue-100 group-hover:text-white transition mb-4">View and edit doctor details.</p>
+                    <p class="text-blue-100 group-hover:text-white transition mb-4">View and edit doctor details.</p> <br>
                     <span class="inline-block px-6 py-2.5 bg-white text-blue-700 font-bold rounded-lg shadow-md hover:text-blue-900 transition">
                         Manage Doctors
                     </span>
@@ -91,7 +87,7 @@ $services_img = 'https://cdn-icons-png.flaticon.com/128/1041/1041898.png';
                     <h3 class="text-xl font-extrabold text-white mb-2 flex items-center space-x-3">
                         <span>Service Records</span>
                     </h3>
-                    <p class="text-yellow-100 group-hover:text-white transition mb-4">View and edit service details.</p>
+                    <p class="text-yellow-100 group-hover:text-white transition mb-4">View and edit service details.</p> <br>
                     <span class="inline-block px-6 py-2.5 bg-white text-yellow-700 font-bold rounded-lg shadow-md hover:text-yellow-900 transition">
                         Manage Services
                     </span>

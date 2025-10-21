@@ -220,7 +220,7 @@ function display_validation_errors($errors)
         </div>
     </div>
 
-    <div id="user-modal" class="modal fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center z-50 p-4" onclick="closeModal(event)">
+    <div id="user-modal" class="modal fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50 p-4" onclick="closeModal(event)">
         <div class="bg-white w-full max-w-lg p-6 rounded-xl shadow-2xl" onclick="event.stopPropagation()">
 
             <h2 id="modal-title" class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2"></h2>
