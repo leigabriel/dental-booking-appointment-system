@@ -48,68 +48,54 @@ defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 // Authentication Routes
 $router->get('/login', 'Auth::login');
 $router->post('/login/submit', 'Auth::login_submit');
-
 $router->get('/register', 'Auth::register');
 $router->post('/register/submit', 'Auth::register_submit');
-
 $router->get('/logout', 'Auth::logout');
 
-// --- APPOINTMENT BOOKING ROUTES ---
+// APPOINTMENT BOOKING ROUTES
 $router->get('/book', 'Booking::index');
 $router->post('/book/submit', 'Booking::submit');
 
-// -----------------------------------------------------------------
-// --- ADMIN MANAGEMENT ROUTES (Handled by Management Controller) ---
-// -----------------------------------------------------------------
+// ADMIN MANAGEMENT ROUTES
 
 // NEW: Redirect base /management to appointments
 $router->get('/management', function () {
   redirect('management/appointments');
 });
 
-// Admin/Staff Management (New Routes)
+// Admin/Staff Management
 $router->post('/admin/admin_staff_add_update', 'Admin::admin_staff_add_update');
 $router->post('/admin/admin_staff_add_update/{id}', 'Admin::admin_staff_add_update')
   ->where_number('id');
 $router->get('/admin/admin_staff_delete/{id}', 'Admin::admin_staff_delete')
   ->where_number('id');
 
-// 1. Appointments Overview (View all bookings)
+// Appointments Overview
 $router->get('/management/appointments', 'Management::appointments');
-
-// **FIXED APPOINTMENT ACTIONS:** Using explicit {id} placeholder.
 $router->get('/management/appointment_confirm/{id}', 'Management::appointment_confirm')
   ->where_number('id');
 $router->get('/management/appointment_cancel/{id}', 'Management::appointment_cancel')
   ->where_number('id');
 
-// 2. Doctor CRUD
-$router->get('/management/doctors', 'Management::doctors'); // Read: List all doctors and show Add form
-$router->post('/management/doctor_add_update', 'Management::doctor_add_update'); // Add new doctor (POST submission)
-// NEW: Route for displaying the dedicated Edit form view
+// Doctor Management
+$router->get('/management/doctors', 'Management::doctors');
+$router->post('/management/doctor_add_update', 'Management::doctor_add_update');
 $router->get('/management/doctor_edit/{id}', 'Management::doctor_edit')
   ->where_number('id');
-// FIX: Route for handling the Edit form submission (POST update)
 $router->post('/management/doctor_add_update/{id}', 'Management::doctor_add_update')
   ->where_number('id');
-$router->get('/management/doctor_delete/{id}', 'Management::doctor_delete') // Delete doctor
+$router->get('/management/doctor_delete/{id}', 'Management::doctor_delete')
   ->where_number('id');
 
-// 3. Service CRUD
-$router->get('/management/services', 'Management::services'); // Read: List all services and show Add form
-$router->post('/management/service_add_update', 'Management::service_add_update'); // Add new service (POST submission)
-// NEW: Route for displaying the dedicated Edit form view
+// Service Management
+$router->get('/management/services', 'Management::services');
+$router->post('/management/service_add_update', 'Management::service_add_update');
 $router->get('/management/service_edit/{id}', 'Management::service_edit')
   ->where_number('id');
-// FIX: Route for handling the Edit form submission (POST update)
 $router->post('/management/service_add_update/{id}', 'Management::service_add_update')
   ->where_number('id');
-$router->get('/management/service_delete/{id}', 'Management::service_delete') // Delete service
+$router->get('/management/service_delete/{id}', 'Management::service_delete')
   ->where_number('id');
-
-// -----------------------------------------------------------------
-// --- DASHBOARD ACCESS (Requires Authorization) ---
-// -----------------------------------------------------------------
 
 // Admin Dashboard Access
 $router->get('/admin/dashboard', function () {
@@ -124,7 +110,7 @@ $router->get('/admin/dashboard', function () {
   }
 });
 
-// Staff: Limited Access
+// Staff Dashboard Access
 $router->get('/staff/dashboard', function () {
   $LAVA = lava_instance();
   $LAVA->call->helper('url');
@@ -132,7 +118,6 @@ $router->get('/staff/dashboard', function () {
 
   $role = $LAVA->session->userdata('role');
   if ($role === 'admin' || $role === 'staff') {
-    // This calls the controller that fetches the data.
     $LAVA->call->controller('Staff', 'dashboard');
   } else {
     redirect('login');
@@ -140,7 +125,6 @@ $router->get('/staff/dashboard', function () {
 });
 
 // User Landing Page
-// This is the public landing page for users.
 $router->get('/', function () {
   lava_instance()->call->view('user_landing');
 });
@@ -150,6 +134,6 @@ $router->get('/profile', 'Auth::profile');
 $router->post('/profile/update', 'Auth::profile_edit_submit');
 $router->get('/profile/delete', 'Auth::profile_delete');
 
-// --- NEW FEATURE ROUTES: APPOINTMENTS ---
+// APPOINTMENTS
 $router->get('/book', 'Booking::index');
 $router->post('/book/submit', 'Booking::submit');
