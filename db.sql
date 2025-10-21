@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS services (
 );
 
 -- --------------------------------------------------------
--- 4. APPOINTMENTS Table (The booking records)
+-- 4. APPOINTMENTS Table (The booking records) 
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS appointments (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
