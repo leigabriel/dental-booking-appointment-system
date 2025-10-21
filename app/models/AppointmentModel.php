@@ -10,7 +10,6 @@ class AppointmentModel extends Model
   public function __construct()
   {
     parent::__construct();
-    // The database connection is loaded by the parent Model and autoload.
   }
 
   /**
@@ -23,13 +22,12 @@ class AppointmentModel extends Model
    */
   public function is_slot_booked($doctor_id, $date, $time)
   {
-    // Ensures the query runs and counts correctly using framework's chaining
     $this->db->table($this->table)
       ->where('doctor_id', $doctor_id)
       ->where('appointment_date', $date)
       ->where('time_slot', $time)
       ->not_in('status', ['cancelled'])
-      ->get_all(); // Forces execution for row_count()
+      ->get_all();
 
     return $this->db->row_count() > 0;
   }

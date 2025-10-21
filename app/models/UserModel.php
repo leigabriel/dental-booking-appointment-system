@@ -5,13 +5,10 @@ class UserModel extends Model
 {
     protected $table = 'users';
     protected $primary_key = 'id';
-
-    // UPDATED: Allow new fields for mass assignment
     protected $fillable = ['username', 'password', 'role', 'full_name', 'email'];
 
     public function __construct()
     {
-        // ... (omitted code) ...
         $this->call->database();
     }
 
