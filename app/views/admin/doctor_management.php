@@ -1,21 +1,16 @@
 <?php
 defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 $LAVA = lava_instance();
-$role = $LAVA->session->userdata('role'); // <--- ADDED
+$role = $LAVA->session->userdata('role');
+
 // Data variables
 $doctors = $doctors ?? [];
-// New: We no longer check for $is_edit here.
+// doctors_list_json is set in Management::doctors() for JS lookup
+$doctors_list_json = $doctors_list_json ?? '[]';
+
 $errors = $errors ?? [];
-$post_data = $post_data ?? []; // New variable for repopulating failed ADD form
+$post_data = $post_data ?? [];
 $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session->flashdata('error_message');
-
-// Repopulate logic for failed Add form submission
-$name = $post_data['name'] ?? '';
-$specialty = $post_data['specialty'] ?? '';
-$email = $post_data['email'] ?? '';
-
-// Check if a failed submission was for the Add form (ID is null)
-$show_add_errors = !empty($errors) && empty($post_data['id']);
 
 function display_errors($errors)
 {
@@ -28,6 +23,9 @@ function display_errors($errors)
         echo '</ul></div>';
     }
 }
+
+// Check if a validation failure occurred for the ADD form (ID is null)
+$show_add_errors = !empty($errors) && empty($post_data['id']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,6 +43,10 @@ function display_errors($errors)
 
         body {
             font-family: 'JetBrains Mono', monospace;
+        }
+
+        .modal {
+            transition: opacity 0.25s ease;
         }
     </style>
 </head>
@@ -66,45 +68,13 @@ function display_errors($errors)
             </div>
         <?php endif; ?>
 
-        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mb-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Add New Doctor</h2>
-
-            <?php // Display validation errors only for the Add form (when $show_add_errors is true)
-            if ($show_add_errors): ?>
-                <div class="p-3 mb-4 rounded-lg bg-red-100 text-red-700 border border-red-300">
-                    Validation failed for Add Doctor:
-                    <?php display_errors($errors); ?>
-                </div>
-            <?php endif; ?>
-
-            <form method="POST" action="<?= site_url('management/doctor_add_update') ?>" class="space-y-4">
-                <?= csrf_field() ?>
-
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" id="name" name="name"
-                        value="<?= html_escape($name) ?>" required
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[--primary-color] focus:border-[--primary-color]">
-                </div>
-
-                <div>
-                    <label for="specialty" class="block text-sm font-medium text-gray-700">Specialty</label>
-                    <input type="text" id="specialty" name="specialty"
-                        value="<?= html_escape($specialty) ?>" required
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[--primary-color] focus:border-[--primary-color]">
-                </div>
-
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" id="email" name="email"
-                        value="<?= html_escape($email) ?>" required
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[--primary-color] focus:border-[--primary-color]">
-                </div>
-
-                <button type="submit" class="w-full bg-[--primary-color] text-white py-2.5 rounded-lg font-semibold hover:bg-[--primary-hover] transition">
-                    Add Doctor
-                </button>
-            </form>
+        <div class="mb-6">
+            <button type="button" onclick="openModal('add')" class="bg-green-500 text-white py-2.5 px-6 rounded-lg font-semibold hover:bg-green-600 transition flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span>Add New Doctor</span>
+            </button>
         </div>
 
         <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
@@ -129,7 +99,11 @@ function display_errors($errors)
                                     <td class="px-3 py-4 text-sm text-gray-600"><?= html_escape($d['specialty']) ?></td>
                                     <td class="px-3 py-4 text-sm text-gray-600"><?= html_escape($d['email']) ?></td>
                                     <td class="px-3 py-4 text-sm space-x-3">
-                                        <a href="<?= site_url('management/doctor_edit/' . $d['id']) ?>" class="text-blue-600 hover:text-blue-800">Edit</a>
+                                        <button
+                                            class="text-blue-600 hover:text-blue-800"
+                                            onclick="openModal('edit', <?= html_escape(json_encode($d)) ?>)">
+                                            Edit
+                                        </button>
                                         <?php if ($role === 'admin'): ?>
                                             <a href="<?= site_url('management/doctor_delete/' . $d['id']) ?>" onclick="return confirm('Are you sure you want to delete Dr. <?= html_escape($d['name']) ?>?')" class="text-red-600 hover:text-red-800">Delete</a>
                                         <?php endif; ?>
@@ -146,6 +120,142 @@ function display_errors($errors)
             </div>
         </div>
     </div>
+
+    <div id="doctor-modal" class="modal fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center z-50 p-4" onclick="closeModal(event)">
+        <div class="bg-white w-full max-w-lg p-6 rounded-xl shadow-2xl" onclick="event.stopPropagation()">
+
+            <h2 id="modal-title" class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2"></h2>
+
+            <?php
+            // If validation failed on a POST request, re-show errors inside the modal structure
+            if (!empty($errors)):
+                // Determine if this was an ADD or EDIT failure to set the modal title correctly
+                $is_edit_fail = !empty($post_data['id']);
+                $failed_title = $is_edit_fail ? "Edit Doctor" : "Add New Doctor";
+            ?>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Automatically open the modal if validation errors are present
+                        openModal('<?= $is_edit_fail ? 'edit' : 'add' ?>', <?= json_encode($post_data) ?>);
+                    });
+                </script>
+                <h3 class="text-lg font-semibold text-red-600">Validation Failed:</h3>
+                <?php display_errors($errors); ?>
+            <?php endif; ?>
+
+            <form id="doctor-form" method="POST" action="<?= site_url('management/doctor_add_update') ?>">
+                <?= csrf_field() ?>
+                <input type="hidden" name="id" id="form-id" value="<?= html_escape($post_data['id'] ?? '') ?>">
+
+                <div class="space-y-4">
+                    <div>
+                        <label for="form-name" class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" id="form-name" name="name" required
+                            value="<?= html_escape($post_data['name'] ?? '') ?>"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[--primary-color] focus:border-[--primary-color]">
+                    </div>
+
+                    <div>
+                        <label for="form-specialty" class="block text-sm font-medium text-gray-700">Specialty</label>
+                        <input type="text" id="form-specialty" name="specialty" required
+                            value="<?= html_escape($post_data['specialty'] ?? '') ?>"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[--primary-color] focus:border-[--primary-color]">
+                    </div>
+
+                    <div>
+                        <label for="form-email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="form-email" name="email" required
+                            value="<?= html_escape($post_data['email'] ?? '') ?>"
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[--primary-color] focus:border-[--primary-color]">
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition">Cancel</button>
+                    <button type="submit" id="form-submit-button" class="px-4 py-2 bg-[--primary-color] text-white rounded-lg hover:bg-[--primary-hover] transition">Save Doctor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        const modal = document.getElementById('doctor-modal');
+        const form = document.getElementById('doctor-form');
+        const modalTitle = document.getElementById('modal-title');
+        const formId = document.getElementById('form-id');
+        const formName = document.getElementById('form-name');
+        const formSpecialty = document.getElementById('form-specialty');
+        const formEmail = document.getElementById('form-email');
+        const formSubmitButton = document.getElementById('form-submit-button');
+
+        // Parse doctor data passed from PHP for quick lookup
+        const doctorsData = <?= $doctors_list_json ?>;
+
+        function openModal(mode, doctor = {}) {
+            // Reset form fields
+            form.reset();
+
+            // Clear any old, visible validation errors outside the form for a fresh start
+            document.querySelectorAll('#doctor-modal .p-3.mb-4.rounded-lg.bg-red-100').forEach(el => el.remove());
+
+            if (mode === 'add') {
+                modalTitle.textContent = "Add New Doctor";
+                form.action = "<?= site_url('management/doctor_add_update') ?>";
+                formId.value = '';
+                formSubmitButton.textContent = "Add Doctor";
+
+            } else if (mode === 'edit') {
+                const data = typeof doctor === 'object' && doctor.id ? doctor : doctorsData[doctor.id];
+
+                if (!data) {
+                    alert('Error: Doctor data not found.');
+                    return;
+                }
+
+                modalTitle.textContent = `Edit Doctor: Dr. ${data.name}`;
+                form.action = `<?= site_url('management/doctor_add_update') ?>/${data.id}`;
+                formId.value = data.id;
+                formName.value = data.name;
+                formSpecialty.value = data.specialty;
+                formEmail.value = data.email;
+                formSubmitButton.textContent = "Save Changes";
+            }
+
+            // Show modal
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+
+            // Move existing error block if present (for failed POST attempts)
+            const errorBlock = document.querySelector('.bg-red-100.text-red-700');
+            if (errorBlock && !modal.contains(errorBlock)) {
+                form.prepend(errorBlock);
+            }
+        }
+
+        function closeModal(event = null) {
+            // Only close if click is on the background or called directly
+            if (!event || event.target.id === 'doctor-modal') {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        // Handle case where validation fails on a POST request and form needs to be re-opened
+        <?php if (!empty($errors)): ?>
+            document.addEventListener('DOMContentLoaded', function() {
+                const initialData = <?= json_encode($post_data) ?>;
+                const mode = initialData.id ? 'edit' : 'add';
+                // Find and move the error block into the modal on page load
+                const errorBlock = document.querySelector('.bg-red-100.text-red-700');
+                if (errorBlock) {
+                    errorBlock.remove(); // Temporarily remove from original position
+                    form.prepend(errorBlock); // Prepend to the form inside the modal
+                }
+                openModal(mode, initialData);
+            });
+        <?php endif; ?>
+    </script>
 </body>
 
 </html>
