@@ -4,6 +4,9 @@ $LAVA = lava_instance();
 $is_logged_in = $LAVA->session->userdata('is_logged_in');
 $username = $LAVA->session->userdata('username');
 $role = $LAVA->session->userdata('role');
+
+// Define the base path for local Leaflet assets
+$leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
 ?>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
@@ -13,6 +16,9 @@ $role = $LAVA->session->userdata('role');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DENTALCARE</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="<?= $leaflet_base_path . 'leaflet.css' ?>" crossorigin="" />
+
     <style>
         :root {
             --primary-color: #2563eb;
@@ -30,12 +36,20 @@ $role = $LAVA->session->userdata('role');
             top: 0;
             z-index: 10;
         }
+
+        /* Style for the map container */
+        #clinicMap {
+            height: 400px;
+            width: 100%;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
     </style>
 </head>
 
 <body class="bg-white">
 
-    <!-- NAVIGATION -->
     <div class="two-tier-nav shadow-lg">
         <div class="bg-blue-800">
             <div class="max-w-7xl mx-auto px-4">
@@ -70,44 +84,32 @@ $role = $LAVA->session->userdata('role');
                 <div class="flex justify-end items-center h-10 space-x-6">
                     <a href="#about" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">About Us</a>
                     <a href="#services" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Services / Booking</a>
+                    <a href="#location" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Location</a>
                     <a href="#contact" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Contact</a>
                     <a href="<?= site_url('book') ?>" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Book</a>
-
-                    <!--
-                    <?php if ($is_logged_in && $role !== 'user'): ?>
-                        <a href="<?= site_url($role . '/dashboard') ?>" class="px-3 py-1 text-sm font-semibold rounded-md bg-green-500 text-white hover:bg-green-600 transition shadow-sm">
-                            Go to Dashboard
-                        </a>
-                    <?php endif; ?>
-                    -->
                 </div>
             </div>
         </nav>
     </div>
 
-    <!-- HERO SECTION -->
     <section id="hero"
         class="relative min-h-screen flex items-center justify-center p-8 overflow-hidden 
            bg-blue-700 text-white">
 
-        <!-- Background Image (Overlay) -->
         <div class="absolute inset-0 flex items-center justify-center">
             <img src="<?php echo base_url() . PUBLIC_DIR . '/img/aa.png'; ?>"
                 alt="Dental clinic background"
                 class="object-contain max-w-[80%] max-h-[80%] opacity-100">
-            <!-- Optional: Subtle blue overlay -->
             <div class="absolute inset-0 bg-blue-300/20"></div>
         </div>
 
 
-        <!-- Content -->
         <div class="relative max-w-7xl w-full text-center md:text-left flex flex-col justify-between pt-16 pb-12">
             <h1 class="text-8xl sm:text-7xl md:text-8xl font-extrabold leading-tight tracking-tight">
                 HEALTHY TEETH,<br>HAPPY LIFE
             </h1>
 
             <div class="mt-12 flex flex-col md:flex-row justify-between gap-8">
-                <!-- Left -->
                 <div class="max-w-xs mx-auto md:mx-0 space-y-4">
                     <div class="flex items-center justify-center md:justify-start space-x-2">
                         <svg class="w-6 h-6 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +123,6 @@ $role = $LAVA->session->userdata('role');
                     </p>
                 </div>
 
-                <!-- Right -->
                 <div class="text-center md:text-right space-y-4">
                     <p class="text-sm font-semibold text-gray-200">5204 Naujan, Oriental Mindoro</p>
                     <a href="#about"
@@ -137,7 +138,6 @@ $role = $LAVA->session->userdata('role');
         </div>
     </section>
 
-    <!-- ABOUT -->
     <section id="about" class="min-h-screen bg-white flex items-center justify-center p-8">
         <div class="max-w-7xl">
             <h2 class="text-6xl font-bold text-[--primary-color] mb-6 border-b-2 border-gray-200 pb-2">
@@ -152,7 +152,6 @@ $role = $LAVA->session->userdata('role');
         </div>
     </section>
 
-    <!-- SERVICES -->
     <section id="services" class="min-h-screen bg-blue-700 flex flex-col items-center p-8 pt-24">
         <h2 class="text-4xl font-bold text-white mb-12">Our Services & Booking</h2>
 
@@ -187,7 +186,19 @@ $role = $LAVA->session->userdata('role');
         </div>
     </section>
 
-    <!-- CONTACT -->
+    <section id="location" class="min-h-screen bg-gray-50 flex flex-col items-center p-8 pt-24">
+        <div class="max-w-7xl w-full">
+            <h2 class="text-4xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2">
+                Our Location
+            </h2>
+            <p class="text-gray-700 text-lg mb-8">
+                Find us easily! Our clinic is located in the heart of Cityville, easily accessible by public transport.
+            </p>
+
+            <div id="clinicMap" class="mb-10"></div>
+        </div>
+    </section>
+
     <section id="contact" class="min-h-screen bg-white flex items-center justify-center p-8">
         <div class="max-w-4xl w-full text-center">
             <h2 class="text-4xl font-bold text-[--primary-color] mb-6">Contact Us</h2>
@@ -200,6 +211,7 @@ $role = $LAVA->session->userdata('role');
                 <div class="p-6 bg-gray-50 rounded-xl shadow-md">
                     <h3 class="text-xl font-bold text-gray-800 mb-2">Location</h3>
                     <p class="text-gray-600">123 Health Ave, Suite 101, Cityville</p>
+                    <a href="#location" class="text-sm text-blue-500 hover:text-blue-700 font-medium">View on Map</a>
                 </div>
                 <div class="p-6 bg-gray-50 rounded-xl shadow-md">
                     <h3 class="text-xl font-bold text-gray-800 mb-2">Hours</h3>
@@ -213,7 +225,6 @@ $role = $LAVA->session->userdata('role');
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="bg-gray-900 text-white p-6 text-center">
         <p>&copy; <?= date('Y') ?> DENTALCARE Booking System. All rights reserved.</p>
         <div class="mt-2 text-sm text-gray-400">
@@ -222,6 +233,64 @@ $role = $LAVA->session->userdata('role');
         </div>
     </footer>
 
+    <script src="<?= $leaflet_base_path . 'leaflet.js' ?>" crossorigin=""></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Configuration to fix local image loading ---
+            // This fix is necessary for Leaflet when using local assets instead of CDN
+
+            // 1. Delete the internal method Leaflet uses to guess the icon path
+            delete L.Icon.Default.prototype._getIconUrl;
+
+            // 2. Explicitly set the full URL paths for all marker images
+            L.Icon.Default.mergeOptions({
+                iconRetinaUrl: '<?= $leaflet_base_path ?>images/marker-icon-2x.png',
+                iconUrl: '<?= $leaflet_base_path ?>images/marker-icon.png',
+                shadowUrl: '<?= $leaflet_base_path ?>images/marker-shadow.png',
+            });
+            // --- End Configuration ---
+
+            // Placeholder coordinates near Naujan, Oriental Mindoro, PH
+            const clinicLat = 13.2500;
+            const clinicLng = 121.2500;
+            const clinicZoom = 13;
+
+            // Initialize the map
+            const map = L.map('clinicMap').setView([clinicLat, clinicLng], clinicZoom);
+
+            // Add the tile layer (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            // Add a marker at the clinic location
+            const marker = L.marker([clinicLat, clinicLng]).addTo(map);
+
+            // Add a popup to the marker
+            marker.bindPopup("<b>DENTALCARE Clinic</b><br>5204 Naujan, Oriental Mindoro").openPopup();
+
+            // Fix map display issue when inside collapsed elements or lazy-loaded
+            const mapContainer = document.getElementById('location');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        map.invalidateSize();
+                        observer.unobserve(mapContainer);
+                    }
+                });
+            }, {
+                rootMargin: '100px 0px'
+            }); // Trigger before it's fully visible
+
+            observer.observe(mapContainer);
+
+            // Fallback for immediate resize
+            setTimeout(function() {
+                map.invalidateSize();
+            }, 500);
+        });
+    </script>
 </body>
 
 </html>
