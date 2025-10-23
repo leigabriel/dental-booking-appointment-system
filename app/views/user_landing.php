@@ -37,7 +37,6 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
             z-index: 10;
         }
 
-        /* Style for the map container */
         #clinicMap {
             height: 400px;
             width: 100%;
@@ -236,21 +235,16 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
     <script src="<?= $leaflet_base_path . 'leaflet.js' ?>" crossorigin=""></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- Configuration to fix local image loading ---
-            // This fix is necessary for Leaflet when using local assets instead of CDN
 
-            // 1. Delete the internal method Leaflet uses to guess the icon path
             delete L.Icon.Default.prototype._getIconUrl;
 
-            // 2. Explicitly set the full URL paths for all marker images
             L.Icon.Default.mergeOptions({
                 iconRetinaUrl: '<?= $leaflet_base_path ?>images/marker-icon-2x.png',
                 iconUrl: '<?= $leaflet_base_path ?>images/marker-icon.png',
                 shadowUrl: '<?= $leaflet_base_path ?>images/marker-shadow.png',
             });
-            // --- End Configuration ---
 
-            // Placeholder coordinates near Naujan, Oriental Mindoro, PH
+            // Naujan, Oriental Mindoro
             const clinicLat = 13.2500;
             const clinicLng = 121.2500;
             const clinicZoom = 13;
@@ -270,7 +264,6 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
             // Add a popup to the marker
             marker.bindPopup("<b>DENTALCARE Clinic</b><br>5204 Naujan, Oriental Mindoro").openPopup();
 
-            // Fix map display issue when inside collapsed elements or lazy-loaded
             const mapContainer = document.getElementById('location');
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
@@ -281,11 +274,10 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                 });
             }, {
                 rootMargin: '100px 0px'
-            }); // Trigger before it's fully visible
+            });
 
             observer.observe(mapContainer);
 
-            // Fallback for immediate resize
             setTimeout(function() {
                 map.invalidateSize();
             }, 500);
