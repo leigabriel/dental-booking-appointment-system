@@ -1,9 +1,6 @@
-CREATE DATABASE IF NOT EXISTS dental_db;
-USE dental_db;
+CREATE DATABASE IF NOT EXISTS dentalcare_database;
+USE dentalcare_database;
 
--- --------------------------------------------------------
--- 1. USERS Table (Authentication, with Full Name and Email)
--- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS users (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
@@ -14,9 +11,6 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- --------------------------------------------------------
--- 2. DOCTORS Table (Staff who take appointments)
--- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS doctors (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -25,9 +19,7 @@ CREATE TABLE IF NOT EXISTS doctors (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- --------------------------------------------------------
--- 3. SERVICES Table (Treatments offered)
--- --------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS services (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -35,9 +27,7 @@ CREATE TABLE IF NOT EXISTS services (
     duration_mins INT(11) NOT NULL
 );
 
--- --------------------------------------------------------
--- 4. APPOINTMENTS Table (The booking records) 
--- --------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS appointments (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id INT(11) UNSIGNED NOT NULL,
@@ -52,6 +42,5 @@ CREATE TABLE IF NOT EXISTS appointments (
     FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE RESTRICT,
     FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE RESTRICT,
     
-    -- Constraint to prevent double-booking the same doctor at the same time/date
     UNIQUE KEY unique_booking (doctor_id, appointment_date, time_slot)
 );
