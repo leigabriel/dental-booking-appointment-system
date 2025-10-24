@@ -82,9 +82,8 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex justify-end items-center h-10 space-x-6">
                     <a href="#about" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">About Us</a>
-                    <a href="#services" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Services / Booking</a>
-                    <a href="#location" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Location</a>
-                    <a href="#contact" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Contact</a>
+                    <a href="#services" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Services</a>
+                    <a href="#contacts" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Contact</a>
                     <a href="<?= site_url('book') ?>" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Book</a>
                 </div>
             </div>
@@ -92,8 +91,8 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
     </div>
 
     <section id="hero"
-        class="relative min-h-screen flex items-center justify-center p-8 overflow-hidden 
-           bg-blue-700 text-white">
+        class="relative min-h-screen rounded-b-3xl flex items-center justify-center p-8 overflow-hidden 
+               bg-blue-700 text-white">
 
         <div class="absolute inset-0 flex items-center justify-center">
             <img src="<?php echo base_url() . PUBLIC_DIR . '/img/aa.png'; ?>"
@@ -137,98 +136,292 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         </div>
     </section>
 
-    <section id="about" class="min-h-screen bg-white flex items-center justify-center p-8">
-        <div class="max-w-7xl">
-            <h2 class="text-6xl font-bold text-[--primary-color] mb-6 border-b-2 border-gray-200 pb-2">
+    <section id="about" class="min-h-screen bg-white flex flex-col items-center justify-center p-8">
+        <div class="max-w-7xl text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-2">
                 About DENTALCARE
             </h2>
-            <p class="text-gray-700 text-2xl mb-4">
-                We are committed to providing personalized and high-quality dental care in a comfortable and welcoming environment. Our team of experienced dentists uses the latest technology to ensure the best results for your oral health.
+            <p class="text-xl text-gray-600">
+                Personalized and High-Quality Dental Care
             </p>
-            <p class="text-gray-700 text-2xl">
-                Since opening our doors in 2015, we've served thousands of happy patients, helping them achieve healthy and confident smiles. We prioritize patient education and preventative care above all else.
+        </div>
+
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-center space-y-10 md:space-y-0 md:space-x-12 max-w-6xl w-full">
+
+            <div class="flex-shrink-0 w-full md:w-1/3 text-center relative">
+
+                <div class="w-24 h-24 p-4 mb-4 mx-auto rounded-full border-2 border-dashed border-teal-200 bg-teal-50 flex items-center justify-center">
+                    <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-teal-500 text-white w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold shadow-lg">1</span>
+                    <img src="https://cdn-icons-png.flaticon.com/128/7215/7215609.png" alt="Commitment Icon" class="w-12 h-12">
+                </div>
+
+                <h3 class="text-xl font-bold text-gray-800 mb-2 mt-4">Our Commitment</h3>
+                <p class="text-gray-600 text-sm md:text-base px-2">
+                    We provide personalized and high-quality dental care in a welcoming environment, using the latest technology.
+                </p>
+            </div>
+
+            <div class="hidden md:block flex-1 border-t-2 border-dashed border-gray-300 -translate-y-12"></div>
+
+
+            <div class="flex-shrink-0 w-full md:w-1/3 text-center relative">
+                <div class="w-24 h-24 p-4 mb-4 mx-auto rounded-full border-2 border-dashed border-teal-200 bg-teal-50 flex items-center justify-center">
+                    <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-teal-500 text-white w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold shadow-lg">2</span>
+                    <img src="https://cdn-icons-png.flaticon.com/128/2278/2278049.png" alt="Years of Service Icon" class="w-12 h-12">
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 mt-4">Years of Service</h3>
+                <p class="text-gray-600 text-sm md:text-base px-2">
+                    Since opening our doors in 2015, we've served thousands of happy patients, achieving healthy and confident smiles.
+                </p>
+            </div>
+
+            <div class="hidden md:block flex-1 border-t-2 border-dashed border-gray-300 -translate-y-12"></div>
+
+
+            <div class="flex-shrink-0 w-full md:w-1/3 text-center relative">
+                <div class="w-24 h-24 p-4 mb-4 mx-auto rounded-full border-2 border-dashed border-teal-200 bg-teal-50 flex items-center justify-center">
+                    <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-teal-500 text-white w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold shadow-lg">3</span>
+                    <img src="https://cdn-icons-png.flaticon.com/128/2902/2902055.png" alt="Philosophy Icon" class="w-12 h-12">
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2 mt-4">Our Philosophy</h3>
+                <p class="text-gray-600 text-sm md:text-base px-2">
+                    We prioritize patient education and preventative care above all else to ensure lasting oral health.
+                </p>
+            </div>
+        </div>
+        <div class="mt-20 max-w-4xl w-full text-center">
+            <p class="text-lg text-gray-700 leading-relaxed border-t pt-8 border-gray-200">
+                DENTALCARE is dedicated to being your partner in oral health. Our experienced team utilizes state-of-the-art technology to deliver comprehensive general, cosmetic, and preventative care. We believe a beautiful, healthy smile is key to overall wellness, and we strive to make every visit comfortable, informative, and focused on achieving your best possible smile.
             </p>
         </div>
     </section>
 
-    <section id="services" class="min-h-screen bg-blue-700 flex flex-col items-center p-8 pt-24">
-        <h2 class="text-4xl font-bold text-white mb-12">Our Services & Booking</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl w-full">
-            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-[--accent-light] hover:shadow-xl transition">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">General Dentistry</h3>
-                <p class="text-gray-600">Check-ups, cleanings, X-rays, and basic restorative procedures.</p>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-[--accent-light] hover:shadow-xl transition">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Cosmetic Procedures</h3>
-                <p class="text-gray-600">Teeth whitening, veneers, and smile design consultation.</p>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-[--accent-light] hover:shadow-xl transition">
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Orthodontics</h3>
-                <p class="text-gray-600">Braces and Invisalign treatments for all ages.</p>
-            </div>
+    <section id="services" class="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-8 py-24">
+        <div class="max-w-7xl w-full text-center mb-16">
+            <p class="text-xl text-teal-600 font-semibold mb-2">Our Care</p>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800">
+                More than just a visit
+            </h2>
+            <p class="text-xl text-gray-600 mt-3">Explore the full range of dental services we offer.</p>
         </div>
 
-        <div class="mt-12 text-center">
-            <p class="text-2xl font-semibold text-white mb-4">Ready to book?</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-8 max-w-7xl w-full">
+
+            <div class="bg-blue-400 p-6 md:p-8 rounded-2xl shadow-xl transition transform hover:shadow-2xl hover:-translate-y-1 border border-gray-100">
+                <div class="w-16 h-16 mb-4 flex items-center justify-center rounded-xl bg-blue-100 border border-blue-200 mx-auto">
+                    <img src="https://cdn-icons-png.flaticon.com/128/18448/18448032.png" alt="Exam & Cleaning Icon" class="w-12 h-12">
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2 mt-4 text-center">Comprehensive Exam & Cleaning</h3>
+                <p class="text-gray-600 text-center text-sm">Complete check-up, professional cleaning, and preventative care for optimal oral health.</p>
+            </div>
+
+            <div class="bg-red-400 p-6 md:p-8 rounded-2xl shadow-xl transition transform hover:shadow-2xl hover:-translate-y-1 border border-gray-100">
+                <div class="w-16 h-16 mb-4 flex items-center justify-center rounded-xl bg-pink-100 border border-pink-200 mx-auto">
+                    <img src="https://cdn-icons-png.flaticon.com/128/13502/13502961.png" alt="Whitening Icon" class="w-12 h-12">
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2 mt-4 text-center">Professional Teeth Whitening</h3>
+                <p class="text-gray-600 text-center text-sm">Safe and effective in-office treatment to brighten your smile several shades.</p>
+            </div>
+
+            <div class="bg-green-400 p-6 md:p-8 rounded-2xl shadow-xl transition transform hover:shadow-2xl hover:-translate-y-1 border border-gray-100">
+                <div class="w-16 h-16 mb-4 flex items-center justify-center rounded-xl bg-green-100 border border-green-200 mx-auto">
+                    <img src="https://cdn-icons-png.flaticon.com/128/11306/11306480.png" alt="Filling Icon" class="w-12 h-12">
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2 mt-4 text-center">Simple Amalgam/Composite Filling</h3>
+                <p class="text-gray-600 text-center text-sm">Restoration of a single tooth to repair minor decay or damage with tooth-colored material.</p>
+            </div>
+
+            <div class="bg-yellow-400 p-6 md:p-8 rounded-2xl shadow-xl transition transform hover:shadow-2xl hover:-translate-y-1 border border-gray-100">
+                <div class="w-16 h-16 mb-4 flex items-center justify-center rounded-xl bg-red-100 border border-red-200 mx-auto">
+                    <img src="https://cdn-icons-png.flaticon.com/128/11377/11377162.png" alt="Extraction Icon" class="w-12 h-12">
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2 mt-4 text-center">Simple Tooth Extraction</h3>
+                <p class="text-gray-600 text-center text-sm">Gentle removal of a single, non-surgical tooth that cannot be saved.</p>
+            </div>
+
+            <div class="bg-pink-400 p-6 md:p-8 rounded-2xl shadow-xl transition transform hover:shadow-2xl hover:-translate-y-1 border border-gray-100">
+                <div class="w-16 h-16 mb-4 flex items-center justify-center rounded-xl bg-yellow-100 border border-yellow-200 mx-auto">
+                    <img src="https://cdn-icons-png.flaticon.com/128/11377/11377181.png" alt="Root Canal Icon" class="w-12 h-12">
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2 mt-4 text-center">Root Canal Treatment (Anterior)</h3>
+                <p class="text-gray-600 text-center text-sm">Treatment to save an infected or damaged front tooth by removing the nerve and pulp.</p>
+            </div>
+
+        </div>
+
+        <div class="mt-16 text-center">
             <?php if ($is_logged_in): ?>
-                <a href="<?= site_url('/book') ?>" class="inline-block px-8 py-3 text-lg font-bold rounded-lg bg-green-500 text-white hover:bg-green-600 transition shadow-lg">
+                <a href="<?= site_url('/book') ?>" class="inline-block px-10 py-4 text-xl font-bold rounded-xl bg-teal-600 text-white shadow-xl hover:bg-teal-700 transition duration-300 transform hover:scale-105">
                     Schedule Your Visit Now
                 </a>
-                <p class="text-sm text-gray-400 mt-2">You are logged in as <?= html_escape($username) ?>.</p>
+                <p class="text-base text-gray-500 mt-3">You are logged in as <?= html_escape($username) ?>.</p>
             <?php else: ?>
-                <a href="<?= site_url('login') ?>" class="inline-block px-8 py-3 text-lg font-bold rounded-lg bg-[--primary-color] text-white shadow-xl hover:bg-[--primary-hover] transition duration-300">
-                    Login to Book
+                <a href="<?= site_url('login') ?>" class="inline-block px-10 py-4 text-xl font-bold rounded-xl bg-blue-600 text-white shadow-xl hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+                    Login to Book Appointment
                 </a>
-                <p class="text-sm text-gray-500 mt-2">New patients, please register first.</p>
+                <p class="text-base text-gray-500 mt-3">New patients, please register first to access online booking.</p>
             <?php endif; ?>
         </div>
     </section>
 
-    <section id="location" class="min-h-screen bg-gray-50 flex flex-col items-center p-8 pt-24">
+    <section id="contacts" class="bg-gray-50 flex flex-col justify-center items-center p-8 py-24">
         <div class="max-w-7xl w-full">
-            <h2 class="text-4xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2">
-                Our Location
-            </h2>
-            <p class="text-gray-700 text-lg mb-8">
-                Find us easily! Our clinic is located in the heart of Cityville, easily accessible by public transport.
-            </p>
 
-            <div id="clinicMap" class="mb-10"></div>
-        </div>
-    </section>
+            <div class="text-center mb-16">
+                <p class="text-xl text-teal-600 font-semibold mb-2">Get In Touch</p>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800">Contact Us</h2>
+                <p class="text-xl text-gray-600 mt-3">We're here to answer your questions. Get in touch via phone or visit our clinic.</p>
+            </div>
 
-    <section id="contact" class="min-h-screen bg-white flex items-center justify-center p-8">
-        <div class="max-w-4xl w-full text-center">
-            <h2 class="text-4xl font-bold text-[--primary-color] mb-6">Contact Us</h2>
-            <p class="text-gray-700 text-lg mb-8">We're here to answer your questions. Get in touch via phone or visit our clinic.</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="p-6 bg-gray-50 rounded-xl shadow-md">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Call Us</h3>
-                    <p class="text-blue-500 font-semibold">(555) 123-4567</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+                <div class="bg-white p-10 rounded-2xl shadow-xl border-t-4 border-teal-500 space-y-8">
+                    <h3 class="text-3xl font-bold text-gray-800 mb-6">Clinic Information</h3>
+
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 flex-shrink-0 mr-5">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.717 21 3 14.283 3 6V5z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-semibold text-gray-800">Call Us</h4>
+                            <p class="text-lg text-blue-600 font-semibold font-mono">(555) DENT-CARE</p>
+                            <p class="text-sm text-gray-500">For immediate assistance.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-teal-100 text-teal-600 flex-shrink-0 mr-5">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-semibold text-gray-800">Location</h4>
+                            <p class="text-gray-600 text-lg">Naujan, Oriental Mindoro, 5204</p>
+                            <a href="#location-map" class="text-sm text-blue-500 hover:text-blue-700 font-medium">View on Map</a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-pink-100 text-pink-600 flex-shrink-0 mr-5">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-semibold text-gray-800">Hours</h4>
+                            <p class="text-gray-600">Mon - Fri: 8:00 AM - 5:00 PM</p>
+                            <p class="text-gray-600">Sat: 9:00 AM - 1:00 PM</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="p-6 bg-gray-50 rounded-xl shadow-md">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Location</h3>
-                    <p class="text-gray-600">123 Health Ave, Suite 101, Cityville</p>
-                    <a href="#location" class="text-sm text-blue-500 hover:text-blue-700 font-medium">View on Map</a>
-                </div>
-                <div class="p-6 bg-gray-50 rounded-xl shadow-md">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Hours</h3>
-                    <p class="text-gray-600">Mon - Fri: 9:00 AM - 5:00 PM</p>
+
+                <div class="bg-white p-10 rounded-2xl shadow-xl border-t-4 border-blue-600">
+                    <h3 class="text-3xl font-bold text-gray-800 mb-6">Send Us a Message</h3>
+                    <form action="#" method="POST" class="space-y-5">
+                        <div>
+                            <label for="contact-name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <input type="text" name="name" id="contact-name" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 transition">
+                        </div>
+
+                        <div>
+                            <label for="contact-email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                            <input type="email" name="email" id="contact-email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 transition">
+                        </div>
+
+                        <div>
+                            <label for="contact-message" class="block text-sm font-medium text-gray-700">Message</label>
+                            <textarea name="message" id="contact-message" rows="5" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-teal-500 focus:border-teal-500 transition"></textarea>
+                        </div>
+
+                        <div>
+                            <button typeG="submit" class="w-full inline-block px-10 py-3 text-lg font-bold rounded-lg bg-blue-600 text-white shadow-xl hover:bg-blue-700 transition duration-300 transform hover:scale-[1.01]">
+                                Send an Email
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
-            <a href="mailto:info@dentalcare.com" class="mt-8 inline-block px-6 py-3 text-sm font-semibold rounded-lg bg-gray-800 text-white hover:bg-gray-700 transition">
-                Send an Email
-            </a>
+            <div id="location-map" class="pt-24">
+                <h2 class="text-4xl font-bold text-gray-800 mb-6 border-b-2 border-gray-300 pb-2">
+                    Our Location
+                </h2>
+                <p class="text-gray-700 text-lg mb-8">
+                    Find us easily! Our clinic is located in Naujan, Oriental Mindoro, easily accessible by public transport.
+                </p>
+
+                <div id="clinicMap" class="mb-10"></div>
+            </div>
+
         </div>
     </section>
 
-    <footer class="bg-gray-900 text-white p-6 text-center">
-        <p>&copy; <?= date('Y') ?> DENTALCARE Booking System. All rights reserved.</p>
-        <div class="mt-2 text-sm text-gray-400">
-            <a href="#" class="hover:text-white mx-2">Privacy Policy</a> |
-            <a href="#" class="hover:text-white mx-2">Terms of Service</a>
+    <footer class="bg-blue-700 text-white pt-16 pb-8" id="contact-footer">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-200 pb-10">
+
+                <div class="space-y-4">
+                    <h3 class="text-2xl font-bold ">DENTALCARE</h3>
+                    <p class="text-sm text-gray-300">
+                        Committed to providing personalized and high-quality dental care in a comfortable and welcoming environment.
+                    </p>
+                    <div class="flex items-center space-x-2 text-sm text-gray-300">
+                        <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.717 21 3 14.283 3 6V5z"></path>
+                        </svg>
+                        <span class="font-mono">0963-405-5941 DENTALCARE</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#about" class="text-gray-300 hover:text-white transition">About Us</a></li>
+                        <li><a href="#services" class="text-gray-300 hover:text-white transition">Our Services</a></li>
+                        <li><a href="#location-map" class="text-gray-300 hover:text-white transition">Find Us</a></li>
+                        <li><a href="<?= site_url('/book') ?>" class="text-gray-300 hover:text-white transition">Book</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Patient Center</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="<?= site_url('/book') ?>" class="text-gray-300 hover:text-white transition">Book Appointment</a></li>
+                        <li><a href="<?= site_url('login') ?>" class="text-gray-300 hover:text-white transition">Patient Login</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">FAQs</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Location & Hours</h4>
+                    <address class="space-y-3 text-sm not-italic">
+                        <p class="text-gray-300">Naujan, Oriental Mindoro, 5204</p>
+                        <p class="text-gray-300">Mon - Fri: 8:00 AM - 5:00 PM</p>
+                        <p class="text-gray-300">Sat: 9:00 AM - 1:00 PM</p>
+                    </address>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-300">
+                <p>&copy; 2025 DENTALCARE. All rights reserved.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-teal-400 transition">
+                        <img src="https://cdn-icons-png.flaticon.com/128/174/174855.png" alt="Instagram Icon" class="w-6 h-6 rounded-md">
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-teal-400 transition">
+                        <img src="https://cdn-icons-png.flaticon.com/128/5968/5968764.png" alt="Facebook Icon" class="w-6 h-6 rounded-md">
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-teal-400 transition">
+                        <img src="https://cdn-icons-png.flaticon.com/128/5968/5968830.png" alt="Twitter/X Icon" class="w-6 h-6 rounded-md">
+                    </a>
+                </div>
+            </div>
         </div>
     </footer>
 
@@ -264,11 +457,13 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
             // Add a popup to the marker
             marker.bindPopup("<b>DENTALCARE Clinic</b><br>5204 Naujan, Oriental Mindoro").openPopup();
 
-            const mapContainer = document.getElementById('location');
+            // Updated mapContainer ID to match the merged section's ID
+            const mapContainer = document.getElementById('contacts');
             const observer = new IntersectionObserver(entries => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         map.invalidateSize();
+                        // Changed observer target to match the updated mapContainer variable
                         observer.unobserve(mapContainer);
                     }
                 });
@@ -276,8 +471,10 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                 rootMargin: '100px 0px'
             });
 
+            // Observe the map container
             observer.observe(mapContainer);
 
+            // Fallback timeout
             setTimeout(function() {
                 map.invalidateSize();
             }, 500);
