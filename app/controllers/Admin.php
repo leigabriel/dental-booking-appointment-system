@@ -22,33 +22,32 @@ class Admin extends Controller
     {
         $LAVA = lava_instance();
 
+        $this->call->model('AppointmentModel');
         if (!isset($LAVA->db)) {
             $this->call->database();
         }
 
-        // 1. Fetch counts (using fetch() to correct the previous PDOStatement error)
+        // Get counts for dashboard statistics
         $total_users = $LAVA->db->raw("SELECT COUNT(*) AS count FROM users WHERE role = 'user'")->fetch(PDO::FETCH_ASSOC)['count'];
         $total_staff = $LAVA->db->raw("SELECT COUNT(*) AS count FROM users WHERE role = 'staff'")->fetch(PDO::FETCH_ASSOC)['count'];
         $total_admin = $LAVA->db->raw("SELECT COUNT(*) AS count FROM users WHERE role = 'admin'")->fetch(PDO::FETCH_ASSOC)['count'];
-
-        // 2. Fetch ALL user records for the table display
+        $total_appointments = $LAVA->db->raw("SELECT COUNT(*) AS count FROM appointments")->fetch(PDO::FETCH_ASSOC)['count'];
         $all_users = $this->UserModel->all();
 
-        // Retrieve flash data for forms
         $data = [
             'total_users' => $total_users,
             'total_staff' => $total_staff,
             'total_admin' => $total_admin,
-            'all_users' => $all_users, // CRITICAL: Pass user list to the view
+            'total_appointments' => $total_appointments,
+            'all_users' => $all_users,
             'errors' => $this->session->flashdata('errors') ?? [],
             'post_data' => $this->session->flashdata('post_data') ?? [],
         ];
 
-        // 3. Load the dashboard view with the data
         $this->call->view('admin/dashboard', $data);
     }
 
-    // ADMIN/STAFF CRUD
+    // ADMIN/STAFF ADD/UPDATE/DELETE METHODS
 
     /**
      * Handles adding or updating a user's role and details.
