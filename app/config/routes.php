@@ -43,7 +43,12 @@ defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 |
 */
 
-// $router->get('/', 'Welcome::index');
+ $router->get('/', 'Welcome::index');
+
+/*/ User Landing Page
+$router->get('/', function () {
+  lava_instance()->call->view('user_landing');
+});*/
 
 // Authentication Routes
 $router->get('/login', 'Auth::login');
@@ -122,11 +127,6 @@ $router->get('/staff/dashboard', function () {
   } else {
     redirect('login');
   }
-});
-
-// User Landing Page
-$router->get('/', function () {
-  lava_instance()->call->view('user_landing');
 });
 
 // User Profile Management Routes
