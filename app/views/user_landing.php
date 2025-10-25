@@ -23,7 +23,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         :root {
             --primary-color: #2563eb;
             --primary-hover: #1d4ed8;
-            --accent-light: #2e3be7ff;
+            --accent-light: #4854ffff;
             --neutral-dark: #1e3a8a;
         }
 
@@ -78,13 +78,14 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
             </div>
         </div>
 
-        <nav class="bg-[--accent-light]">
+        <nav class="bg-blue-500">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex justify-end items-center h-10 space-x-6">
-                    <a href="#about" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">About Us</a>
-                    <a href="#services" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Services</a>
-                    <a href="#contacts" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Contact</a>
-                    <a href="<?= site_url('book') ?>" class="text-white hover:text-[--primary-color] px-3 py-1 rounded-md text-sm font-medium transition">Book</a>
+                    <a href="/#" class="text-white hover:text-blue-300 px-3 py-1 rounded-md text-sm font-medium transition hover:underline">Home</a>
+                    <a href="#about" class="text-white hover:text-blue-300 px-3 py-1 rounded-md text-sm font-medium transition hover:underline">About Us</a>
+                    <a href="#services" class="text-white hover:text-blue-300 px-3 py-1 rounded-md text-sm font-medium transition hover:underline">Services</a>
+                    <a href="#contacts" class="text-white hover:text-blue-300 px-3 py-1 rounded-md text-sm font-medium transition hover:underline">Contact</a>
+                    <a href="<?= site_url('book') ?>" class="text-white hover:text-blue-300 px-3 py-1 rounded-md text-sm font-medium transition hover:underline">Book</a>
                 </div>
             </div>
         </nav>
@@ -196,7 +197,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         </div>
     </section>
 
-    <section id="services" class="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-8 py-24">
+    <section id="services" class="min-h-screen bg-white flex flex-col justify-center items-center p-8 py-24">
         <div class="max-w-7xl w-full text-center mb-16">
             <p class="text-xl text-teal-600 font-semibold mb-2">Our Care</p>
             <h2 class="text-4xl md:text-5xl font-extrabold text-gray-800">
@@ -264,7 +265,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         </div>
     </section>
 
-    <section id="contacts" class="bg-gray-50 flex flex-col justify-center items-center p-8 py-24">
+    <section id="contacts" class="bg-white flex flex-col justify-center items-center p-8 py-24">
         <div class="max-w-7xl w-full">
 
             <div class="text-center mb-16">
@@ -360,7 +361,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         </div>
     </section>
 
-    <footer class="bg-blue-700 text-white pt-16 pb-8" id="contact-footer">
+    <footer class="bg-blue-800 text-white pt-16 pb-8" id="contact-footer">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-200 pb-10">

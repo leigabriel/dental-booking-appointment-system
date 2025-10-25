@@ -67,7 +67,7 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
             <div class="absolute inset-0">
                 <img src="https://i.pinimg.com/736x/4b/a0/03/4ba003d85204accaec805a405947351a.jpg"
                     alt="Dental background"
-                    class="w-full h-full object-cover opacity-70">
+                    class="w-full h-full object-cover opacity-100">
                 <div class="absolute inset-0 bg-gradient-to-t from-blue-800/80 via-blue-700/70 to-blue-600/60"></div>
             </div>
 

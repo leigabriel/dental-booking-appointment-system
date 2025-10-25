@@ -38,7 +38,7 @@ function repopulate($key, $default = '')
 
 
 // List of available times
-$time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00'];
+$time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,13 +100,14 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             </div>
         </div>
 
-        <nav class="bg-[--accent-light]">
+        <nav class="bg-blue-500">
             <div class="max-w-7xl mx-auto px-4">
                 <div class="flex justify-end items-center h-10 space-x-6">
-                    <a href="<?= site_url('/#about') ?>" class="text-white hover:text-blue-800 px-3 py-1 rounded-md text-sm font-medium transition">About Us</a>
-                    <a href="<?= site_url('/#services') ?>" class="text-white hover:text-blue-800 px-3 py-1 rounded-md text-sm font-medium transition">Services</a>
-                    <a href="<?= site_url('/#contacts') ?>" class="text-white hover:text-blue-800 px-3 py-1 rounded-md text-sm font-medium transition">Contact</a>
-                    <a href="<?= site_url('book') ?>" class="text-white hover:text-blue-800 px-3 py-1 rounded-md text-sm font-medium transition">Book</a>
+                    <a href="/#" class="text-white hover:text-blue-300 px-3 py-1 rounded-md text-sm font-medium transition hover:underline">Home</a>
+                    <a href="/#about" class="text-white hover:text-blue-300 px-3 py-1 rounded-md text-sm font-medium transition hover:underline">About Us</a>
+                    <a href="/#services" class="text-white hover:text-blue-300 px-3 py-1 rounded-md text-sm font-medium transition hover:underline">Services</a>
+                    <a href="/#contacts" class="text-white hover:text-blue-300 px-3 py-1 rounded-md text-sm font-medium transition hover:underline">Contact</a>
+                    <a href="<?= site_url('book') ?>" class="text-white hover:text-blue-300 px-3 py-1 rounded-md text-sm font-medium transition hover:underline">Book</a>
                 </div>
             </div>
         </nav>
@@ -117,6 +118,9 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             <h1 class="text-3xl font-extrabold text-[--primary-color]">
                 Schedule Your Visit
             </h1>
+            <a href="<?= site_url('/profile') ?>" class="text-sm text-gray-600 hover:text-[--primary-color] hover:underline font-medium">
+                View Appointment
+            </a>
         </div>
 
         <?php if ($flash_message): ?>
@@ -192,6 +196,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                 Confirm Appointment
                             </button>
                         </div>
+
                     </form>
                 </div>
             </div>

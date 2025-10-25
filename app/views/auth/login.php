@@ -70,7 +70,7 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
             <div class="absolute inset-0">
                 <img src="https://i.pinimg.com/736x/4b/a0/03/4ba003d85204accaec805a405947351a.jpg"
                     alt="Dental background"
-                    class="w-full h-full object-cover opacity-70">
+                    class="w-full h-full object-cover opacity-100">
                 <div class="absolute inset-0 bg-gradient-to-t from-blue-800/80 via-blue-700/70 to-blue-600/60"></div>
             </div>
 
@@ -138,7 +138,7 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
                 </button>
 
                 <div class="text-center text-sm mt-2">
-                    Have an account?
+                    Don't have an account?
                     <a href="<?= site_url('register') ?>" class="text-[--primary-color] hover:underline font-medium">Register</a>
                 </div>
 
@@ -153,7 +153,7 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
                         <img src="https://cdn-icons-png.flaticon.com/128/2991/2991148.png" class="w-4 h-4" alt="Google"> <span>Login with Google</span>
                     </button>
                     <button type="button" class="flex items-center space-x-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition text-sm">
-                        <img src="https://cdn-icons-png.flaticon.com/128/179/179309.png" class="w-4 h-4" alt="Apple"> <span>Login with Apple</span>
+                        <img src="https://cdn-icons-png.flaticon.com/128/5968/5968764.png" class="w-4 h-4" alt="Apple"> <span>Login with Facebook</span>
                     </button>
                 </div>
             </form>

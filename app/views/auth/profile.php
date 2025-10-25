@@ -31,13 +31,16 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
 </head>
 
 <body class="bg-gray-100 p-6 sm:p-10 min-h-screen">
-    <div class="max-w-7xl mx-auto space-y-6">
+    <div class="max-w-8xl mx-auto space-y-6">
         <header class="flex justify-between items-center bg-white p-6 rounded-xl shadow-lg border border-gray-200">
             <h1 class="text-3xl font-extrabold text-[--primary-color]">
                 My DENTALCARE Account
             </h1>
             <a href="<?= site_url('/') ?>" class="text-sm text-gray-600 hover:text-[--primary-color] font-medium">
                 ← Back to Home
+            </a>
+            <a href="<?= site_url('/book') ?>" class="text-sm text-gray-600 hover:text-[--primary-color] font-medium">
+                ← Back to Book
             </a>
         </header>
 
