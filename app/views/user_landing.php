@@ -13,7 +13,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DENTALCARE</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="<?= $leaflet_base_path . 'leaflet.css' ?>" crossorigin="" />
     <style>
         body {
@@ -23,17 +23,30 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         #clinicMap {
             height: 400px;
             width: 100%;
-            border-radius: 0.75rem;
+            border-radius: 0.4rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             z-index: 1;
+        }
+
+        ::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #212631;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 10px;
         }
     </style>
 </head>
 
-<body class="bg-blue-900">
+<body class="bg-blue-950">
 
     <header class="absolute inset-x-0 top-0 z-50">
-        <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
+        <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-90 lg:py-10">
             <div class="flex lg:flex-1">
                 <a href="#" class="-m-1.5 p-1.5">
                     <span class="sr-only">DENTALCARE</span>
@@ -49,38 +62,40 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                 </button>
             </div>
             <div class="hidden lg:flex lg:gap-x-12">
-                <a href="#services" class="text-sm/6 font-semibold text-white">Services</a>
-                <a href="#about" class="text-sm/6 font-semibold text-white">About</a>
-                <a href="#blog" class="text-sm/6 font-semibold text-white">Blog</a>
-                <a href="#contact" class="text-sm/6 font-semibold text-white">Contact</a>
-                <a href="<?= site_url('book') ?>" class="text-sm/6 font-semibold text-white">Book Now</a>
+                <a href="#hero" class="text-lg/6 font-semibold text-white hover:text-blue-400">Home</a>
+                <a href="#services" class="text-lg/6 font-semibold text-white hover:text-blue-400">Services</a>
+                <a href="#about" class="text-lg/6 font-semibold text-white hover:text-blue-400">About</a>
+                <a href="#blog" class="text-lg/6 font-semibold text-white hover:text-blue-400">Blog</a>
+                <a href="#contact" class="text-lg/6 font-semibold text-white hover:text-blue-400">Contact</a>
+                <a href="<?= site_url('book') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Book Now</a>
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end gap-x-6">
                 <?php if ($is_logged_in) : ?>
-                    <a href="<?= site_url('profile') ?>" class="group relative flex items-center gap-x-2 text-sm/6 font-semibold text-white hover:text-gray-300">
+                    <a href="<?= site_url('profile') ?>" class="group relative flex items-center gap-x-2 text-lg/6 uppercase font-semibold text-white hover:text-blue-400">
                         <img src="https://cdn-icons-png.flaticon.com/128/5393/5393061.png" alt="Profile" class="h-6 w-6 rounded-full object-cover invert">
                         <?= html_escape($username) ?>
                     </a>
-                    <a href="<?= site_url('logout') ?>" class="group relative flex items-center text-sm/6 font-semibold text-white hover:text-gray-300">
+                    <a href="<?= site_url('logout') ?>" class="group relative rounded-full p-1 bg-red-700 flex items-center text-sm/6 font-semibold text-white hover:text-red-300">
                         <img src="https://cdn-icons-png.flaticon.com/128/10609/10609328.png" alt="Logout" class="h-6 w-6 filter invert">
                         <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-700 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
                             Log out
                         </span>
                     </a>
                 <?php else : ?>
-                    <a href="<?= site_url('login') ?>" class="text-sm/6 font-semibold text-white hover:text-gray-300">Log in</a>
-                    <a href="<?= site_url('register') ?>" class="text-sm/6 font-semibold text-white hover:text-gray-300">Register</span></a>
+                    <a href="<?= site_url('login') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Log in</a>
+                    <span class="text-white">|</span>
+                    <a href="<?= site_url('register') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Register</span></a>
                 <?php endif; ?>
             </div>
         </nav>
         <el-dialog>
             <dialog id="mobile-menu" class="m-0 p-0 backdrop:bg-transparent lg:hidden">
                 <div tabindex="0" class="fixed inset-0 focus:outline focus:outline-0">
-                    <el-dialog-panel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-blue-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
+                    <el-dialog-panel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-blue-950 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
                         <div class="flex items-center justify-between">
                             <a href="#" class="-m-1.5 p-1.5">
                                 <span class="sr-only">DENTALCARE</span>
-                                <img src="<?= base_url() ?>public/img/favicon-32x32.png" alt="DENTALCARE Logo" class="h-8 w-auto" />
+                                <img src="<?= base_url() ?>public/img/favicon-32x32.png" alt="DENTALCARE Logo" class="h-6 w-auto" />
                             </a>
                             <button type="button" command="close" commandfor="mobile-menu" class="-m-2.5 rounded-md p-2.5 text-gray-200">
                                 <span class="sr-only">Close menu</span>
@@ -115,19 +130,19 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         </el-dialog>
     </header>
 
-    <div class="bg-blue-900">
+    <div id="hero" class="bg-blue-950">
         <div class="relative isolate px-6 pt-14 lg:px-8">
             <div aria-hidden="true" class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
                 <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
             </div>
-            <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+            <div class="mx-auto max-w-8xl py-32 sm:py-48 lg:py-56">
                 <div class="hidden sm:mb-8 sm:flex sm:justify-center">
-                    <div class="relative rounded-full px-3 py-1 text-sm/6 text-gray-400 ring-1 ring-white/10 hover:ring-white/20">
+                    <div class="relative rounded-full px-3 py-1 text-lg/6 text-gray-200 ring-1 ring-white/20 hover:ring-white/50">
                         Welcome to DENTALCARE. We're happy to see you!
                     </div>
                 </div>
                 <div class="text-center">
-                    <h1 class="text-balance text-5xl font-semibold tracking-tight text-white sm:text-7xl">HEALTHY TEETH,<br>HAPPY LIFE</h1>
+                    <h1 class="text-balance text-5xl font-bold tracking-tight text-white sm:text-[8rem]">HEALTHY TEETH,<br>HAPPY LIFE</h1>
                     <p class="mt-8 text-pretty text-lg font-medium text-gray-400 sm:text-xl/8">Experience world-class dental care in a welcoming environment. Achieve the smile you deserve.</p>
                     <div class="mt-10 flex items-center justify-center gap-x-6">
                         <a href="<?php echo $is_logged_in ? site_url('book') : site_url('login'); ?>" class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Book Appointment</a>
@@ -141,42 +156,42 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         </div>
     </div>
 
-    <div id="about" class="overflow-hidden bg-blue-900 py-24 sm:py-32">
+    <div id="about" class="overflow-hidden bg-blue-950 py-24 sm:py-32">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
                 <div class="lg:pt-4 lg:pr-8">
                     <div class="lg:max-w-lg">
-                        <h2 class="text-base/7 font-semibold text-indigo-400">About DENTALCARE</h2>
+                        <h2 class="text-2xl font-semibold text-indigo-400">About DENTALCARE</h2>
                         <p class="mt-2 text-4xl font-semibold tracking-tight text-pretty text-white sm:text-5xl">Personalized & High-Quality Care</p>
-                        <p class="mt-6 text-lg/8 text-gray-300">DENTALCARE is dedicated to being your partner in oral health. Our experienced team utilizes state-of-the-art technology to deliver comprehensive general, cosmetic, and preventative care.</p>
+                        <p class="mt-6 text-xl text-gray-300">DENTALCARE is dedicated to being your partner in oral health. Our experienced team utilizes state-of-the-art technology to deliver comprehensive general, cosmetic, and preventative care.</p>
                         <dl class="mt-10 max-w-xl space-y-8 text-base/7 text-gray-400 lg:max-w-none">
                             <div class="relative pl-9">
-                                <dt class="inline font-semibold text-white">
+                                <dt class="text-xl inline font-semibold text-white">
                                     <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="absolute top-1 left-1 size-5 text-indigo-400">
                                         <path d="M5.5 17a4.5 4.5 0 0 1-1.44-8.765 4.5 4.5 0 0 1 8.302-3.046 3.5 3.5 0 0 1 4.504 4.272A4 4 0 0 1 15 17H5.5Zm3.75-2.75a.75.75 0 0 0 1.5 0V9.66l1.95 2.1a.75.75 0 1 0 1.1-1.02l-3.25-3.5a.75.75 0 0 0-1.1 0l-3.25 3.5a.75.75 0 1 0 1.1 1.02l1.95-2.1v4.59Z" clip-rule="evenodd" fill-rule="evenodd" />
                                     </svg>
-                                    Our Commitment.
+                                    Our Commitment. <br>
                                 </dt>
-                                <dd class="inline">We provide personalized and high-quality dental care in a welcoming environment, using the latest technology.</dd>
+                                <dd class="inline text-lg">We provide personalized and high-quality dental care in a welcoming environment, using the latest technology.</dd>
                             </div>
                             <div class="relative pl-9">
-                                <dt class="inline font-semibold text-white">
+                                <dt class="text-xl inline font-semibold text-white">
                                     <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="absolute top-1 left-1 size-5 text-indigo-400">
                                         <path d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clip-rule="evenodd" fill-rule="evenodd" />
                                     </svg>
-                                    Years of Service.
+                                    Years of Service. <br>
                                 </dt>
-                                <dd class="inline">Since opening our doors in 2015, we've served thousands of happy patients, achieving healthy and confident smiles.</dd>
+                                <dd class="inline text-lg">Since opening our doors in 2015, we've served thousands of happy patients, achieving healthy and confident smiles.</dd>
                             </div>
                             <div class="relative pl-9">
-                                <dt class="inline font-semibold text-white">
+                                <dt class="text-xl inline font-semibold text-white">
                                     <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="absolute top-1 left-1 size-5 text-indigo-400">
                                         <path d="M4.632 3.533A2 2 0 0 1 6.577 2h6.846a2 2 0 0 1 1.945 1.533l1.976 8.234A3.489 3.489 0 0 0 16 11.5H4c-.476 0-.93.095-1.344.267l1.976-8.234Z" />
                                         <path d="M4 13a2 2 0 1 0 0 4h12a2 2 0 1 0 0-4H4Zm11.24 2a.75.75 0 0 1 .75-.75H16a.75.75 0 0 1 .75.75v.01a.75.75 0 0 1-.75.75h-.01a.75.75 0 0 1-.75-.75V15Zm-2.25-.75a.75.75 0 0 0-.75.75v.01c0 .414.336.75.75.75H13a.75.75 0 0 0 .75-.75V15a.75.75 0 0 0-.75-.75h-.01Z" clip-rule="evenodd" fill-rule="evenodd" />
                                     </svg>
-                                    Our Philosophy.
+                                    Our Philosophy. <br>
                                 </dt>
-                                <dd class="inline">We prioritize patient education and preventative care above all else to ensure lasting oral health.</dd>
+                                <dd class="inline text-lg">We prioritize patient education and preventative care above all else to ensure lasting oral health.</dd>
                             </div>
                         </dl>
                     </div>
@@ -186,7 +201,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         </div>
     </div>
 
-    <div id="services" class="relative isolate overflow-hidden bg-blue-900 px-6 py-24 sm:py-32 lg:overflow-visible lg:px-0">
+    <div id="services" class="relative isolate overflow-hidden bg-blue-950 px-6 py-24 sm:py-32 lg:overflow-visible lg:px-0">
         <div class="absolute inset-0 -z-10 overflow-hidden">
             <svg aria-hidden="true" class="absolute left-[max(50%,25rem)] top-0 h-[64rem] w-[128rem] -translate-x-1/2 stroke-gray-500 [mask-image:radial-gradient(64rem_64rem_at_top,white,transparent)]">
                 <defs>
@@ -201,57 +216,62 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
             </svg>
         </div>
 
-        <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-start lg:gap-y-10">
+        <div class="relative isolate mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-2 lg:items-start lg:gap-y-10">
             <div class="lg:sticky lg:top-4 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8 lg:overflow-hidden -mt-12 p-12 hidden lg:block">
                 <img src="https://i.pinimg.com/1200x/fb/9c/41/fb9c41e93cfea49347d0b3185ef22dfa.jpg" alt="Dental Care" class="w-full max-w-none rounded-xl bg-gray-800 shadow-xl ring-1 ring-white/10 object-cover h-full" />
             </div>
             <div class="lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
                 <div class="lg:pr-4">
                     <div class="max-w-xl text-base/7 text-gray-400 lg:max-w-lg">
-                        <p class="text-base/7 font-semibold text-indigo-400">Our Care</p>
+                        <p class="text-4xl font-semibold text-indigo-400">Our Care</p>
                         <h1 class="mt-2 text-pretty text-4xl font-semibold tracking-tight text-white sm:text-5xl">Comprehensive Dental Services</h1>
                         <p class="mt-6 text-xl/8 text-gray-300">We offer a wide range of services to meet your dental needs, from routine checkups to advanced cosmetic procedures, all delivered with expertise and care.</p>
-                        <p class="mt-8">Our commitment is to provide personalized care in a comfortable environment. We utilize the latest technology to ensure efficient and effective treatments for all our patients.</p>
+                        <p class="mt-8 text-lg">Our commitment is to provide personalized care in a comfortable environment. We utilize the latest technology to ensure efficient and effective treatments for all our patients.</p>
                         <ul role="list" class="mt-8 space-y-8 text-gray-400">
                             <li class="flex gap-x-3">
                                 <svg viewBox="0 0 20 20" fill="currentColor" class="mt-1 size-5 flex-none text-indigo-400">
                                     <path d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
                                 </svg>
-                                <span><strong class="font-semibold text-white">Comprehensive Exams & Cleanings.</strong> Regular checkups and professional cleanings are essential for maintaining optimal oral health and preventing future problems.</span>
+                                <span class="text-lg"><strong class="font-semibold text-white text-xl">Comprehensive Exams & Cleanings. <br></strong> Regular checkups and professional cleanings are essential for maintaining optimal oral health and preventing future problems.</span>
                             </li>
                             <li class="flex gap-x-3">
                                 <svg viewBox="0 0 20 20" fill="currentColor" class="mt-1 size-5 flex-none text-indigo-400">
                                     <path d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
                                 </svg>
-                                <span><strong class="font-semibold text-white">Cosmetic Dentistry.</strong> Enhance your smile with services like teeth whitening, veneers, and bonding for a confident appearance.</span>
+                                <span class="text-lg"><strong class="font-semibold text-white text-xl">Cosmetic Dentistry. <br></strong> Enhance your smile with services like teeth whitening, veneers, and bonding for a confident appearance.</span>
                             </li>
                             <li class="flex gap-x-3">
                                 <svg viewBox="0 0 20 20" fill="currentColor" class="mt-1 size-5 flex-none text-indigo-400">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-.75-4.75a.75.75 0 001.5 0V8.66l1.95 2.1a.75.75 0 101.1-1.02l-3.25-3.5a.75.75 0 00-1.1 0l-3.25 3.5a.75.75 0 101.1 1.02l1.95-2.1v4.59z" clip-rule="evenodd" />
                                 </svg>
-                                <span><strong class="font-semibold text-white">Restorative Treatments.</strong> We offer fillings, crowns, bridges, root canals, and extractions to restore function and health to damaged teeth.</span>
+                                <span class="text-lg"><strong class="font-semibold text-white text-xl">Restorative Treatments. <br></strong> We offer fillings, crowns, bridges, root canals, and extractions to restore function and health to damaged teeth.</span>
                             </li>
                         </ul>
-                        <p class="mt-8">Et vitae blandit facilisi magna lacus commodo. Vitae sapien duis odio id et. Id blandit molestie auctor fermentum dignissim. Lacus diam tincidunt ac cursus in vel. Mauris varius vulputate et ultrices hac adipiscing egestas. Iaculis convallis ac tempor et ut. Ac lorem vel integer orci.</p>
                         <h2 class="mt-16 text-2xl font-bold tracking-tight text-white">Ready for a healthier smile?</h2>
-                        <p class="mt-6">Booking your appointment is easy. Use our online system or give us a call. We look forward to welcoming you to our practice and helping you achieve the smile you deserve.</p>
+                        <p class="mt-2 text-xl"><a href="<?= site_url('book') ?>" class="text-blue-300 underline">Book your appointment right now!</a> Use our online system or give us a call. We look forward to welcoming you to our practice and helping you achieve the smile you deserve.</p>
                     </div>
                 </div>
+            </div>
+            <div aria-hidden="true" class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
+                <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"></div>
             </div>
         </div>
     </div>
 
-    <div id="blog" class="bg-blue-900 py-24 sm:py-32">
-        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div id="blog" class="bg-blue-950 py-24 sm:py-32">
+        <div class="relative isolate mx-auto max-w-7xl px-6 lg:px-8">
+            <div aria-hidden="true" class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
+                <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+            </div>
             <div class="mx-auto max-w-2xl lg:mx-0">
                 <h2 class="text-4xl font-semibold tracking-tight text-pretty text-white sm:text-5xl">From the DENTALCARE Blog</h2>
                 <p class="mt-2 text-lg/8 text-gray-300">Learn how to care for your smile with our expert advice.</p>
             </div>
-            <div class="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+            <div class="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-400 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
                 <article class="flex max-w-xl flex-col items-start justify-between">
                     <div class="flex items-center gap-x-4 text-xs">
                         <time datetime="2020-03-16" class="text-gray-400">Mar 16, 2025</time>
-                        <a href="#blog" class="relative z-10 rounded-full bg-gray-800/60 px-3 py-1.5 font-medium text-gray-300 hover:bg-gray-800">General Health</a>
+                        <a href="#blog" class="relative z-10 rounded-full bg-yellow-200 px-3 py-1.5 font-medium text-gray-900 hover:bg-yellow-500">General Health</a>
                     </div>
                     <div class="group relative grow">
                         <h3 class="mt-3 text-lg/6 font-semibold text-white group-hover:text-gray-300">
@@ -278,7 +298,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                 <article class="flex max-w-xl flex-col items-start justify-between">
                     <div class="flex items-center gap-x-4 text-xs">
                         <time datetime="2020-03-10" class="text-gray-400">Mar 10, 2025</time>
-                        <a href="#blog" class="relative z-10 rounded-full bg-gray-800/60 px-3 py-1.5 font-medium text-gray-300 hover:bg-gray-800">Cosmetic</a>
+                        <a href="#blog" class="relative z-10 rounded-full bg-purple-700 px-3 py-1.5 font-medium text-gray-200 hover:bg-purple-800">Cosmetic</a>
                     </div>
                     <div class="group relative grow">
                         <h3 class="mt-3 text-lg/6 font-semibold text-white group-hover:text-gray-300">
@@ -305,7 +325,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                 <article class="flex max-w-xl flex-col items-start justify-between">
                     <div class="flex items-center gap-x-4 text-xs">
                         <time datetime="2020-02-12" class="text-gray-400">Feb 12, 2025</time>
-                        <a href="#blog" class="relative z-10 rounded-full bg-gray-800/60 px-3 py-1.5 font-medium text-gray-300 hover:bg-gray-800">Nutrition</a>
+                        <a href="#blog" class="relative z-10 rounded-full bg-green-600 px-3 py-1.5 font-medium text-gray-200 hover:bg-green-800">Nutrition</a>
                     </div>
                     <div class="group relative grow">
                         <h3 class="mt-3 text-lg/6 font-semibold text-white group-hover:text-gray-300">
@@ -330,10 +350,13 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                     </div>
                 </article>
             </div>
+            <div aria-hidden="true" class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
+                <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"></div>
+            </div>
         </div>
     </div>
 
-    <div class="bg-blue-900 py-24 sm:py-32">
+    <div class="bg-blue-950 py-24 sm:py-32">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
             <h2 class="text-center text-lg/8 font-semibold text-white">Our Health Partners</h2>
             <div class="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5">
@@ -350,10 +373,10 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         </div>
     </div>
 
-    <div id="team" class="bg-blue-900 py-24 sm:py-32">
-        <div class="mx-auto grid max-w-7xl gap-20 px-6 lg:px-8 xl:grid-cols-3">
+    <div id="team" class="bg-blue-950 py-24 sm:py-32">
+        <div class="relative isolate mx-auto grid max-w-7xl gap-20 px-6 lg:px-8 xl:grid-cols-3">
             <div class="max-w-xl">
-                <h2 class="text-3xl font-semibold tracking-tight text-pretty text-white sm:text-4xl">Meet our team</h2>
+                <h2 class="text-3xl font-semibold tracking-tight text-pretty text-white sm:text-4xl">Meet our Dentist</h2>
                 <p class="mt-6 text-lg/8 text-gray-400">We’re a dynamic group of individuals who are passionate about what we do
                     and dedicated to delivering the best results for our clients.</p>
             </div>
@@ -413,67 +436,88 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                     </div>
                 </li>
             </ul>
-        </div>
-    </div>
-
-    <div id="contact" class="bg-blue-900 py-24 sm:py-32">
-        <div class="mx-auto max-w-7xl px-6 lg:px-8">
-            <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-
-                <div class="lg:pt-4 lg:pr-8">
-                    <div class="lg:max-w-lg">
-                        <h2 class="text-base/7 font-semibold text-indigo-400">Get In Touch</h2>
-                        <p class="mt-2 text-4xl font-semibold tracking-tight text-pretty text-white sm:text-5xl">Contact Us</p>
-                        <p class="mt-6 text-lg/8 text-gray-300">We're here to answer your questions. Get in touch via phone or visit our clinic.</p>
-                        <dl class="mt-10 max-w-xl space-y-8 text-base/7 text-gray-400 lg:max-w-none">
-                            <div class="relative pl-9">
-                                <dt class="inline font-semibold text-white">
-                                    <svg class="absolute top-1 left-1 size-5 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.717 21 3 14.283 3 6V5z" />
-                                    </svg>
-                                    Call Us.
-                                </dt>
-                                <dd class="inline font-mono text-gray-300">(555) DENT-CARE</dd>
-                            </div>
-                            <div class="relative pl-9">
-                                <dt class="inline font-semibold text-white">
-                                    <svg class="absolute top-1 left-1 size-5 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    Location.
-                                </dt>
-                                <dd class="inline text-gray-300">Naujan, Oriental Mindoro, 5204</dd>
-                            </div>
-                            <div class="relative pl-9">
-                                <dt class="inline font-semibold text-white">
-                                    <svg class="absolute top-1 left-1 size-5 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    Hours.
-                                </dt>
-                                <dd class="inline text-gray-300">Mon - Fri: 8:00 AM - 5:00 PM</dd>
-                            </div>
-                        </dl>
-                    </div>
-                </div>
-
-                <div class="relative">
-                    <h2 class="text-3xl font-semibold tracking-tight text-pretty text-white sm:text-4xl mb-6">Our Location</h2>
-                    <div id="clinicMap" class="w-full h-full min-h-[400px] rounded-xl ring-1 ring-white/10 shadow-xl"></div>
-                </div>
-
+            <div aria-hidden="true" class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
+                <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"></div>
             </div>
         </div>
     </div>
 
-    <footer class="bg-gray-900 rounded-t-3xl border-t border-white/10" id="contact-footer">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div id="contact" class="bg-blue-950 py-24 sm:py-32">
+        <div class="relative isolate mx-auto max-w-7xl px-6 lg:px-8">
+            <div aria-hidden="true" class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
+                <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
+                <form action="<?= site_url('contact/submit') ?>" method="POST" class="w-full max-w-xl mx-auto bg-white/5 backdrop-blur-sm p-10 rounded-md shadow-2xl ring-1 ring-white/10">
+                    <?= csrf_field() ?>
+                    <h1 class="text-3xl font-bold text-white mb-8 text-center">Contact Us</h1>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label for="first-name" class="block text-sm font-semibold text-white mb-2">First name</label>
+                            <input id="first-name" type="text" name="first-name" autocomplete="given-name" required
+                                class="block w-full rounded-md bg-white/10 px-3.5 py-2 text-base text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 outline-none transition" />
+                        </div>
+
+                        <div>
+                            <label for="last-name" class="block text-sm font-semibold text-white mb-2">Last name</label>
+                            <input id="last-name" type="text" name="last-name" autocomplete="family-name" required
+                                class="block w-full rounded-md bg-white/10 px-3.5 py-2 text-base text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 outline-none transition" />
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="email" class="block text-sm font-semibold text-white mb-2">Email</label>
+                            <input id="email" type="email" name="email" autocomplete="email" required
+                                class="block w-full rounded-md bg-white/10 px-3.5 py-2 text-base text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 outline-none transition" />
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="phone-number" class="block text-sm font-semibold text-white mb-2">Phone number (Optional)</label>
+                            <input id="phone-number" type="tel" name="phone-number" autocomplete="tel" placeholder="(555) 123-4567"
+                                class="block w-full rounded-md bg-white/10 px-3.5 py-2 text-base text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 outline-none transition" />
+                        </div>
+
+                        <div class="sm:col-span-2">
+                            <label for="message" class="block text-sm font-semibold text-white mb-2">Message</label>
+                            <textarea id="message" name="message" rows="4" required
+                                class="block w-full rounded-md bg-white/10 px-3.5 py-2 text-base text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 outline-none transition"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-10">
+                        <button type="submit"
+                            class="block w-full rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-md hover:bg-indigo-400 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+
+                <div class="flex flex-col justify-center items-center text-center lg:text-left lg:items-start">
+                    <h2 class="text-4xl font-bold text-white mb-6">Our Location</h2>
+                    <div id="clinicMap"
+                        class="w-full h-[400px] rounded-2xl overflow-hidden ring-2 ring-white/10 shadow-2xl bg-gradient-to-br from-blue-800 to-blue-700">
+                    </div>
+                    <p class="mt-30 text-xl text-gray-200 max-w-xl">
+                        Visit our dental clinic or reach out to us for appointments, inquiries, and feedback.
+                    </p>
+                </div>
+
+            </div>
+            <div aria-hidden="true" class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
+                <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-[#212631]/40 rounded-t-4xl border-t border-white/50" id="contact-footer">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-200/10 pb-10">
 
                 <div class="space-y-4">
-                    <h3 class="text-2xl font-bold text-white">DENTALCARE</h3>
+                    <a href="#">
+                        <h3 class="text-4xl font-bold text-white">DENTALCARE</h3>
+                    </a>
                     <p class="text-sm text-gray-300">
                         Committed to providing personalized and high-quality dental care in a comfortable and welcoming environment.
                     </p>
@@ -510,7 +554,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                     <address class="space-y-3 text-sm not-italic">
                         <p class="text-gray-300">Naujan, Oriental Mindoro, 5204</p>
                         <p class="text-gray-300">Mon - Fri: 8:00 AM - 5:00 PM</p>
-                        <p class="text-gray-300">Sat: 9:00 AM - 1:00 PM</p>
+                        <p class="text-gray-300">Sat: 8:00 AM - 21:00 PM</p>
                     </address>
                 </div>
             </div>
@@ -525,7 +569,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                         <img src="https://cdn-icons-png.flaticon.com/128/5968/5968764.png" alt="Facebook Icon" class="w-6 h-6 rounded-md">
                     </a>
                     <a href="#" class="text-gray-400 hover:text-indigo-400 transition">
-                        <img src="https://cdn-icons-png.flaticon.com/128/5968/5968830.png" alt="Twitter/X Icon" class="w-6 h-6 rounded-md">
+                        <img src="https://cdn-icons-png.flaticon.com/128/5968/5968830.png" alt="Twitter/X Icon" class="w-6 h-6 rounded-md invert">
                     </a>
                 </div>
             </div>

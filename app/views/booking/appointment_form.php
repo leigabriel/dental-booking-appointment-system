@@ -42,27 +42,38 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule Appointment - DENTALCARE</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Style for date input icon */
         input[type="date"]::-webkit-calendar-picker-indicator {
             filter: invert(0.8);
-            /* Adjust filter to make it visible on dark background */
+        }
+
+        ::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #212631;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 10px;
         }
     </style>
 </head>
 
-<body class="bg-blue-900 text-gray-300 min-h-screen flex flex-col pt-20">
+<body class="bg-blue-950 text-gray-300 min-h-screen flex flex-col pt-20">
 
     <header class="absolute inset-x-0 top-0 z-50">
         <header class="absolute inset-x-0 top-0 z-50">
-            <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
+            <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-90 lg:py-10">
                 <div class="flex lg:flex-1">
-                    <a href="/#" class="-m-1.5 p-1.5">
+                    <a href="#" class="-m-1.5 p-1.5">
                         <span class="sr-only">DENTALCARE</span>
                         <img src="<?= base_url() ?>public/img/favicon-32x32.png" alt="DENTALCARE Logo" class="h-8 w-auto" />
                     </a>
@@ -76,19 +87,20 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                     </button>
                 </div>
                 <div class="hidden lg:flex lg:gap-x-12">
-                    <a href="/#services" class="text-sm/6 font-semibold text-white">Services</a>
-                    <a href="/#about" class="text-sm/6 font-semibold text-white">About</a>
-                    <a href="/#blog" class="text-sm/6 font-semibold text-white">Blog</a>
-                    <a href="/#contact" class="text-sm/6 font-semibold text-white">Contact</a>
-                    <a href="<?= site_url('book') ?>" class="text-sm/6 font-semibold text-white">Book Now</a>
+                    <a href="/#hero" class="text-lg/6 font-semibold text-white hover:text-blue-400">Home</a>
+                    <a href="/#services" class="text-lg/6 font-semibold text-white hover:text-blue-400">Services</a>
+                    <a href="/#about" class="text-lg/6 font-semibold text-white hover:text-blue-400">About</a>
+                    <a href="/#blog" class="text-lg/6 font-semibold text-white hover:text-blue-400">Blog</a>
+                    <a href="/#contact" class="text-lg/6 font-semibold text-white hover:text-blue-400">Contact</a>
+                    <a href="<?= site_url('book') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Book Now</a>
                 </div>
                 <div class="hidden lg:flex lg:flex-1 lg:justify-end gap-x-6">
                     <?php if ($is_logged_in) : ?>
-                        <a href="<?= site_url('profile') ?>" class="group relative flex items-center gap-x-2 text-sm/6 font-semibold text-white hover:text-gray-300">
+                        <a href="<?= site_url('profile') ?>" class="group relative flex items-center gap-x-2 text-lg/6 uppercase font-semibold text-white hover:text-blue-400">
                             <img src="https://cdn-icons-png.flaticon.com/128/5393/5393061.png" alt="Profile" class="h-6 w-6 rounded-full object-cover invert">
                             <?= html_escape($username) ?>
                         </a>
-                        <a href="<?= site_url('logout') ?>" class="group relative flex items-center text-sm/6 font-semibold text-white hover:text-gray-300">
+                        <a href="<?= site_url('logout') ?>" class="group relative rounded-full p-1 bg-red-700 flex items-center text-sm/6 font-semibold text-white hover:text-red-300">
                             <img src="https://cdn-icons-png.flaticon.com/128/10609/10609328.png" alt="Logout" class="h-6 w-6 filter invert">
                             <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-700 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
                                 Log out
@@ -142,8 +154,11 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             </el-dialog>
         </header>
 
-        <main class="flex-grow mt-10">
-            <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <main class="flex-grow mt-20">
+            <div class="relative isolate max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                <div aria-hidden="true" class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
+                    <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+                </div>
                 <div class="flex justify-between items-center bg-blue-800/50 p-6 rounded-xl shadow-lg border border-white/10 mb-8 ring-1 ring-white/10">
                     <h1 class="text-3xl font-extrabold text-white">
                         Schedule Your Visit
@@ -270,13 +285,14 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             </div>
         </main>
 
-        <footer class="bg-gray-900 rounded-t-3xl border-t border-white/10" id="contact-footer">
+        <footer class="bg-[#212631]/40 rounded-t-4xl border-t border-white/50" id="contact-footer">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-gray-200/10 pb-10">
 
                     <div class="space-y-4">
-                        <h3 class="text-2xl font-bold text-white">DENTALCARE</h3>
+                        <a href="#">
+                            <h3 class="text-4xl font-bold text-white">DENTALCARE</h3>
+                        </a>
                         <p class="text-sm text-gray-300">
                             Committed to providing personalized and high-quality dental care in a comfortable and welcoming environment.
                         </p>
@@ -291,9 +307,9 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                     <div>
                         <h4 class="text-lg font-semibold mb-4 text-white">Quick Links</h4>
                         <ul class="space-y-3 text-sm">
-                            <li><a href="#about" class="text-gray-300 hover:text-white transition">About Us</a></li>
-                            <li><a href="#services" class="text-gray-300 hover:text-white transition">Our Services</a></li>
-                            <li><a href="#contact" class="text-gray-300 hover:text-white transition">Find Us</a></li>
+                            <li><a href="/#about" class="text-gray-300 hover:text-white transition">About Us</a></li>
+                            <li><a href="/#services" class="text-gray-300 hover:text-white transition">Our Services</a></li>
+                            <li><a href="/#contact" class="text-gray-300 hover:text-white transition">Find Us</a></li>
                             <li><a href="<?= site_url('/book') ?>" class="text-gray-300 hover:text-white transition">Book</a></li>
                         </ul>
                     </div>
@@ -313,7 +329,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                         <address class="space-y-3 text-sm not-italic">
                             <p class="text-gray-300">Naujan, Oriental Mindoro, 5204</p>
                             <p class="text-gray-300">Mon - Fri: 8:00 AM - 5:00 PM</p>
-                            <p class="text-gray-300">Sat: 9:00 AM - 1:00 PM</p>
+                            <p class="text-gray-300">Sat: 8:00 AM - 21:00 PM</p>
                         </address>
                     </div>
                 </div>
@@ -328,7 +344,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                             <img src="https://cdn-icons-png.flaticon.com/128/5968/5968764.png" alt="Facebook Icon" class="w-6 h-6 rounded-md">
                         </a>
                         <a href="#" class="text-gray-400 hover:text-indigo-400 transition">
-                            <img src="https://cdn-icons-png.flaticon.com/128/5968/5968830.png" alt="Twitter/X Icon" class="w-6 h-6 rounded-md">
+                            <img src="https://cdn-icons-png.flaticon.com/128/5968/5968830.png" alt="Twitter/X Icon" class="w-6 h-6 rounded-md invert">
                         </a>
                     </div>
                 </div>
