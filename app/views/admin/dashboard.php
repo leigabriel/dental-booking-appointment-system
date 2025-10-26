@@ -41,7 +41,6 @@ function display_validation_errors($errors)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --primary-color: #3B82F6;
@@ -372,15 +371,72 @@ function display_validation_errors($errors)
                 </section>
             </main>
 
-            <aside class="w-full lg:w-80 bg-white p-6 shadow-2xl border-l border-gray-200 overflow-y-auto h-screen sticky top-0">
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-[--sidebar-bg] text-white flex items-center justify-center mb-4 ring-4 ring-offset-2 ring-[--primary-color]">
-                        <i class="fas fa-user-shield text-5xl"></i>
+            <aside class="w-full lg:w-80 h-screen sticky top-0 flex flex-col overflow-y-auto bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900 shadow-2xl border-r border-blue-800 text-white">
+
+                <?php
+                // Keep the same logic as before
+                $details_to_show = $userDetails ?? [];
+                $display_name = html_escape($details_to_show['full_name'] ?? $username);
+                $display_username = html_escape($details_to_show['username'] ?? $username);
+                $display_email = html_escape($details_to_show['email'] ?? 'N/A');
+                $display_role = html_escape(ucfirst($details_to_show['role'] ?? $current_role));
+
+                $icon_class = 'fas fa-user-shield';
+                $gradient_class = 'from-blue-700 to-blue-600';
+                $ring_color_class = 'ring-blue-400 ring-offset-blue-900';
+                $text_color_class = 'text-blue-300';
+                $badge_color_class = 'bg-blue-700 text-blue-100';
+                $info_title = 'Admin Information';
+
+                if (strtolower($details_to_show['role'] ?? $current_role) === 'staff') {
+                    $icon_class = 'fas fa-user-nurse';
+                    $gradient_class = 'from-sky-600 to-sky-500';
+                    $ring_color_class = 'ring-sky-400 ring-offset-blue-900';
+                    $text_color_class = 'text-sky-300';
+                    $badge_color_class = 'bg-sky-700 text-sky-100';
+                    $info_title = 'Staff Information';
+                }
+                ?>
+
+                <!-- Profile Header -->
+                <div class="relative p-6 text-center bg-white/10 backdrop-blur-md rounded-b-3xl shadow-lg mb-6">
+                    <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center mx-auto ring-4 ring-offset-2 <?= $ring_color_class ?> ring-white shadow-xl transition-all hover:scale-105 duration-300">
+                        <i class="<?= $icon_class ?> text-4xl <?= $text_color_class ?>"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-900"><?= html_escape($username) ?></h2>
-                    <p class="text-sm font-semibold text-[--primary-color] uppercase"><?= html_escape(ucfirst($current_role)) ?></p>
+                    <h2 class="mt-3 text-xl font-bold text-white tracking-wide"><?= $display_name ?></h2>
+                    <p class="mt-1 text-xs uppercase font-semibold <?= $badge_color_class ?> px-4 py-1 rounded-full inline-block tracking-wider shadow-inner"><?= $display_role ?></p>
                 </div>
+
+                <!-- Info Section -->
+                <div class="px-6 pb-10 flex-grow">
+                    <h3 class="text-sm font-semibold text-blue-200 mb-4 uppercase tracking-wider border-b border-blue-700 pb-2"><?= $info_title ?></h3>
+
+                    <ul class="space-y-6 text-sm">
+                        <li>
+                            <span class="block text-blue-200 mb-1">Full Name</span>
+                            <span class="text-white font-semibold text-base"><?= $display_name ?></span>
+                        </li>
+                        <li>
+                            <span class="block text-blue-200 mb-1">Username</span>
+                            <span class="text-white font-semibold text-base"><?= $display_username ?></span>
+                        </li>
+                        <li>
+                            <span class="block text-blue-200 mb-1">Email Address</span>
+                            <span class="text-white font-semibold text-base break-words"><?= $display_email ?></span>
+                        </li>
+                        <li>
+                            <span class="block text-blue-200 mb-1">Role</span>
+                            <span class="text-white font-semibold text-base"><?= $display_role ?></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Footer -->
+                <footer class="p-6 mt-auto border-t border-blue-800 bg-blue-950/50 backdrop-blur-sm text-center">
+                    <p class="text-xs text-blue-300">&copy; <?= date('Y') ?> DENTALCARE. All rights reserved.</p>
+                </footer>
             </aside>
+
         </div>
     </div>
 
@@ -428,124 +484,124 @@ function display_validation_errors($errors)
         </div>
     </div>
 
-        <script>
-            const modal = document.getElementById('user-modal');
-            const form = document.getElementById('user-form');
-            const modalTitle = document.getElementById('modal-title');
-            const formId = document.getElementById('form-id');
-            const formFullName = document.getElementById('form-full-name');
-            const formEmail = document.getElementById('form-email');
-            const formUsername = document.getElementById('form-username');
-            const usernameField = document.getElementById('username-field');
-            const formRole = document.getElementById('form-role');
-            const formPassword = document.getElementById('form-password');
-            const passwordHint = document.getElementById('password-hint');
-            const formSubmitButton = document.getElementById('form-submit-button');
-            const siteUrl = "<?= site_url('admin/admin_staff_add_update') ?>";
+    <script>
+        const modal = document.getElementById('user-modal');
+        const form = document.getElementById('user-form');
+        const modalTitle = document.getElementById('modal-title');
+        const formId = document.getElementById('form-id');
+        const formFullName = document.getElementById('form-full-name');
+        const formEmail = document.getElementById('form-email');
+        const formUsername = document.getElementById('form-username');
+        const usernameField = document.getElementById('username-field');
+        const formRole = document.getElementById('form-role');
+        const formPassword = document.getElementById('form-password');
+        const passwordHint = document.getElementById('password-hint');
+        const formSubmitButton = document.getElementById('form-submit-button');
+        const siteUrl = "<?= site_url('admin/admin_staff_add_update') ?>";
 
-            function openModal(mode, user = {}) {
-                form.reset();
-                formId.value = '';
-                document.querySelectorAll('.p-3.mb-4.rounded-lg.bg-red-100').forEach(el => el.remove());
+        function openModal(mode, user = {}) {
+            form.reset();
+            formId.value = '';
+            document.querySelectorAll('.p-3.mb-4.rounded-lg.bg-red-100').forEach(el => el.remove());
 
-                if (mode === 'add') {
-                    modalTitle.textContent = "Add New Admin/Staff";
-                    form.action = siteUrl;
-                    usernameField.classList.remove('hidden');
-                    formUsername.required = true;
-                    formPassword.required = true;
-                    passwordHint.textContent = "(Required, min 6 chars)";
-                    formSubmitButton.textContent = "Add User";
-                } else if (mode === 'edit') {
-                    modalTitle.textContent = `Edit User: ${user.username}`;
-                    form.action = `${siteUrl}/${user.id}`;
-                    formId.value = user.id;
-                    usernameField.classList.add('hidden');
-                    formUsername.required = false;
-                    formFullName.value = user.full_name;
-                    formEmail.value = user.email;
-                    formRole.value = user.role;
-                    formPassword.required = false;
-                    passwordHint.textContent = "(Optional - leave blank to keep current)";
-                    formSubmitButton.textContent = "Save Changes";
-                }
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                document.body.classList.add('overflow-hidden');
+            if (mode === 'add') {
+                modalTitle.textContent = "Add New Admin/Staff";
+                form.action = siteUrl;
+                usernameField.classList.remove('hidden');
+                formUsername.required = true;
+                formPassword.required = true;
+                passwordHint.textContent = "(Required, min 6 chars)";
+                formSubmitButton.textContent = "Add User";
+            } else if (mode === 'edit') {
+                modalTitle.textContent = `Edit User: ${user.username}`;
+                form.action = `${siteUrl}/${user.id}`;
+                formId.value = user.id;
+                usernameField.classList.add('hidden');
+                formUsername.required = false;
+                formFullName.value = user.full_name;
+                formEmail.value = user.email;
+                formRole.value = user.role;
+                formPassword.required = false;
+                passwordHint.textContent = "(Optional - leave blank to keep current)";
+                formSubmitButton.textContent = "Save Changes";
             }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+        }
 
-            function closeModal(event = null) {
-                if (!event || event.target.id === 'user-modal') {
-                    modal.classList.remove('flex');
-                    modal.classList.add('hidden');
-                    document.body.classList.remove('overflow-hidden');
-                }
+        function closeModal(event = null) {
+            if (!event || event.target.id === 'user-modal') {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
             }
+        }
 
-            <?php if (!empty($errors) && !empty($post_data)): ?>
-                <?php if (isset($post_data['id']) && !empty($post_data['id'])): ?>
-                    openModal('edit', {
-                        id: '<?= html_escape($post_data['id']) ?>',
-                        username: '<?= html_escape($post_data['username'] ?? '') ?>',
-                        full_name: '<?= html_escape($post_data['full_name'] ?? '') ?>',
-                        email: '<?= html_escape($post_data['email'] ?? '') ?>',
-                        role: '<?= html_escape($post_data['role'] ?? 'staff') ?>'
-                    });
-                <?php else: ?>
-                    openModal('add');
-                    formFullName.value = '<?= html_escape($post_data['full_name'] ?? '') ?>';
-                    formEmail.value = '<?= html_escape($post_data['email'] ?? '') ?>';
-                    formUsername.value = '<?= html_escape($post_data['username'] ?? '') ?>';
-                    formRole.value = '<?= html_escape($post_data['role'] ?? 'staff') ?>';
-                <?php endif; ?>
+        <?php if (!empty($errors) && !empty($post_data)): ?>
+            <?php if (isset($post_data['id']) && !empty($post_data['id'])): ?>
+                openModal('edit', {
+                    id: '<?= html_escape($post_data['id']) ?>',
+                    username: '<?= html_escape($post_data['username'] ?? '') ?>',
+                    full_name: '<?= html_escape($post_data['full_name'] ?? '') ?>',
+                    email: '<?= html_escape($post_data['email'] ?? '') ?>',
+                    role: '<?= html_escape($post_data['role'] ?? 'staff') ?>'
+                });
+            <?php else: ?>
+                openModal('add');
+                formFullName.value = '<?= html_escape($post_data['full_name'] ?? '') ?>';
+                formEmail.value = '<?= html_escape($post_data['email'] ?? '') ?>';
+                formUsername.value = '<?= html_escape($post_data['username'] ?? '') ?>';
+                formRole.value = '<?= html_escape($post_data['role'] ?? 'staff') ?>';
             <?php endif; ?>
+        <?php endif; ?>
 
-                // Logout modal functions
-                (function() {
-                    const logoutAnchor = document.querySelector('a[title="Logout"]');
-                    const logoutModal = document.getElementById('logout-modal');
-                    const confirmBtn = document.getElementById('confirm-logout-btn');
-                    const logoutUrl = "<?= site_url('logout') ?>";
+            // Logout modal functions
+            (function() {
+                const logoutAnchor = document.querySelector('a[title="Logout"]');
+                const logoutModal = document.getElementById('logout-modal');
+                const confirmBtn = document.getElementById('confirm-logout-btn');
+                const logoutUrl = "<?= site_url('logout') ?>";
 
-                    function openLogoutModal() {
-                        confirmBtn.setAttribute('href', logoutUrl);
-                        logoutModal.classList.remove('hidden');
-                        logoutModal.classList.add('flex');
-                        document.body.classList.add('overflow-hidden');
-                    }
-
-                    function closeLogoutModal(event = null) {
-                        if (!event || event.target.id === 'logout-modal') {
-                            logoutModal.classList.remove('flex');
-                            logoutModal.classList.add('hidden');
-                            document.body.classList.remove('overflow-hidden');
-                        }
-                    }
-
-                    // Expose to global scope for inline onclick calls used in markup
-                    window.openLogoutModal = openLogoutModal;
-                    window.closeLogoutModal = closeLogoutModal;
-
-                    if (logoutAnchor) {
-                        logoutAnchor.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            openLogoutModal();
-                        });
-                    }
-                })();
-
-            // Close function for this modal instance
-            function closeDeleteModal(event, id) {
-                if (!event || event.target.id === 'delete-modal-' + id) {
-                    var el = document.getElementById('delete-modal-' + id);
-                    if (el) {
-                        el.classList.remove('flex');
-                        el.classList.add('hidden');
-                    }
-                    document.body.classList.remove('overflow-hidden');
+                function openLogoutModal() {
+                    confirmBtn.setAttribute('href', logoutUrl);
+                    logoutModal.classList.remove('hidden');
+                    logoutModal.classList.add('flex');
+                    document.body.classList.add('overflow-hidden');
                 }
+
+                function closeLogoutModal(event = null) {
+                    if (!event || event.target.id === 'logout-modal') {
+                        logoutModal.classList.remove('flex');
+                        logoutModal.classList.add('hidden');
+                        document.body.classList.remove('overflow-hidden');
+                    }
+                }
+
+                // Expose to global scope for inline onclick calls used in markup
+                window.openLogoutModal = openLogoutModal;
+                window.closeLogoutModal = closeLogoutModal;
+
+                if (logoutAnchor) {
+                    logoutAnchor.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        openLogoutModal();
+                    });
+                }
+            })();
+
+        // Close function for this modal instance
+        function closeDeleteModal(event, id) {
+            if (!event || event.target.id === 'delete-modal-' + id) {
+                var el = document.getElementById('delete-modal-' + id);
+                if (el) {
+                    el.classList.remove('flex');
+                    el.classList.add('hidden');
+                }
+                document.body.classList.remove('overflow-hidden');
             }
-        </script>
+        }
+    </script>
 </body>
 
 </html>

@@ -142,6 +142,39 @@ function display_validation_errors($errors)
                     </span>
                 </a>
             </div>
+
+            <div id="logout-modal"
+                class="modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-opacity duration-300 ease-in-out"
+                onclick="closeLogoutModal(event)">
+
+                <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl transform transition-transform duration-300 ease-in-out scale-95"
+                    onclick="event.stopPropagation()">
+
+                    <div class="flex flex-col items-center text-center mb-6">
+                        <div class="mb-4 text-red-500 text-5xl">
+                            <i class="fas fa-right-from-bracket"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-gray-800">Confirm Logout</h3>
+                    </div>
+
+                    <p class="text-gray-600 text-center mb-8">
+                        Are you sure you want to logout? This will end your current session.
+                    </p>
+
+                    <div class="flex justify-center gap-4">
+                        <button type="button"
+                            onclick="closeLogoutModal()"
+                            class="px-6 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition duration-150 font-medium">
+                            Cancel
+                        </button>
+                        <a id="confirm-logout-btn"
+                            href="#"
+                            class="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 font-medium shadow-md">
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
         </aside>
 
         <div class="flex-1 flex flex-col lg:flex-row">
@@ -213,15 +246,72 @@ function display_validation_errors($errors)
                 </section>
             </main>
 
-            <aside class="w-full lg:w-80 bg-white p-6 shadow-2xl border-l border-gray-200 overflow-y-auto h-screen sticky top-0">
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-[--sidebar-bg] text-white flex items-center justify-center mb-4 ring-4 ring-offset-2 ring-[--primary-color]">
-                        <i class="fas fa-user-shield text-5xl"></i>
+            <aside class="w-full lg:w-80 h-screen sticky top-0 flex flex-col overflow-y-auto bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900 shadow-2xl border-r border-blue-800 text-white">
+
+                <?php
+                // Keep the same logic as before
+                $details_to_show = $userDetails ?? [];
+                $display_name = html_escape($details_to_show['full_name'] ?? $username);
+                $display_username = html_escape($details_to_show['username'] ?? $username);
+                $display_email = html_escape($details_to_show['email'] ?? 'N/A');
+                $display_role = html_escape(ucfirst($details_to_show['role'] ?? $current_role));
+
+                $icon_class = 'fas fa-user-shield';
+                $gradient_class = 'from-blue-700 to-blue-600';
+                $ring_color_class = 'ring-blue-400 ring-offset-blue-900';
+                $text_color_class = 'text-blue-300';
+                $badge_color_class = 'bg-blue-700 text-blue-100';
+                $info_title = 'Admin Information';
+
+                if (strtolower($details_to_show['role'] ?? $current_role) === 'staff') {
+                    $icon_class = 'fas fa-user-nurse';
+                    $gradient_class = 'from-sky-600 to-sky-500';
+                    $ring_color_class = 'ring-sky-400 ring-offset-blue-900';
+                    $text_color_class = 'text-sky-300';
+                    $badge_color_class = 'bg-sky-700 text-sky-100';
+                    $info_title = 'Staff Information';
+                }
+                ?>
+
+                <!-- Profile Header -->
+                <div class="relative p-6 text-center bg-white/10 backdrop-blur-md rounded-b-3xl shadow-lg mb-6">
+                    <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center mx-auto ring-4 ring-offset-2 <?= $ring_color_class ?> ring-white shadow-xl transition-all hover:scale-105 duration-300">
+                        <i class="<?= $icon_class ?> text-4xl <?= $text_color_class ?>"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-900"><?= html_escape($username) ?></h2>
-                    <p class="text-sm font-semibold text-[--primary-color] uppercase"><?= html_escape(ucfirst($current_role)) ?></p>
+                    <h2 class="mt-3 text-xl font-bold text-white tracking-wide"><?= $display_name ?></h2>
+                    <p class="mt-1 text-xs uppercase font-semibold <?= $badge_color_class ?> px-4 py-1 rounded-full inline-block tracking-wider shadow-inner"><?= $display_role ?></p>
                 </div>
+
+                <!-- Info Section -->
+                <div class="px-6 pb-10 flex-grow">
+                    <h3 class="text-sm font-semibold text-blue-200 mb-4 uppercase tracking-wider border-b border-blue-700 pb-2"><?= $info_title ?></h3>
+
+                    <ul class="space-y-6 text-sm">
+                        <li>
+                            <span class="block text-blue-200 mb-1">Full Name</span>
+                            <span class="text-white font-semibold text-base"><?= $display_name ?></span>
+                        </li>
+                        <li>
+                            <span class="block text-blue-200 mb-1">Username</span>
+                            <span class="text-white font-semibold text-base"><?= $display_username ?></span>
+                        </li>
+                        <li>
+                            <span class="block text-blue-200 mb-1">Email Address</span>
+                            <span class="text-white font-semibold text-base break-words"><?= $display_email ?></span>
+                        </li>
+                        <li>
+                            <span class="block text-blue-200 mb-1">Role</span>
+                            <span class="text-white font-semibold text-base"><?= $display_role ?></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Footer -->
+                <footer class="p-6 mt-auto border-t border-blue-800 bg-blue-950/50 backdrop-blur-sm text-center">
+                    <p class="text-xs text-blue-300">&copy; <?= date('Y') ?> DENTALCARE. All rights reserved.</p>
+                </footer>
             </aside>
+
         </div>
     </div>
 
@@ -351,6 +441,40 @@ function display_validation_errors($errors)
                 formDuration.value = '<?= html_escape($post_data['duration_mins'] ?? '') ?>';
             <?php endif; ?>
         <?php endif; ?>
+
+            // Logout modal functions
+            (function() {
+                const logoutAnchor = document.querySelector('a[title="Logout"]');
+                const logoutModal = document.getElementById('logout-modal');
+                const confirmBtn = document.getElementById('confirm-logout-btn');
+                const logoutUrl = "<?= site_url('logout') ?>";
+
+                function openLogoutModal() {
+                    confirmBtn.setAttribute('href', logoutUrl);
+                    logoutModal.classList.remove('hidden');
+                    logoutModal.classList.add('flex');
+                    document.body.classList.add('overflow-hidden');
+                }
+
+                function closeLogoutModal(event = null) {
+                    if (!event || event.target.id === 'logout-modal') {
+                        logoutModal.classList.remove('flex');
+                        logoutModal.classList.add('hidden');
+                        document.body.classList.remove('overflow-hidden');
+                    }
+                }
+
+                // Expose to global scope for inline onclick calls used in markup
+                window.openLogoutModal = openLogoutModal;
+                window.closeLogoutModal = closeLogoutModal;
+
+                if (logoutAnchor) {
+                    logoutAnchor.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        openLogoutModal();
+                    });
+                }
+            })();
 
         const deleteModal = document.getElementById('delete-confirmation-modal');
         const deleteModalMessage = document.getElementById('delete-modal-message');
