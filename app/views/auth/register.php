@@ -159,7 +159,7 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
                     </div>
                 </div>
 
-                <div>
+                <div hidden>
                     <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Select Role</label>
                     <select id="role" name="role" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition">
