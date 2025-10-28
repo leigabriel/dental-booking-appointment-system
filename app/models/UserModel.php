@@ -26,14 +26,14 @@ class UserModel extends Model
     {
         if (empty($data['password'])) {
             $insert_data = [
-                'name' => $data['name'],
+                'full_name' => $data['name'],
                 'email' => $data['email'],
                 'role' => $data['role'],
                 'email_verified_at' => $data['email_verified_at']
             ];
         } else {
             $insert_data = [
-                'name' => $data['name'] ?? ($data['full_name'] ?? ($data['username'] ?? 'User')),
+                'full_name' => $data['name'] ?? ($data['full_name'] ?? ($data['username'] ?? 'User')),
                 'email' => $data['email'],
                 'password' => password_hash($data['password'], PASSWORD_DEFAULT),
                 'role' => $data['role']
