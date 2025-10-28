@@ -137,3 +137,14 @@ $router->get('/profile/delete', 'Auth::profile_delete');
 // APPOINTMENTS
 $router->get('/book', 'Booking::index');
 $router->post('/book/submit', 'Booking::submit');
+
+/*
+|--------------------------------------------------------------------------
+| Google OAuth Routes
+|--------------------------------------------------------------------------
+*/
+// This route is for the link/button the user clicks
+$router->get('/auth/google_login', 'Auth@google_login');
+
+// This is the callback URL Google sends the user back to
+$router->get('/auth/google_callback', 'Auth@google_callback');
