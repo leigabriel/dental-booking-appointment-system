@@ -65,7 +65,6 @@ class UserModel extends Model
             $this->db->bind(':role', $data['role']);
         }
 
-        // Execute the query
         return $this->db->execute();
     }
 }
