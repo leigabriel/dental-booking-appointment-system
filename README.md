@@ -3,7 +3,7 @@
 This web application manages doctor appointments and patient records for a dental practice, built on the **LavaLust PHP MVC Framework (v4.4.0)**.
 
 <p align="center">
-    <img src="./public/img/dentalcare512x512.png" alt="Dentalcare App Icon" width="150" height="150"/>
+    <img src="./public/img/dentalcare-health.png" alt="Dentalcare App Icon" height="400" width="800"/>
 </p>
 
 ## 🌟 Project Features
