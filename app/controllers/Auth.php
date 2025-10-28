@@ -262,21 +262,12 @@ class Auth extends Controller
      */
     public function google_login()
     {
-        // Init Google Client
         $google_client = new Google_Client();
-
-        // --- PASTE YOUR CREDENTIALS HERE ---
         $google_client->setClientId('298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com');
         $google_client->setClientSecret('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');
-
-        // --- USE YOUR LIVE RENDER URL ---
-        $google_client->setRedirectUri('https://dentalcare-health.onrender.com/auth/google_callback');
-
-        // Add scope to get email and profile info
+        $google_client->setRedirectUri('http://localhost:3000/auth/google_callback');
         $google_client->addScope('email');
         $google_client->addScope('profile');
-
-        // Create the auth URL and redirect
         $auth_url = $google_client->createAuthUrl();
         header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
     }
@@ -293,7 +284,7 @@ class Auth extends Controller
 
             $google_client->setClientId('298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com');
             $google_client->setClientSecret('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');
-            $google_client->setRedirectUri('https://dentalcare-health.onrender.com/auth/google_callback');
+            $google_client->setRedirectUri('http://localhost:3000/auth/google_callback');
 
             $token = $google_client->fetchAccessTokenWithAuthCode($code);
 
@@ -314,10 +305,17 @@ class Auth extends Controller
             $existing_user = $this->UserModel->findUserByEmail($user_email);
 
             if ($existing_user) {
-                $this->session->set_userdata('user_id', $existing_user['id']);
-                $this->session->set_userdata('user_email', $existing_user['email']);
-                $this->session->set_userdata('user_role', $existing_user['role']);
-                redirect('/');
+                // Normalise session keys to match regular login flow
+                $session_data = [
+                    'user_id' => $existing_user['id'],
+                    'username' => $existing_user['username'] ?? $existing_user['name'] ?? $existing_user['email'],
+                    'user_email' => $existing_user['email'],
+                    'role' => $existing_user['role'],
+                    'is_logged_in' => TRUE,
+                ];
+                $this->session->set_userdata($session_data);
+
+                $this->_redirect_by_role($existing_user['role']);
             } else {
                 $new_user_data = [
                     'name' => $user_name,
@@ -330,11 +328,17 @@ class Auth extends Controller
                 if ($this->UserModel->register($new_user_data)) {
                     $new_user = $this->UserModel->findUserByEmail($user_email);
                     if ($new_user) {
-                        $this->session->set_userdata('user_id', $new_user['id']);
-                        $this->session->set_userdata('user_email', $new_user['email']);
-                        $this->session->set_userdata('user_role', $new_user['role']);
+                        // Ensure newly-registered Google users receive the same session keys
+                        $session_data = [
+                            'user_id' => $new_user['id'],
+                            'username' => $new_user['username'] ?? $new_user['name'] ?? $new_user['email'],
+                            'user_email' => $new_user['email'],
+                            'role' => $new_user['role'],
+                            'is_logged_in' => TRUE,
+                        ];
+                        $this->session->set_userdata($session_data);
                     }
-                    redirect('/');
+                    $this->_redirect_by_role($new_user['role']);
                 } else {
                     redirect('/auth/register?error=google_reg_failed');
                 }
