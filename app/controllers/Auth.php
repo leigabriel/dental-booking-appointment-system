@@ -1,6 +1,6 @@
 <?php
 defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
-
+require_once 'vendor\autoload.php'; // Ensure Composer autoload is included
 class Auth extends Controller
 {
     public function __construct()
@@ -253,5 +253,117 @@ class Auth extends Controller
         $this->session->set_flashdata('success_message', 'Your account has been deleted.');
 
         redirect('/');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Google Sign-In Methods
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Redirects the user to the Google OAuth consent screen.
+     */
+    public function google_login()
+    {
+        // Init Google Client
+        $google_client = new Google_Client();
+
+        // --- PASTE YOUR CREDENTIALS HERE ---
+        $google_client->setClientId('298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com');
+        $google_client->setClientSecret('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');
+
+        // --- USE YOUR LIVE RENDER URL ---
+        $google_client->setRedirectUri('https://dentalcare-health.onrender.com/auth/google_callback');
+
+        // Add scope to get email and profile info
+        $google_client->addScope('email');
+        $google_client->addScope('profile');
+
+        // Create the auth URL and redirect
+        $auth_url = $google_client->createAuthUrl();
+        header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
+    }
+
+    /**
+     * Handles the callback from Google after user authentication.
+     */
+    public function google_callback()
+    {
+        // Get the auth code from Google
+        $code = $this->input->get('code');
+
+        if ($code) {
+            $google_client = new Google_Client();
+
+            // --- PASTE YOUR CREDENTIALS HERE AGAIN ---
+            $google_client->setClientId('298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com');
+            $google_client->setClientSecret('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');
+
+            // --- USE YOUR LIVE RENDER URL AGAIN ---
+            $google_client->setRedirectUri('https://dentalcare-health.onrender.com/auth/google_callback');
+
+            // Exchange code for an access token
+            $token = $google_client->fetchAccessTokenWithAuthCode($code);
+
+            if (isset($token['error'])) {
+                // Handle error
+                redirect('/auth/login?error=google_failed');
+                return;
+            }
+
+            $google_client->setAccessToken($token['access_token']);
+
+            // Get user profile information
+            $google_service = new Google_Service_Oauth2($google_client);
+            $data = $google_service->userinfo->get();
+
+            // At this point, $data->email is VERIFIED by Google.
+            $user_email = $data->email;
+            $user_name = $data->name;
+
+            // Load your UserModel
+            $userModel = $this->model('UserModel');
+
+            // 1. Check if user already exists in your database
+            $existing_user = $userModel->findUserByEmail($user_email);
+
+            if ($existing_user) {
+                // User exists - LOG THEM IN
+                // Create session just like in your normal login method
+                $this->session->set('user_id', $existing_user->id);
+                $this->session->set('user_email', $existing_user->email);
+                $this->session->set('user_role', $existing_user->role);
+
+                redirect('/dashboard'); // Redirect to user dashboard
+            } else {
+                // User does not exist - REGISTER AND LOG THEM IN
+                $new_user_data = [
+                    'name' => $user_name,
+                    'email' => $user_email,
+                    'password' => '', // No password needed for Google Sign-In
+                    'role' => 'user', // Default role
+                    'email_verified_at' => date('Y-m-d H:i:s') // Mark as verified
+                ];
+
+                if ($userModel->register($new_user_data)) {
+                    // Get the new user's ID
+                    $new_user = $userModel->findUserByEmail($user_email);
+
+                    // Create session
+                    $this->session->set('user_id', $new_user->id);
+                    $this->session->set('user_email', $new_user->email);
+                    $this->session->set('user_role', $new_user->role);
+
+                    redirect('/dashboard'); // Redirect to user dashboard
+                } else {
+                    // Handle registration error
+                    redirect('/auth/register?error=google_reg_failed');
+                }
+            }
+        } else {
+            // No code provided
+            redirect('/auth/login');
+        }
     }
 }
