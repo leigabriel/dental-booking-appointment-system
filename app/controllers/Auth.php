@@ -298,33 +298,27 @@ class Auth extends Controller
             $token = $google_client->fetchAccessTokenWithAuthCode($code);
 
             if (isset($token['error'])) {
-                // Handle error
                 redirect('/auth/login?error=google_failed');
                 return;
             }
 
             $google_client->setAccessToken($token['access_token']);
 
-            // Get user profile information
-            $google_service = new Google_Service_Oauth2($google_client);
+            $google_service = new \Google\Service\Oauth2($google_client);
             $data = $google_service->userinfo->get();
 
-            // At this point, $data->email is VERIFIED by Google.
             $user_email = $data->email;
             $user_name = $data->name;
 
-            // Load your UserModel
             $this->call->model('UserModel');
-            $existing_user = $this->UserModel->findUserByEmail($user_email); // NEW LINE
+            $existing_user = $this->UserModel->findUserByEmail($user_email);
 
             if ($existing_user) {
-                $this->session->set('user_id', $existing_user->id);
-                $this->session->set('user_email', $existing_user->email);
-                $this->session->set('user_role', $existing_user->role);
-
+                $this->session->set_userdata('user_id', $existing_user->id);
+                $this->session->set_userdata('user_email', $existing_user->email);
+                $this->session->set_userdata('user_role', $existing_user->role);
                 redirect('/dashboard');
             } else {
-
                 $new_user_data = [
                     'name' => $user_name,
                     'email' => $user_email,
@@ -334,21 +328,16 @@ class Auth extends Controller
                 ];
 
                 if ($this->UserModel->register($new_user_data)) {
-
-                    // Get the new user's ID
                     $new_user = $this->UserModel->findUserByEmail($user_email);
-                    // Create session
-                    $this->session->set('user_id', $new_user->id);
-                    $this->session->set('user_email', $new_user->email);
-                    $this->session->set('user_role', $new_user->role);
-
+                    $this->session->set_userdata('user_id', $new_user->id);
+                    $this->session->set_userdata('user_email', $new_user->email);
+                    $this->session->set_userdata('user_role', $new_user->role);
                     redirect('/dashboard');
                 } else {
                     redirect('/auth/register?error=google_reg_failed');
                 }
             }
         } else {
-
             redirect('/auth/login');
         }
     }
