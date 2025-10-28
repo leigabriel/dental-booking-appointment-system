@@ -2,8 +2,6 @@
 defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 
 require 'vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__, 2));
-$dotenv->safeLoad();
 
 class Auth extends Controller
 {
@@ -274,9 +272,8 @@ class Auth extends Controller
         $google_client = new Google_Client();
 
         // --- PASTE YOUR CREDENTIALS HERE ---
-        // --- NEW CODE ---
-        $google_client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
-        $google_client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
+        $google_client->setClientId('298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com');
+        $google_client->setClientSecret('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');
 
         // --- USE YOUR LIVE RENDER URL ---
         $google_client->setRedirectUri('https://dentalcare-health.onrender.com/auth/google_callback');
@@ -303,8 +300,8 @@ class Auth extends Controller
 
             // --- PASTE YOUR CREDENTIALS HERE AGAIN ---
             // --- NEW CODE ---
-            $google_client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
-            $google_client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
+            $google_client->setClientId('298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com');
+            $google_client->setClientSecret('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');
 
             // --- USE YOUR LIVE RENDER URL AGAIN ---
             $google_client->setRedirectUri('https://dentalcare-health.onrender.com/auth/google_callback');
