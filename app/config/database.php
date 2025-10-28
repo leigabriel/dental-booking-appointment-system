@@ -83,4 +83,5 @@ $database['main'] = array(
     'charset'   => 'utf8mb4',
     'dbprefix'  => ''
 );
+
 ?>
