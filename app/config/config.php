@@ -79,7 +79,7 @@ $config['ENVIRONMENT']             = 'development';
 | WARNING: You MUST set this value!
 |
 */
-$config['base_url'] 				= 'http://dentalcare-health.onrender.com/';
+$config['base_url'] 				= 'https://dentalcare-health.onrender.com/';
 
 /*
 |--------------------------------------------------------------------------
