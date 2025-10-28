@@ -257,12 +257,6 @@ class Auth extends Controller
         redirect('/');
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Google Sign-In Methods
-    |--------------------------------------------------------------------------
-    */
-
     /**
      * Redirects the user to the Google OAuth consent screen.
      */
@@ -292,21 +286,15 @@ class Auth extends Controller
      */
     public function google_callback()
     {
-        // Get the auth code from Google
         $code = $this->io->get('code');
-        
+
         if ($code) {
             $google_client = new Google_Client();
 
-            // --- PASTE YOUR CREDENTIALS HERE AGAIN ---
-            // --- NEW CODE ---
             $google_client->setClientId('298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com');
             $google_client->setClientSecret('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');
-
-            // --- USE YOUR LIVE RENDER URL AGAIN ---
             $google_client->setRedirectUri('https://dentalcare-health.onrender.com/auth/google_callback');
 
-            // Exchange code for an access token
             $token = $google_client->fetchAccessTokenWithAuthCode($code);
 
             if (isset($token['error'])) {
@@ -326,46 +314,41 @@ class Auth extends Controller
             $user_name = $data->name;
 
             // Load your UserModel
-            $userModel = $this->model('UserModel');
-
-            // 1. Check if user already exists in your database
-            $existing_user = $userModel->findUserByEmail($user_email);
+            $this->call->model('UserModel');
+            $existing_user = $this->UserModel->findUserByEmail($user_email); // NEW LINE
 
             if ($existing_user) {
-                // User exists - LOG THEM IN
-                // Create session just like in your normal login method
                 $this->session->set('user_id', $existing_user->id);
                 $this->session->set('user_email', $existing_user->email);
                 $this->session->set('user_role', $existing_user->role);
 
-                redirect('/dashboard'); // Redirect to user dashboard
+                redirect('/dashboard');
             } else {
-                // User does not exist - REGISTER AND LOG THEM IN
+
                 $new_user_data = [
                     'name' => $user_name,
                     'email' => $user_email,
-                    'password' => '', // No password needed for Google Sign-In
-                    'role' => 'user', // Default role
-                    'email_verified_at' => date('Y-m-d H:i:s') // Mark as verified
+                    'password' => '',
+                    'role' => 'user',
+                    'email_verified_at' => date('Y-m-d H:i:s')
                 ];
 
-                if ($userModel->register($new_user_data)) {
-                    // Get the new user's ID
-                    $new_user = $userModel->findUserByEmail($user_email);
+                if ($this->UserModel->register($new_user_data)) {
 
+                    // Get the new user's ID
+                    $new_user = $this->UserModel->findUserByEmail($user_email);
                     // Create session
                     $this->session->set('user_id', $new_user->id);
                     $this->session->set('user_email', $new_user->email);
                     $this->session->set('user_role', $new_user->role);
 
-                    redirect('/dashboard'); // Redirect to user dashboard
+                    redirect('/dashboard');
                 } else {
-                    // Handle registration error
                     redirect('/auth/register?error=google_reg_failed');
                 }
             }
         } else {
-            // No code provided
+
             redirect('/auth/login');
         }
     }
