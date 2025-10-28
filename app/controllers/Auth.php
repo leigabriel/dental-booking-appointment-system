@@ -1,8 +1,10 @@
 <?php
 defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
-require_once 'vendor/autoload.php';
+
+require 'vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__, 2));
-$dotenv->load();
+$dotenv->safeLoad();
+
 class Auth extends Controller
 {
     public function __construct()
