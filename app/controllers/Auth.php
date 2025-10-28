@@ -317,8 +317,7 @@ class Auth extends Controller
                 $this->session->set_userdata('user_id', $existing_user['id']);
                 $this->session->set_userdata('user_email', $existing_user['email']);
                 $this->session->set_userdata('user_role', $existing_user['role']);
-                // -----------------------------
-                redirect('/dashboard');
+                redirect('/');
             } else {
                 $new_user_data = [
                     'name' => $user_name,
