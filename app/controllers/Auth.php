@@ -314,9 +314,10 @@ class Auth extends Controller
             $existing_user = $this->UserModel->findUserByEmail($user_email);
 
             if ($existing_user) {
-                $this->session->set_userdata('user_id', $existing_user->id);
-                $this->session->set_userdata('user_email', $existing_user->email);
-                $this->session->set_userdata('user_role', $existing_user->role);
+                $this->session->set_userdata('user_id', $existing_user['id']);
+                $this->session->set_userdata('user_email', $existing_user['email']);
+                $this->session->set_userdata('user_role', $existing_user['role']);
+                // -----------------------------
                 redirect('/dashboard');
             } else {
                 $new_user_data = [
@@ -329,9 +330,11 @@ class Auth extends Controller
 
                 if ($this->UserModel->register($new_user_data)) {
                     $new_user = $this->UserModel->findUserByEmail($user_email);
-                    $this->session->set_userdata('user_id', $new_user->id);
-                    $this->session->set_userdata('user_email', $new_user->email);
-                    $this->session->set_userdata('user_role', $new_user->role);
+                    if ($new_user) {
+                        $this->session->set_userdata('user_id', $new_user['id']);
+                        $this->session->set_userdata('user_email', $new_user['email']);
+                        $this->session->set_userdata('user_role', $new_user['role']);
+                    }
                     redirect('/dashboard');
                 } else {
                     redirect('/auth/register?error=google_reg_failed');
