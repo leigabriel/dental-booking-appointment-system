@@ -70,12 +70,14 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                 <a href="<?= site_url('book') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Book Now</a>
             </div>
             <div class="hidden lg:flex lg:flex-1 lg:justify-end gap-x-6">
-                <?php if ($is_logged_in) : ?>
+                <?php if (isset($is_logged_in) && $is_logged_in): ?>
                     <a href="<?= site_url('profile') ?>" class="group relative flex items-center gap-x-2 text-lg/6 uppercase font-semibold text-white hover:text-blue-400">
-                        <img src="https://cdn-icons-png.flaticon.com/128/5393/5393061.png" alt="Profile" class="h-6 w-6 rounded-full object-cover invert">
-                        <?= html_escape($username) ?>
+                        <img src="https://cdn-icons-png.flaticon.com/128/5393/5393061.png" alt="Profile" class="h-8 w-8 rounded-full object-cover invert">
+                        <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-700 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+                            <?= html_escape($username) ?>
+                        </span>
                     </a>
-                    <a href="<?= site_url('logout') ?>" class="group relative rounded-full p-1 bg-red-700 flex items-center text-sm/6 font-semibold text-white hover:text-red-300">
+                    <a href="#" class="logout-confirm group relative rounded-full p-1 bg-red-700 flex border-2 border-white items-center text-sm/6 font-semibold text-white hover:text-red-300" data-logout-url="<?= site_url('logout') ?>">
                         <img src="https://cdn-icons-png.flaticon.com/128/10609/10609328.png" alt="Logout" class="h-6 w-6 filter invert">
                         <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-700 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
                             Log out
@@ -576,6 +578,19 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         </div>
     </footer>
 
+    <!-- Logout confirmation modal -->
+    <div id="logoutModal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div class="fixed inset-0 bg-black/60" tabindex="-1"></div>
+        <div class="bg-blue-950/95 backdrop-blur-md text-white rounded-lg p-6 z-50 max-w-md mx-auto shadow-lg">
+            <h3 class="text-lg font-semibold">Confirm Logout</h3>
+            <p class="mt-2 text-sm text-gray-200">Are you sure you want to log out?</p>
+            <div class="mt-5 flex justify-end gap-3">
+                <button id="cancelLogout" class="px-4 py-2 rounded bg-gray-700 hover:bg-gray-600">Cancel</button>
+                <button id="confirmLogout" class="px-4 py-2 rounded bg-red-600 hover:bg-red-500 font-semibold">Log out</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 
     <script src="<?= $leaflet_base_path . 'leaflet.js' ?>" crossorigin=""></script>
@@ -638,6 +653,52 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                 }, 1000);
             }
         });
+
+        (function() {
+            const modal = document.getElementById('logoutModal');
+            const confirmBtn = document.getElementById('confirmLogout');
+            const cancelBtn = document.getElementById('cancelLogout');
+            let targetLogoutUrl = null;
+
+            function showModal(url) {
+                targetLogoutUrl = url || '<?= site_url('logout') ?>';
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+
+            function hideModal() {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                targetLogoutUrl = null;
+            }
+
+            document.querySelectorAll('.logout-confirm').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = this.getAttribute('data-logout-url') || this.dataset.logoutUrl || '<?= site_url('logout') ?>';
+                    showModal(url);
+                });
+            });
+
+            cancelBtn.addEventListener('click', function() {
+                hideModal();
+            });
+
+            confirmBtn.addEventListener('click', function() {
+                if (targetLogoutUrl) {
+                    window.location.href = targetLogoutUrl;
+                } else {
+                    window.location.href = '<?= site_url('logout') ?>';
+                }
+            });
+
+            // Close modal on Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    hideModal();
+                }
+            });
+        })();
     </script>
 </body>
 
