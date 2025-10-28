@@ -293,8 +293,8 @@ class Auth extends Controller
     public function google_callback()
     {
         // Get the auth code from Google
-        $code = $this->input->get('code');
-
+        $code = $this->io->get('code');
+        
         if ($code) {
             $google_client = new Google_Client();
 
