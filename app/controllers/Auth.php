@@ -1,7 +1,7 @@
 <?php
 defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 
-require 'vendor/autoload.php';
+require '/vendor/autoload.php';
 
 class Auth extends Controller
 {
@@ -335,7 +335,7 @@ class Auth extends Controller
                         $this->session->set_userdata('user_email', $new_user['email']);
                         $this->session->set_userdata('user_role', $new_user['role']);
                     }
-                    redirect('/dashboard');
+                    redirect('/');
                 } else {
                     redirect('/auth/register?error=google_reg_failed');
                 }
