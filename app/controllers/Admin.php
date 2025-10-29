@@ -11,6 +11,7 @@ class Admin extends Controller
         $this->call->helper('url');
         $this->call->helper('language');
 
+        // Ensure only admin can access admin routes
         if ($this->session->userdata('role') !== 'admin') {
             if ($this->router->get_method() !== 'dashboard') {
                 $this->session->set_flashdata('error_message', 'Admin privileges required.');
@@ -19,6 +20,7 @@ class Admin extends Controller
         }
     }
 
+    // Admin dashboard
     public function dashboard()
     {
         if ($this->session->userdata('role') !== 'admin') {
@@ -47,6 +49,7 @@ class Admin extends Controller
             redirect('login');
         }
 
+        // Fetch statistics
         $total_users = $LAVA->db->raw("SELECT COUNT(*) AS count FROM users WHERE role = 'user'")->fetch(PDO::FETCH_ASSOC)['count'];
         $total_staff = $LAVA->db->raw("SELECT COUNT(*) AS count FROM users WHERE role = 'staff'")->fetch(PDO::FETCH_ASSOC)['count'];
         $total_admin = $LAVA->db->raw("SELECT COUNT(*) AS count FROM users WHERE role = 'admin'")->fetch(PDO::FETCH_ASSOC)['count'];
@@ -67,6 +70,7 @@ class Admin extends Controller
         $this->call->view('admin/dashboard', $data);
     }
 
+    // Add or update staff/admin user
     public function admin_staff_add_update($id = null)
     {
         if ($this->session->userdata('role') !== 'admin') {
@@ -125,6 +129,7 @@ class Admin extends Controller
         redirect('admin/dashboard');
     }
 
+    // Delete staff/admin user
     public function admin_staff_delete($id)
     {
         if ($this->session->userdata('role') !== 'admin') {
