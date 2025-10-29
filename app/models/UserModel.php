@@ -22,6 +22,7 @@ class UserModel extends Model
         return $this->filter(['email' => $email])->get();
     }
 
+    // Register user with conditional username generation
     public function register($data)
     {
         if (empty($data['password'])) {
