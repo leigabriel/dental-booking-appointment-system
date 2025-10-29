@@ -12,6 +12,7 @@ class Management extends Controller
         $this->_check_admin_or_staff();
     }
 
+    // Ensure user is admin or staff
     private function _check_admin_or_staff()
     {
         $role = $this->session->userdata('role');
@@ -21,6 +22,7 @@ class Management extends Controller
         }
     }
 
+    // Ensure user is admin
     private function _check_admin()
     {
         $role = $this->session->userdata('role');
@@ -30,6 +32,7 @@ class Management extends Controller
         }
     }
 
+    // Fetch logged-in user details
     private function _fetchUserDetails()
     {
         $loggedInUserId = $this->session->userdata('user_id');
@@ -46,6 +49,7 @@ class Management extends Controller
         return $userDetails;
     }
 
+    // View all appointments
     public function appointments()
     {
         $userDetails = $this->_fetchUserDetails();
@@ -57,6 +61,7 @@ class Management extends Controller
         $this->call->view('admin/appointments', $data);
     }
 
+    // View and manage doctors
     public function doctors()
     {
         $userDetails = $this->_fetchUserDetails();
@@ -69,6 +74,7 @@ class Management extends Controller
         $this->call->view('admin/doctor_management', $data);
     }
 
+    // View and manage services
     public function services()
     {
         $userDetails = $this->_fetchUserDetails();
@@ -81,6 +87,7 @@ class Management extends Controller
         $this->call->view('admin/service_management', $data);
     }
 
+    // Confirm an appointment
     public function appointment_confirm($id)
     {
         if (!$id) {
@@ -92,6 +99,7 @@ class Management extends Controller
         redirect('management/appointments');
     }
 
+    // Cancel an appointment
     public function appointment_cancel($id)
     {
         if (!$id) {
@@ -103,6 +111,7 @@ class Management extends Controller
         redirect('management/appointments');
     }
 
+    // Add or update doctor
     public function doctor_add_update($id = null)
     {
         if ($this->io->method() !== 'POST') {
@@ -150,6 +159,7 @@ class Management extends Controller
         redirect('management/doctors');
     }
 
+    // Delete a doctor
     public function doctor_delete($id)
     {
         $this->_check_admin();
@@ -166,6 +176,7 @@ class Management extends Controller
         redirect('management/doctors');
     }
 
+    // Add or update service
     public function service_add_update($id = null)
     {
         if ($this->io->method() !== 'POST') {
@@ -202,6 +213,7 @@ class Management extends Controller
         redirect('management/services');
     }
 
+    // Delete a service
     public function service_delete($id)
     {
         $this->_check_admin();
