@@ -18,6 +18,7 @@ class Booking extends Controller
         $this->call->helper(['url', 'language']);
     }
 
+    // Show appointment booking form
     public function index()
     {
         $data['doctors'] = $this->DoctorModel->all();
@@ -26,6 +27,7 @@ class Booking extends Controller
         $this->call->view('booking/appointment_form', $data);
     }
 
+    // Submit appointment booking
     public function submit()
     {
         if (!$this->io->post()) {
@@ -35,7 +37,7 @@ class Booking extends Controller
         $user_id = $this->session->userdata('user_id');
         $post = $this->io->post();
 
-        // 1. Validation
+        // Validation
         $this->form_validation
             ->name('doctor_id|Doctor')->required()->numeric()
             ->name('service_id|Service')->required()->numeric()
@@ -44,13 +46,13 @@ class Booking extends Controller
 
         if ($this->form_validation->run()) {
 
-            // 2. Check Availability
+            // Check Availability
             if ($this->AppointmentModel->is_slot_booked($post['doctor_id'], $post['appointment_date'], $post['time_slot'])) {
                 $this->session->set_flashdata('error_message', 'The selected time slot is already taken. Please choose another.');
                 redirect('book');
             }
 
-            // 3. Insert Appointment
+            // Insert Appointment
             $booking_data = [
                 'user_id' => $user_id,
                 'doctor_id' => $post['doctor_id'],
@@ -69,7 +71,8 @@ class Booking extends Controller
             }
             redirect('book');
         } else {
-            // 4. Validation Failed
+
+            // Validation Failed
             $data['doctors'] = $this->DoctorModel->all();
             $data['services'] = $this->ServiceModel->all();
             $data['errors'] = $this->form_validation->get_errors();
