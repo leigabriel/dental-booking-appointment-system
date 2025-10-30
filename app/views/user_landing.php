@@ -56,7 +56,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
             <div class="flex lg:hidden">
                 <button type="button" command="show-modal" commandfor="mobile-menu" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-200">
                     <span class="sr-only">Open main menu</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-8">
                         <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
@@ -97,11 +97,11 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                         <div class="flex items-center justify-between">
                             <a href="#" class="-m-1.5 p-1.5">
                                 <span class="sr-only">DENTALCARE</span>
-                                <img src="<?= base_url() ?>public/img/favicon-32x32.png" alt="DENTALCARE Logo" class="h-6 w-auto" />
+                                <img src="<?= base_url() ?>public/img/favicon-32x32.png" alt="DENTALCARE Logo" class="h-8 w-auto" />
                             </a>
                             <button type="button" command="close" commandfor="mobile-menu" class="-m-2.5 rounded-md p-2.5 text-gray-200">
                                 <span class="sr-only">Close menu</span>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-8">
                                     <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                             </button>
@@ -109,11 +109,11 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                         <div class="mt-6 flow-root">
                             <div class="-my-6 divide-y divide-white/10">
                                 <div class="space-y-2 py-6">
-                                    <a href="#services" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Services</a>
-                                    <a href="#about" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">About</a>
-                                    <a href="#blog" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Blog</a>
-                                    <a href="#contact" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Contact</a>
-                                    <a href="<?= site_url('book') ?>" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Book Now</a>
+                                    <a href="#services" class="-mx-3 block rounded-lg px-3 py-2 text-lg/7 font-semibold text-white hover:bg-white/5">Services</a>
+                                    <a href="#about" class="-mx-3 block rounded-lg px-3 py-2 text-lg/7 font-semibold text-white hover:bg-white/5">About</a>
+                                    <a href="#blog" class="-mx-3 block rounded-lg px-3 py-2 text-lg/7 font-semibold text-white hover:bg-white/5">Blog</a>
+                                    <a href="#contact" class="-mx-3 block rounded-lg px-3 py-2 text-lg/7 font-semibold text-white hover:bg-white/5">Contact</a>
+                                    <a href="<?= site_url('book') ?>" class="-mx-3 block rounded-lg px-3 py-2 text-lg/7 font-semibold text-white hover:bg-white/5">Book Now</a>
                                 </div>
                                 <div class="py-6">
                                     <?php if ($is_logged_in) : ?>
@@ -591,6 +591,10 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
         </div>
     </div>
 
+    <!-- Elfsight AI Chatbot | Untitled AI Chatbot -->
+    <script src="https://elfsightcdn.com/platform.js" async></script>
+    <div class="elfsight-app-4f03267f-b8d0-4e92-9be7-5901554b587c" data-elfsight-app-lazy></div>
+
     <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
 
     <script src="<?= $leaflet_base_path . 'leaflet.js' ?>" crossorigin=""></script>
@@ -692,7 +696,6 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                 }
             });
 
-            // Close modal on Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
                     hideModal();

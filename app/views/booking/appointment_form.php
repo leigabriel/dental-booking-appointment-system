@@ -7,8 +7,8 @@ $errors = $errors ?? [];
 
 $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session->flashdata('error_message');
 $is_success = $LAVA->session->flashdata('success_message') ? true : false;
-$is_logged_in = $LAVA->session->userdata('is_logged_in'); // Added for header
-$username = $LAVA->session->userdata('username'); // Added for header
+$is_logged_in = $LAVA->session->userdata('is_logged_in');
+$username = $LAVA->session->userdata('username');
 
 function display_validation_errors($errors)
 {
@@ -73,7 +73,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
         <header class="absolute inset-x-0 top-0 z-50">
             <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-90 lg:py-10">
                 <div class="flex lg:flex-1">
-                    <a href="#" class="-m-1.5 p-1.5">
+                    <a href="/#" class="-m-1.5 p-1.5">
                         <span class="sr-only">DENTALCARE</span>
                         <img src="<?= base_url() ?>public/img/favicon-32x32.png" alt="DENTALCARE Logo" class="h-8 w-auto" />
                     </a>
@@ -354,9 +354,6 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             </div>
         </footer>
 
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
-        </body>
-
         <!-- Logout confirmation modal -->
         <div id="logoutModal" class="fixed inset-0 z-50 hidden items-center justify-center">
             <div class="fixed inset-0 bg-black/60" tabindex="-1"></div>
@@ -370,38 +367,44 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             </div>
         </div>
 
+        <!-- Elfsight AI Chatbot | Untitled AI Chatbot -->
+        <script src="https://elfsightcdn.com/platform.js" async></script>
+        <div class="elfsight-app-4f03267f-b8d0-4e92-9be7-5901554b587c" data-elfsight-app-lazy></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+
         <script>
-            (function(){
+            (function() {
                 const modal = document.getElementById('logoutModal');
                 const confirmBtn = document.getElementById('confirmLogout');
                 const cancelBtn = document.getElementById('cancelLogout');
                 let targetLogoutUrl = null;
 
-                function showModal(url){
+                function showModal(url) {
                     targetLogoutUrl = url || '<?= site_url('logout') ?>';
                     modal.classList.remove('hidden');
                     modal.classList.add('flex');
                 }
 
-                function hideModal(){
+                function hideModal() {
                     modal.classList.add('hidden');
                     modal.classList.remove('flex');
                     targetLogoutUrl = null;
                 }
 
                 document.querySelectorAll('.logout-confirm').forEach(el => {
-                    el.addEventListener('click', function(e){
+                    el.addEventListener('click', function(e) {
                         e.preventDefault();
                         const url = this.getAttribute('data-logout-url') || this.dataset.logoutUrl || '<?= site_url('logout') ?>';
                         showModal(url);
                     });
                 });
 
-                cancelBtn.addEventListener('click', function(){
+                cancelBtn.addEventListener('click', function() {
                     hideModal();
                 });
 
-                confirmBtn.addEventListener('click', function(){
+                confirmBtn.addEventListener('click', function() {
                     if (targetLogoutUrl) {
                         window.location.href = targetLogoutUrl;
                     } else {
@@ -410,7 +413,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                 });
 
                 // Close modal on Escape
-                document.addEventListener('keydown', function(e){
+                document.addEventListener('keydown', function(e) {
                     if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
                         hideModal();
                     }
@@ -418,7 +421,6 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             })();
         </script>
 
-        </html>
 </body>
 
 </html>
