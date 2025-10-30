@@ -80,6 +80,7 @@ $config['ENVIRONMENT']             = 'development';
 |
 */
 $config['base_url'] 				= 'https://dentalcare-health.onrender.com/';
+// $config['base_url']         = 'http://localhost:3000/';
 
 /*
 |--------------------------------------------------------------------------

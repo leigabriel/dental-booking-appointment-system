@@ -11,15 +11,8 @@ class AppointmentModel extends Model
   {
     parent::__construct();
   }
-
-  /**
-   * Checks if a specific doctor's slot is already booked and not cancelled.
-   *
-   * @param int $doctor_id
-   * @param string $date
-   * @param string $time
-   * @return bool
-   */
+  
+  // Checks if a specific doctor's slot is already booked and not cancelled.
   public function is_slot_booked($doctor_id, $date, $time)
   {
     $this->db->table($this->table)

@@ -1,8 +1,6 @@
 <?php
 defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
-
 require 'vendor/autoload.php';
-
 class Auth extends Controller
 {
     public function __construct()
@@ -236,7 +234,7 @@ class Auth extends Controller
         $google_client = new Google_Client();
         $google_client->setClientId('298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com');
         $google_client->setClientSecret('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');
-        $google_client->setRedirectUri('https://dentalcare-health.onrender.com/auth/google_callback');
+        $google_client->setRedirectUri('http://localhost:3000/auth/google_callback');
         $google_client->addScope('email');
         $google_client->addScope('profile');
         $auth_url = $google_client->createAuthUrl();
@@ -253,7 +251,7 @@ class Auth extends Controller
 
             $google_client->setClientId('298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com');
             $google_client->setClientSecret('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');
-            $google_client->setRedirectUri('https://dentalcare-health.onrender.com/auth/google_callback');
+            $google_client->setRedirectUri('http://localhost:3000/auth/google_callback');
 
             $token = $google_client->fetchAccessTokenWithAuthCode($code);
 
