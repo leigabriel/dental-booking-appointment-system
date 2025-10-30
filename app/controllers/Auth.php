@@ -1,6 +1,6 @@
 <?php
 defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
-require 'vendor/autoload.php';
+
 class Auth extends Controller
 {
     public function __construct()
