@@ -148,7 +148,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                     <p class="mt-8 text-pretty text-lg font-medium text-gray-400 sm:text-xl/8">Experience world-class dental care in a welcoming environment. Achieve the smile you deserve.</p>
                     <div class="mt-10 flex items-center justify-center gap-x-6">
                         <a href="<?php echo $is_logged_in ? site_url('book') : site_url('login'); ?>" class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Book Appointment</a>
-                        <a href="#about" class="text-sm/6 font-semibold text-white">Learn more <span aria-hidden="true">→</span></a>
+                        <a href="#about" class="rounded-md hover:bg-gray-200/20 border border-white/50 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm">Learn more <span aria-hidden="true">↓</span></a>
                     </div>
                 </div>
             </div>
