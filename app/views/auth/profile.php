@@ -44,7 +44,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
         <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
     </div>
 
-    <div class="max-w-7xl bg-blue-900 border-4 border-white rounded-2xl p-8 mx-auto space-y-1">
+    <div class="max-w-8xl bg-blue-900 border-4 border-white rounded-2xl p-8 mx-auto space-y-1">
         <!-- HEADER -->
         <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-white shadow-sm rounded-2xl p-6 border">
             <div class="flex items-center gap-4">
@@ -65,6 +65,12 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                     Back to Home
                 </a>
                 <a href="<?= site_url('/book') ?>" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm shadow">Book Appointment</a>
+                <a href="#" class="logout-confirm group relative rounded-full p-1 bg-red-700 flex border-2 border-white items-center text-sm/6 font-semibold text-white hover:text-red-300" data-logout-url="<?= site_url('logout') ?>">
+                    <img src="https://cdn-icons-png.flaticon.com/128/10609/10609328.png" alt="Logout" class="h-6 w-6 filter invert">
+                    <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-700 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+                        Log out
+                    </span>
+                </a>
             </div>
         </header>
 
@@ -130,7 +136,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm border-collapse">
                         <thead>
-                            <tr class="text-left text-xs text-slate-500 border-b">
+                            <tr class="text-left text-xs text-slate-500 border border-gray-300/50">
                                 <th class="py-2 px-3">Doctor</th>
                                 <th class="py-2 px-3">Service</th>
                                 <th class="py-2 px-3">Date</th>
@@ -139,7 +145,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                 <th class="py-2 px-3">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y">
+                        <tbody class="divide-y border border-gray-300/50">
                             <?php if (!empty($appointments)): ?>
                                 <?php foreach ($appointments as $app): ?>
                                     <tr class="hover:bg-blue-200">
@@ -223,6 +229,19 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
         </div>
     </div>
 
+    <!-- Logout confirmation modal -->
+    <div id="logoutModal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div class="fixed inset-0 bg-black/60" tabindex="-1"></div>
+        <div class="bg-blue-950/95 backdrop-blur-md text-white rounded-lg p-6 z-50 max-w-md mx-auto shadow-lg">
+            <h3 class="text-lg font-semibold">Confirm Logout</h3>
+            <p class="mt-2 text-sm text-gray-200">Are you sure you want to log out?</p>
+            <div class="mt-5 flex justify-end gap-3">
+                <button id="cancelLogout" class="px-4 py-2 rounded bg-gray-700 hover:bg-gray-600">Cancel</button>
+                <button id="confirmLogout" class="px-4 py-2 rounded bg-red-600 hover:bg-red-500 font-semibold">Log out</button>
+            </div>
+        </div>
+    </div>
+
     <div aria-hidden="true" class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
         <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[50.1875rem]"></div>
     </div>
@@ -246,6 +265,51 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
             const container = document.getElementById('view-decline-message');
             container.textContent = '';
         }
+
+        (function() {
+            const modal = document.getElementById('logoutModal');
+            const confirmBtn = document.getElementById('confirmLogout');
+            const cancelBtn = document.getElementById('cancelLogout');
+            let targetLogoutUrl = null;
+
+            function showModal(url) {
+                targetLogoutUrl = url || '<?= site_url('logout') ?>';
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+
+            function hideModal() {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                targetLogoutUrl = null;
+            }
+
+            document.querySelectorAll('.logout-confirm').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = this.getAttribute('data-logout-url') || this.dataset.logoutUrl || '<?= site_url('logout') ?>';
+                    showModal(url);
+                });
+            });
+
+            cancelBtn.addEventListener('click', function() {
+                hideModal();
+            });
+
+            confirmBtn.addEventListener('click', function() {
+                if (targetLogoutUrl) {
+                    window.location.href = targetLogoutUrl;
+                } else {
+                    window.location.href = '<?= site_url('logout') ?>';
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    hideModal();
+                }
+            });
+        })();
     </script>
 
 </body>
