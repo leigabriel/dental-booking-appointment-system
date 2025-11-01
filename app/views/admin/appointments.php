@@ -218,8 +218,12 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                                                 <?php if ($app['status'] === 'pending'): ?>
                                                     <a href="<?= site_url('management/appointment_confirm/' . $app['id']) ?>" class="text-green-600 hover:text-green-800 font-medium">Confirm</a>
                                                     <a href="<?= site_url('management/appointment_cancel/' . $app['id']) ?>" class="text-red-600 hover:text-red-800 font-medium">Cancel</a>
+                                                    <button type="button" onclick="openDeclineModal(<?= html_escape($app['id']) ?>, '<?= html_escape($users[$app['user_id']]['full_name'] ?? 'Patient') ?>')" class="text-orange-600 hover:text-orange-800 font-medium">Decline</button>
                                                 <?php elseif ($app['status'] === 'confirmed'): ?>
                                                     <a href="<?= site_url('management/appointment_cancel/' . $app['id']) ?>" class="text-red-600 hover:text-red-800 font-medium">Cancel</a>
+                                                    <button type="button" onclick="openDeclineModal(<?= html_escape($app['id']) ?>, '<?= html_escape($users[$app['user_id']]['full_name'] ?? 'Patient') ?>')" class="text-orange-600 hover:text-orange-800 font-medium">Decline</button>
+                                                <?php elseif ($app['status'] === 'declined'): ?>
+                                                    <span class="text-sm text-gray-600">Declined</span>
                                                 <?php else: ?>
                                                     <span class="text-gray-400">N/A</span>
                                                 <?php endif; ?>
@@ -306,6 +310,26 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
         </div>
     </div>
 
+    <!-- Decline Modal -->
+    <div id="decline-modal" class="modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" onclick="if(event.target.id==='decline-modal') closeDeclineModal();">
+        <div class="bg-white w-full max-w-xl p-6 rounded-2xl shadow-xl" onclick="event.stopPropagation();">
+            <h3 class="text-lg font-semibold mb-3">Decline Appointment</h3>
+            <p class="text-sm text-gray-600 mb-4">Provide a short reason for declining this appointment. This message will be visible to the patient in their profile.</p>
+            <form method="POST" action="<?= site_url('management/appointment_decline') ?>">
+                <?= csrf_field() ?>
+                <input type="hidden" id="decline-appointment-id" name="appointment_id" value="">
+                <div class="mb-3">
+                    <label for="decline_message" class="block text-sm font-medium text-gray-700">Message</label>
+                    <textarea id="decline_message" name="decline_message" rows="4" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="closeDeclineModal()" class="px-4 py-2 rounded-md border">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-orange-600 text-white rounded-md">Send & Decline</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // Logout modal functions
         (function() {
@@ -340,6 +364,25 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                 });
             }
         })();
+
+        // Decline modal functions
+        function openDeclineModal(appointmentId, patientName) {
+            const modal = document.getElementById('decline-modal');
+            modal.querySelector('#decline-appointment-id').value = appointmentId;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeDeclineModal() {
+            const modal = document.getElementById('decline-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            // clear textarea
+            const ta = modal.querySelector('#decline_message');
+            if (ta) ta.value = '';
+        }
     </script>
 </body>
 
