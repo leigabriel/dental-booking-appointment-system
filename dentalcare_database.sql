@@ -48,3 +48,6 @@ CREATE TABLE IF NOT EXISTS appointments (
 ALTER TABLE users MODIFY password VARCHAR(255) NULL;
 -- 2. Adds the new column to track Google-verified emails
 ALTER TABLE users ADD email_verified_at DATETIME NULL AFTER email;
+-- 3. Add decline_message column to appointments and include 'declined' status
+ALTER TABLE appointments MODIFY status ENUM('pending', 'confirmed', 'cancelled', 'declined') NOT NULL DEFAULT 'pending';
+ALTER TABLE appointments ADD COLUMN decline_message TEXT NULL AFTER status;
