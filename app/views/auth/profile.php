@@ -20,7 +20,20 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        ::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #212631;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 10px;
         }
     </style>
 </head>
@@ -66,7 +79,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                 <div class="overflow-x-auto rounded-xl border border-blue-700/50">
                     <table class="min-w-full text-sm">
                         <thead class="bg-blue-700/50 text-blue-100 uppercase text-xs">
-                                <tr>
+                            <tr>
                                 <th class="px-3 py-3 text-left">Doctor</th>
                                 <th class="px-3 py-3 text-left">Service</th>
                                 <th class="px-3 py-3 text-left">Date / Time</th>
@@ -193,38 +206,38 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
             </div>
         </div>
     </div>
-                <!-- View Decline Message Modal -->
-                <div id="view-decline-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 p-4" onclick="if(event.target.id==='view-decline-modal') closeViewDeclineModal();">
-                    <div class="bg-blue-900/95 text-white w-full max-w-lg p-6 rounded-2xl shadow-xl" onclick="event.stopPropagation()">
-                        <h3 class="text-lg font-semibold">Decline Reason</h3>
-                        <div id="view-decline-message" class="mt-4 text-sm leading-relaxed"></div>
-                        <div class="mt-6 text-right">
-                            <button onclick="closeViewDeclineModal()" class="px-4 py-2 bg-white text-blue-900 rounded">Close</button>
-                        </div>
-                    </div>
-                </div>
+    <!-- View Decline Message Modal -->
+    <div id="view-decline-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 p-4" onclick="if(event.target.id==='view-decline-modal') closeViewDeclineModal();">
+        <div class="bg-blue-900/95 text-white w-full max-w-lg p-6 rounded-2xl shadow-xl" onclick="event.stopPropagation()">
+            <h3 class="text-lg font-semibold">Decline Reason</h3>
+            <div id="view-decline-message" class="mt-4 text-sm leading-relaxed"></div>
+            <div class="mt-6 text-right">
+                <button onclick="closeViewDeclineModal()" class="px-4 py-2 bg-white text-blue-900 rounded">Close</button>
+            </div>
+        </div>
+    </div>
 
-                <script>
-                    function openViewDeclineModal(btn) {
-                        const message = btn.getAttribute('data-message') || '';
-                        const modal = document.getElementById('view-decline-modal');
-                        const container = document.getElementById('view-decline-message');
-                        container.textContent = message;
-                        modal.classList.remove('hidden');
-                        modal.classList.add('flex');
-                        document.body.classList.add('overflow-hidden');
-                    }
+    <script>
+        function openViewDeclineModal(btn) {
+            const message = btn.getAttribute('data-message') || '';
+            const modal = document.getElementById('view-decline-modal');
+            const container = document.getElementById('view-decline-message');
+            container.textContent = message;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+        }
 
-                    function closeViewDeclineModal() {
-                        const modal = document.getElementById('view-decline-modal');
-                        modal.classList.remove('flex');
-                        modal.classList.add('hidden');
-                        document.body.classList.remove('overflow-hidden');
-                        const container = document.getElementById('view-decline-message');
-                        container.textContent = '';
-                    }
-                </script>
+        function closeViewDeclineModal() {
+            const modal = document.getElementById('view-decline-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            const container = document.getElementById('view-decline-message');
+            container.textContent = '';
+        }
+    </script>
 
-            </body>
+</body>
 
-            </html>
+</html>
