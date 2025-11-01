@@ -81,6 +81,8 @@ $router->get('/management/appointment_confirm/{id}', 'Management::appointment_co
   ->where_number('id');
 $router->get('/management/appointment_cancel/{id}', 'Management::appointment_cancel')
   ->where_number('id');
+// Decline appointment (admin/staff with message)
+$router->post('/management/appointment_decline', 'Management::appointment_decline');
 
 // Doctor Management
 $router->get('/management/doctors', 'Management::doctors');
@@ -134,17 +136,14 @@ $router->get('/profile', 'Auth::profile');
 $router->post('/profile/update', 'Auth::profile_edit_submit');
 $router->get('/profile/delete', 'Auth::profile_delete');
 
+// Cancel appointment (users can cancel their own appointments from profile)
+$router->post('/profile/cancel_appointment', 'Auth::profile_cancel_appointment');
+
 // APPOINTMENTS
 $router->get('/book', 'Booking::index');
 $router->post('/book/submit', 'Booking::submit');
 
-/*
-|--------------------------------------------------------------------------
-| Google OAuth Routes
-|--------------------------------------------------------------------------
-*/
 // This route is for the link/button the user clicks
 $router->get('/auth/google_login', 'Auth@google_login');
-
 // This is the callback URL Google sends the user back to
 $router->get('/auth/google_callback', 'Auth@google_callback');
