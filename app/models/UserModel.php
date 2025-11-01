@@ -12,14 +12,14 @@ class UserModel extends Model
         return $this->filter(['username' => $username])->get();
     }
 
-    public function create_user($data)
-    {
-        return $this->insert($data);
-    }
-
     public function findUserByEmail($email)
     {
         return $this->filter(['email' => $email])->get();
+    }
+
+    public function create_user($data)
+    {
+        return $this->insert($data);
     }
 
     // Register user with conditional username generation
