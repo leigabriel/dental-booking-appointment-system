@@ -111,6 +111,40 @@ class Management extends Controller
         redirect('management/appointments');
     }
 
+    // Decline an appointment with a message (accessible by admin and staff)
+    public function appointment_decline()
+    {
+        if ($this->io->method() !== 'POST') {
+            redirect('management/appointments');
+        }
+
+        $post = $this->io->post();
+        $appointment_id = $post['appointment_id'] ?? null;
+        $message = trim($post['decline_message'] ?? '');
+
+        if (empty($appointment_id) || $message === '') {
+            $this->session->set_flashdata('error_message', 'Appointment ID and decline message are required.');
+            redirect('management/appointments');
+        }
+
+        // Ensure appointment exists
+        $appointment = $this->AppointmentModel->find($appointment_id);
+        if (!$appointment) {
+            $this->session->set_flashdata('error_message', 'Appointment not found.');
+            redirect('management/appointments');
+        }
+
+        // Update appointment status and store decline message
+        $update = [
+            'status' => 'declined',
+            'decline_message' => $message
+        ];
+
+        $this->AppointmentModel->update($appointment_id, $update);
+        $this->session->set_flashdata('success_message', "Appointment #{$appointment_id} declined and user notified.");
+        redirect('management/appointments');
+    }
+
     // Add or update doctor
     public function doctor_add_update($id = null)
     {
