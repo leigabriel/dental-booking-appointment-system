@@ -43,3 +43,8 @@ CREATE TABLE IF NOT EXISTS appointments (
     
     UNIQUE KEY unique_booking (doctor_id, appointment_date, time_slot)
 );
+
+-- 1. Makes the password column optional (for Google users who don't have one)
+ALTER TABLE users MODIFY password VARCHAR(255) NULL;
+-- 2. Adds the new column to track Google-verified emails
+ALTER TABLE users ADD email_verified_at DATETIME NULL AFTER email;
