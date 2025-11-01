@@ -181,6 +181,19 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
                     Login
                 </a>
             </div>
+
+            <div class="flex items-center my-4">
+                <hr class="flex-grow border-gray-300">
+                <span class="text-gray-400 text-xs px-2">OR</span>
+                <hr class="flex-grow border-gray-300">
+            </div>
+
+            <div class="flex justify-center space-x-3">
+                <a href="/auth/google_login" type="button" class="flex items-center space-x-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition text-sm">
+                    <img src="https://cdn-icons-png.flaticon.com/128/2991/2991148.png" class="w-4 h-4" alt="Google"> <span>Login with Google</span>
+                </a>
+                </button>
+            </div>
         </div>
     </div>
     <div aria-hidden="true" class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
