@@ -5,7 +5,7 @@ class AppointmentModel extends Model
 {
   protected $table = 'appointments';
   protected $primary_key = 'id';
-  protected $fillable = ['user_id', 'doctor_id', 'service_id', 'appointment_date', 'time_slot', 'status'];
+  protected $fillable = ['user_id', 'doctor_id', 'service_id', 'appointment_date', 'time_slot', 'status', 'decline_message'];
 
   public function __construct()
   {
@@ -23,5 +23,28 @@ class AppointmentModel extends Model
       ->get_all();
 
     return $this->db->row_count() > 0;
+  }
+
+  /**
+   * Cancel an appointment (mark status as 'cancelled').
+   * If $user_id is provided, ensure the appointment belongs to that user.
+   *
+   * @param int $appointment_id
+   * @param int|null $user_id
+   * @return bool
+   */
+  public function cancel($appointment_id, $user_id = null)
+  {
+    $appointment = $this->find($appointment_id);
+    if (!$appointment) {
+      return false;
+    }
+
+    if ($user_id !== null && $appointment['user_id'] != $user_id) {
+      // Do not allow cancelling others' appointments
+      return false;
+    }
+
+    return (bool) $this->update($appointment_id, ['status' => 'cancelled']);
   }
 }
