@@ -83,6 +83,8 @@ $router->get('/management/appointment_cancel/{id}', 'Management::appointment_can
   ->where_number('id');
 // Decline appointment (admin/staff with message)
 $router->post('/management/appointment_decline', 'Management::appointment_decline');
+// Appointments JSON for calendar/analytics
+$router->get('/management/appointments_json', 'Management::appointments_json');
 
 // Doctor Management
 $router->get('/management/doctors', 'Management::doctors');
