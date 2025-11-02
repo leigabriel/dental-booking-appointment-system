@@ -47,4 +47,21 @@ class AppointmentModel extends Model
 
     return (bool) $this->update($appointment_id, ['status' => 'cancelled']);
   }
+
+  /**
+   * Count non-cancelled/non-declined bookings for a specific date.
+   * These are the active bookings that should count against the daily cap.
+   *
+   * @param string $date YYYY-MM-DD
+   * @return int
+   */
+  public function count_active_by_date($date)
+  {
+    $stmt = $this->db->raw(
+      "SELECT COUNT(*) AS cnt FROM {$this->table} WHERE appointment_date = ? AND status NOT IN ('cancelled','declined')",
+      [$date]
+    );
+    $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: ['cnt' => 0];
+    return (int) $row['cnt'];
+  }
 }

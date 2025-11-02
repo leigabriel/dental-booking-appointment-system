@@ -87,6 +87,63 @@ class Management extends Controller
         $this->call->view('admin/service_management', $data);
     }
 
+    // JSON: Appointments for a month (admin/staff only)
+    public function appointments_json()
+    {
+        // Access control already enforced in constructor (_check_admin_or_staff)
+        $month = (int) ($this->io->get('month') ?? date('n'));
+        $year  = (int) ($this->io->get('year')  ?? date('Y'));
+        if ($month < 1 || $month > 12) { $month = (int) date('n'); }
+        if ($year < 1970 || $year > 2100) { $year = (int) date('Y'); }
+
+        $start = sprintf('%04d-%02d-01', $year, $month);
+        $end   = date('Y-m-t', strtotime($start));
+
+        // Ensure DB loaded for raw queries
+        if (!isset($this->db)) {
+            $this->call->database();
+        }
+
+        // Join to enrich with names
+        $sql = "SELECT a.id, a.user_id, a.doctor_id, a.service_id, a.appointment_date, a.time_slot, a.status,
+                       u.username, COALESCE(u.full_name, u.username) AS user_full_name,
+                       d.name AS doctor_name, d.specialty AS doctor_specialty,
+                       s.name AS service_name, s.duration_mins, s.price
+                FROM appointments a
+                LEFT JOIN users u ON u.id = a.user_id
+                LEFT JOIN doctors d ON d.id = a.doctor_id
+                LEFT JOIN services s ON s.id = a.service_id
+                WHERE a.appointment_date BETWEEN ? AND ?
+                ORDER BY a.appointment_date ASC, a.time_slot ASC";
+
+        $stmt = $this->db->raw($sql, [$start, $end]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        // Map to client-friendly events
+        $events = array_map(function($r) {
+            return [
+                'id' => (int)$r['id'],
+                'date' => $r['appointment_date'],
+                'time' => $r['time_slot'],
+                'status' => $r['status'],
+                'user' => $r['user_full_name'] ?? $r['username'] ?? 'User',
+                'doctor' => $r['doctor_name'] ?? 'Doctor',
+                'specialty' => $r['doctor_specialty'] ?? null,
+                'service' => $r['service_name'] ?? 'Service',
+                'duration_mins' => isset($r['duration_mins']) ? (int)$r['duration_mins'] : null,
+                'price' => isset($r['price']) ? (float)$r['price'] : null,
+            ];
+        }, $rows);
+
+        $this->io->send_json([
+            'month' => $month,
+            'year'  => $year,
+            'start' => $start,
+            'end'   => $end,
+            'events'=> $events,
+        ]);
+    }
+
     // Confirm an appointment
     public function appointment_confirm($id)
     {

@@ -52,6 +52,17 @@ class Booking extends Controller
                 redirect('book');
             }
 
+            // Enforce daily booking cap (max 10 active bookings per day)
+            try {
+                $active_count = $this->AppointmentModel->count_active_by_date($post['appointment_date']);
+            } catch (Exception $e) {
+                $active_count = 10; // fail-safe to block when counting fails
+            }
+            if ($active_count >= 10) {
+                $this->session->set_flashdata('error_message', 'This date has reached the daily booking limit (10). Please select another date.');
+                redirect('book');
+            }
+
             // Insert Appointment
             $booking_data = [
                 'user_id' => $user_id,
