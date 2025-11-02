@@ -230,6 +230,41 @@ function display_validation_errors($errors)
                     </div>
                 </section>
 
+                <!-- Calendar Panel (no analytics) -->
+                <section class="bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-200 mb-10" aria-busy="false">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <button id="calPrev" type="button" class="px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 border border-gray-200" aria-label="Previous month">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                            <h3 id="calMonthLabel" class="text-lg font-semibold" aria-live="polite">—</h3>
+                            <button id="calNext" type="button" class="px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 border border-gray-200" aria-label="Next month">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            Appointments: <span id="calCount">0</span>
+                        </div>
+                    </div>
+                    <div id="calError" class="hidden mb-3 p-2 text-sm rounded-md border border-red-200 bg-red-50 text-red-700"></div>
+                    <div class="grid grid-cols-7 text-[11px] text-gray-500 mb-2">
+                        <div class="text-center">Sun</div>
+                        <div class="text-center">Mon</div>
+                        <div class="text-center">Tue</div>
+                        <div class="text-center">Wed</div>
+                        <div class="text-center">Thu</div>
+                        <div class="text-center">Fri</div>
+                        <div class="text-center">Sat</div>
+                    </div>
+                    <div id="calGrid" class="grid grid-cols-7 gap-2"></div>
+                    <div class="mt-6">
+                        <h4 id="dayTitle" class="text-sm font-semibold text-gray-700 mb-2">Selected Day</h4>
+                        <div id="dayEvents" class="divide-y divide-gray-100 rounded-lg border border-gray-200 overflow-hidden">
+                            <div class="p-4 text-sm text-gray-500">No appointments for this day.</div>
+                        </div>
+                    </div>
+                </section>
+
                 <section class="bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-200">
                     <h2 class="text-2xl font-bold text-gray-800 mb-6">Registered Patient Accounts</h2>
                     <p class="text-gray-600 mb-4 text-sm">
@@ -342,6 +377,167 @@ function display_validation_errors($errors)
     </div>
 
     <script>
+        // Staff Calendar (no analytics)
+        (function() {
+            const calGrid = document.getElementById('calGrid');
+            const calLabel = document.getElementById('calMonthLabel');
+            const calPrev = document.getElementById('calPrev');
+            const calNext = document.getElementById('calNext');
+            const calCount = document.getElementById('calCount');
+            const dayTitle = document.getElementById('dayTitle');
+            const dayEvents = document.getElementById('dayEvents');
+            const calError = document.getElementById('calError');
+            const calPanel = calGrid ? calGrid.closest('[aria-busy]') : null;
+
+            let current = new Date();
+            current.setDate(1);
+            let events = [];
+            let firstLoad = true;
+            const monthCache = {};
+
+            function iso(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+            function startOfMonth(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
+            function endOfMonth(d) { return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+            function fmtTime(hhmmss) {
+                const [h,m] = (hhmmss||'00:00:00').split(':');
+                const date = new Date(); date.setHours(+h, +m, 0,0);
+                let hr = date.getHours(); const am = hr<12?'AM':'PM'; hr%=12; if(hr===0) hr=12;
+                return `${hr}:${String(date.getMinutes()).padStart(2,'0')} ${am}`;
+            }
+            function monthKey(dateObj){ return `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}`; }
+
+            function statusBadge(status) {
+                const map = {
+                    confirmed: 'bg-green-100 text-green-700',
+                    pending: 'bg-yellow-100 text-yellow-700',
+                    declined: 'bg-red-100 text-red-700',
+                    cancelled: 'bg-gray-100 text-gray-600'
+                };
+                return map[status] || 'bg-blue-100 text-blue-700';
+            }
+
+            function renderCalendar() {
+                if (!calGrid) return;
+                calLabel.textContent = current.toLocaleDateString(undefined, { month:'long', year:'numeric' });
+                calGrid.innerHTML = '';
+                const first = startOfMonth(current);
+                const last = endOfMonth(current);
+                for (let i=0;i<first.getDay();i++) calGrid.appendChild(document.createElement('div'));
+                const selectedIso = iso(new Date());
+                for (let d=1; d<=last.getDate(); d++) {
+                    const day = new Date(current.getFullYear(), current.getMonth(), d);
+                    const dayIso = iso(day);
+                    const btn = document.createElement('button');
+                    btn.type='button';
+                    btn.className = 'relative p-2 rounded-lg border text-left hover:bg-gray-50 ' + (dayIso===selectedIso?'ring-2 ring-blue-400':'' );
+                    btn.innerHTML = `<div class="text-xs text-gray-500">${d}</div>`;
+                    const dayCount = events.filter(e => e.date===dayIso).length;
+                    if (dayCount) {
+                        const dot = document.createElement('div');
+                        dot.className = 'absolute right-2 top-2 w-2 h-2 rounded-full bg-blue-500';
+                        btn.appendChild(dot);
+                    }
+                    btn.addEventListener('click', () => renderDayList(day));
+                    calGrid.appendChild(btn);
+                }
+            }
+
+            function renderDayList(day) {
+                const dayIso = iso(day);
+                dayTitle.textContent = day.toLocaleDateString(undefined, { weekday:'long', month:'short', day:'numeric', year:'numeric' });
+                const list = events.filter(e => e.date===dayIso);
+                dayEvents.innerHTML = '';
+                if (!list.length) {
+                    dayEvents.innerHTML = '<div class="p-4 text-sm text-gray-500">No appointments for this day.</div>';
+                    return;
+                }
+                list.forEach(e => {
+                    const row = document.createElement('div');
+                    row.className = 'p-3 flex items-center justify-between bg-white';
+                    row.innerHTML = `
+                        <div>
+                            <div class="text-sm font-medium text-gray-800">${fmtTime(e.time)} • ${e.service}</div>
+                            <div class="text-xs text-gray-500">${e.user} with Dr. ${e.doctor}</div>
+                        </div>
+                        <span class="text-[11px] px-2 py-1 rounded-full ${statusBadge(e.status)}">${e.status}</span>
+                    `;
+                    dayEvents.appendChild(row);
+                });
+            }
+
+            async function loadData(immediate = false) {
+                const month = current.getMonth()+1, year = current.getFullYear();
+                const jsonPath = "<?= parse_url(site_url('management/appointments_json'), PHP_URL_PATH) ?>";
+                const url = `${jsonPath}?month=${month}&year=${year}`;
+                const absUrl = `<?= site_url('management/appointments_json') ?>?month=${'${month}'}&year=${'${year}'}`;
+                const key = monthKey(current);
+
+                try {
+                    if (calPanel) calPanel.setAttribute('aria-busy', 'true');
+                    calError.classList.add('hidden');
+                    calError.textContent = '';
+
+                    if (immediate) {
+                        if (monthCache[key] && Array.isArray(monthCache[key])) {
+                            events = monthCache[key];
+                            calCount.textContent = String(events.length);
+                            renderCalendar();
+                            renderDayList(new Date(current.getFullYear(), current.getMonth(), 1));
+                        } else {
+                            events = [];
+                            calCount.textContent = '0';
+                            renderCalendar();
+                            renderDayList(new Date(current.getFullYear(), current.getMonth(), 1));
+                        }
+                    }
+
+                    let res = await fetch(url, { headers: { 'X-Requested-With':'XMLHttpRequest' }, credentials: 'include' });
+                    let ct = res.headers.get('content-type') || '';
+                    if (!res.ok || !ct.includes('application/json')) {
+                        res = await fetch(absUrl, { headers: { 'X-Requested-With':'XMLHttpRequest' }, credentials: 'include' });
+                        ct = res.headers.get('content-type') || '';
+                    }
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    if (!ct.includes('application/json')) throw new Error('Unexpected response');
+
+                    const data = await res.json();
+                    events = data.events || [];
+                    calCount.textContent = String(events.length);
+                    renderCalendar();
+                    renderDayList(new Date(current.getFullYear(), current.getMonth(), 1));
+                    monthCache[key] = events.slice();
+                } catch (e) {
+                    console.warn('Appointments fetch failed; keeping existing UI (staff)', e);
+                    const hasCache = monthCache[key] && monthCache[key].length > 0;
+                    if ((!events || events.length === 0) && firstLoad && !hasCache) {
+                        calError.textContent = 'Could not load calendar data. You may need to login again or check your network.';
+                        calError.classList.remove('hidden');
+                    }
+                } finally {
+                    if (calPanel) calPanel.setAttribute('aria-busy', 'false');
+                    firstLoad = false;
+                }
+            }
+
+            calPrev.addEventListener('click', () => { current = new Date(current.getFullYear(), current.getMonth()-1, 1); loadData(true); });
+            calNext.addEventListener('click', () => { current = new Date(current.getFullYear(), current.getMonth()+1, 1); loadData(true); });
+
+            // Bootstrap from server
+            try {
+                const boot = <?php echo json_encode($initial_calendar ?? null); ?>;
+                if (boot && boot.events) {
+                    current = new Date(boot.year, boot.month - 1, 1);
+                    events = boot.events;
+                    monthCache[`${boot.year}-${String(boot.month).padStart(2,'0')}`] = boot.events.slice();
+                    calCount.textContent = String(events.length);
+                    renderCalendar();
+                    renderDayList(new Date(current.getFullYear(), current.getMonth(), 1));
+                }
+            } catch (e) { /* ignore */ }
+
+            // Fetch to refresh
+            loadData(false);
+        })();
         // Logout modal functions
         (function() {
             const logoutAnchor = document.querySelector('a[title="Logout"]');

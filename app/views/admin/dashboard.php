@@ -41,6 +41,7 @@ function display_validation_errors($errors)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         :root {
             --primary-color: #3B82F6;
@@ -260,6 +261,63 @@ function display_validation_errors($errors)
                         <p class="text-[0.75rem] font-light text-amber-700">All appointment records.</p>
                     </div>
 
+                </section>
+
+                <!-- Calendar + Analytics -->
+                <section class="grid grid-cols-1 2xl:grid-cols-3 gap-6 mb-10">
+                    <!-- Calendar Panel -->
+                    <div class="2xl:col-span-2 bg-white rounded-xl shadow-lg border border-gray-200 p-6" aria-busy="false">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-2">
+                                <button id="calPrev" type="button" class="px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 border border-gray-200" aria-label="Previous month">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                                <h3 id="calMonthLabel" class="text-lg font-semibold" aria-live="polite">—</h3>
+                                <button id="calNext" type="button" class="px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 border border-gray-200" aria-label="Next month">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                Appointments: <span id="calCount">0</span>
+                            </div>
+                        </div>
+                        <div id="calError" class="hidden mb-3 p-2 text-sm rounded-md border border-red-200 bg-red-50 text-red-700"></div>
+                        <div class="grid grid-cols-7 text-[11px] text-gray-500 mb-2">
+                            <div class="text-center">Sun</div>
+                            <div class="text-center">Mon</div>
+                            <div class="text-center">Tue</div>
+                            <div class="text-center">Wed</div>
+                            <div class="text-center">Thu</div>
+                            <div class="text-center">Fri</div>
+                            <div class="text-center">Sat</div>
+                        </div>
+                        <div id="calGrid" class="grid grid-cols-7 gap-2"></div>
+                        <div class="mt-6">
+                            <h4 id="dayTitle" class="text-sm font-semibold text-gray-700 mb-2">Selected Day</h4>
+                            <div id="dayEvents" class="divide-y divide-gray-100 rounded-lg border border-gray-200 overflow-hidden">
+                                <div class="p-4 text-sm text-gray-500">No appointments for this day.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Panel -->
+                    <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 space-y-6">
+                        <h3 class="text-lg font-semibold">Analytics</h3>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-2">Appointments per day (current month)</p>
+                            <canvas id="chartDaily" height="160"></canvas>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-xs text-gray-500 mb-2">By status</p>
+                                <canvas id="chartStatus" height="180"></canvas>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 mb-2">By service</p>
+                                <canvas id="chartService" height="180"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
                 <section class="bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-200">
@@ -485,6 +543,236 @@ function display_validation_errors($errors)
     </div>
 
     <script>
+        // Dashboard Calendar + Analytics
+        (function() {
+            const calGrid = document.getElementById('calGrid');
+            const calLabel = document.getElementById('calMonthLabel');
+            const calPrev = document.getElementById('calPrev');
+            const calNext = document.getElementById('calNext');
+            const calCount = document.getElementById('calCount');
+            const dayTitle = document.getElementById('dayTitle');
+            const dayEvents = document.getElementById('dayEvents');
+            const calError = document.getElementById('calError');
+            const calPanel = calGrid.closest('[aria-busy]');
+
+            let current = new Date(); // current in view
+            current.setDate(1);
+            let events = [];
+            let charts = { daily: null, status: null, service: null };
+            let firstLoad = true;
+            const monthCache = {}; // key: YYYY-MM -> events array
+
+            function iso(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+            function startOfMonth(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
+            function endOfMonth(d) { return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+            function fmtTime(hhmmss) {
+                const [h,m] = (hhmmss||'00:00:00').split(':');
+                const date = new Date(); date.setHours(+h, +m, 0,0);
+                let hr = date.getHours(); const am = hr<12?'AM':'PM'; hr%=12; if(hr===0) hr=12;
+                return `${hr}:${String(date.getMinutes()).padStart(2,'0')} ${am}`;
+            }
+
+            function groupBy(arr, key) {
+                return arr.reduce((acc, it) => { const k = it[key] ?? 'Unknown'; (acc[k] ||= []).push(it); return acc; }, {});
+            }
+
+            function renderCalendar() {
+                calLabel.textContent = current.toLocaleDateString(undefined, { month:'long', year:'numeric' });
+                calGrid.innerHTML = '';
+                const first = startOfMonth(current);
+                const last = endOfMonth(current);
+                const minDate = new Date(); minDate.setHours(0,0,0,0);
+                // leading blanks
+                for (let i=0;i<first.getDay();i++) calGrid.appendChild(document.createElement('div'));
+                const selectedIso = iso(new Date());
+                for (let d=1; d<=last.getDate(); d++) {
+                    const day = new Date(current.getFullYear(), current.getMonth(), d);
+                    const dayIso = iso(day);
+                    const btn = document.createElement('button');
+                    btn.type='button';
+                    btn.className = 'relative p-2 rounded-lg border text-left hover:bg-gray-50 ' + (dayIso===selectedIso?'ring-2 ring-blue-400':'' );
+                    btn.innerHTML = `<div class="text-xs text-gray-500">${d}</div>`;
+                    const dayCount = events.filter(e => e.date===dayIso).length;
+                    if (dayCount) {
+                        const dot = document.createElement('div');
+                        dot.className = 'absolute right-2 top-2 w-2 h-2 rounded-full bg-blue-500';
+                        btn.appendChild(dot);
+                    }
+                    btn.addEventListener('click', () => renderDayList(day));
+                    calGrid.appendChild(btn);
+                }
+            }
+
+            function renderDayList(day) {
+                const dayIso = iso(day);
+                dayTitle.textContent = day.toLocaleDateString(undefined, { weekday:'long', month:'short', day:'numeric', year:'numeric' });
+                const list = events.filter(e => e.date===dayIso);
+                dayEvents.innerHTML = '';
+                if (!list.length) {
+                    dayEvents.innerHTML = '<div class="p-4 text-sm text-gray-500">No appointments for this day.</div>';
+                    return;
+                }
+                list.forEach(e => {
+                    const row = document.createElement('div');
+                    row.className = 'p-3 flex items-center justify-between bg-white';
+                    row.innerHTML = `
+                        <div>
+                            <div class="text-sm font-medium text-gray-800">${fmtTime(e.time)} • ${e.service}</div>
+                            <div class="text-xs text-gray-500">${e.user} with Dr. ${e.doctor}</div>
+                        </div>
+                        <span class="text-[11px] px-2 py-1 rounded-full ${statusBadge(e.status)}">${e.status}</span>
+                    `;
+                    dayEvents.appendChild(row);
+                });
+            }
+
+            function statusBadge(status) {
+                const map = {
+                    confirmed: 'bg-green-100 text-green-700',
+                    pending: 'bg-yellow-100 text-yellow-700',
+                    declined: 'bg-red-100 text-red-700',
+                    cancelled: 'bg-gray-100 text-gray-600'
+                };
+                return map[status] || 'bg-blue-100 text-blue-700';
+            }
+
+            function monthKey(dateObj){ return `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}`; }
+
+            async function loadData(immediate = false) {
+                const month = current.getMonth()+1, year = current.getFullYear();
+                // Use only the path portion from PHP to ensure same-origin fetch even behind proxies/ports
+                const jsonPath = "<?= parse_url(site_url('management/appointments_json'), PHP_URL_PATH) ?>";
+                const url = `${jsonPath}?month=${month}&year=${year}`;
+                const absUrl = `<?= site_url('management/appointments_json') ?>?month=${'${month}'}&year=${'${year}'}`;
+                const key = monthKey(current);
+
+                try {
+                    if (calPanel) calPanel.setAttribute('aria-busy', 'true');
+                    calError.classList.add('hidden');
+                    calError.textContent = '';
+
+                    // Immediate mode is used for month navigation: render grid now with zeroed events
+                    if (immediate) {
+                        // If we have cached data for this month, show it immediately
+                        if (monthCache[key] && Array.isArray(monthCache[key])) {
+                            events = monthCache[key];
+                            calCount.textContent = String(events.length);
+                            renderCalendar();
+                            renderDayList(new Date(current.getFullYear(), current.getMonth(), 1));
+                            renderCharts();
+                        } else {
+                            events = [];
+                            calCount.textContent = '0';
+                            renderCalendar();
+                            renderDayList(new Date(current.getFullYear(), current.getMonth(), 1));
+                        }
+                    }
+
+                    let res = await fetch(url, {
+                        headers: { 'X-Requested-With':'XMLHttpRequest' },
+                        credentials: 'include'
+                    });
+                    let ct = res.headers.get('content-type') || '';
+                    if (!res.ok || !ct.includes('application/json')) {
+                        // Fallback: try absolute URL (useful when app is served via a dev proxy)
+                        res = await fetch(absUrl, { headers: { 'X-Requested-With':'XMLHttpRequest' }, credentials: 'include' });
+                        ct = res.headers.get('content-type') || '';
+                    }
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    if (!ct.includes('application/json')) throw new Error('Unexpected response');
+
+                    const data = await res.json();
+                    events = data.events || [];
+                    calCount.textContent = String(events.length);
+                    renderCalendar();
+                    renderDayList(new Date(current.getFullYear(), current.getMonth(), 1));
+                    renderCharts();
+                    // Update cache on success
+                    monthCache[key] = events.slice();
+                } catch (e) {
+                    console.warn('Appointments fetch failed; keeping existing UI', e);
+                    // Keep current UI (server bootstrap), only show a subtle banner if we have no data at all
+                    const hasCache = monthCache[key] && monthCache[key].length > 0;
+                    if ((!events || events.length === 0) && firstLoad && !hasCache) {
+                        calError.textContent = 'Could not load calendar data. You may need to login again or check your network.';
+                        calError.classList.remove('hidden');
+                        // Do not destroy charts or clear grid; maintain whatever is showing
+                    }
+                } finally {
+                    if (calPanel) calPanel.setAttribute('aria-busy', 'false');
+                    firstLoad = false;
+                }
+            }
+
+            function renderCharts() {
+                const canvasDaily = document.getElementById('chartDaily');
+                const canvasStatus = document.getElementById('chartStatus');
+                const canvasService = document.getElementById('chartService');
+                if (!canvasDaily || !canvasStatus || !canvasService) return;
+                const ctxDaily = canvasDaily.getContext('2d');
+                const ctxStatus = canvasStatus.getContext('2d');
+                const ctxService = canvasService.getContext('2d');
+
+                const labels = Array.from({length: endOfMonth(current).getDate()}, (_,i)=> i+1);
+                const dayCounts = new Array(labels.length).fill(0);
+                events.forEach(e => {
+                    const d = new Date(e.date + 'T00:00:00');
+                    if (d.getMonth()===current.getMonth() && d.getFullYear()===current.getFullYear()) {
+                        dayCounts[d.getDate()-1]++;
+                    }
+                });
+
+                if (charts.daily) charts.daily.destroy();
+                charts.daily = new Chart(ctxDaily, {
+                    type: 'line',
+                    data: { labels, datasets: [{ label: 'Appointments', data: dayCounts, borderColor:'#3B82F6', backgroundColor:'rgba(59,130,246,.15)', fill:true, tension:.3 }]},
+                    options: { plugins:{ legend:{ display:false }}, scales:{ y:{ beginAtZero:true, ticks:{ precision:0 }}} }
+                });
+
+                const byStatus = groupBy(events, 'status');
+                const statusLabels = Object.keys(byStatus);
+                const statusCounts = statusLabels.map(k => byStatus[k].length);
+                const statusColors = ['#22C55E','#EAB308','#EF4444','#9CA3AF','#3B82F6'];
+                if (charts.status) charts.status.destroy();
+                charts.status = new Chart(ctxStatus, {
+                    type: 'doughnut',
+                    data: { labels: statusLabels, datasets:[{ data: statusCounts, backgroundColor: statusColors.slice(0, Math.max(1,statusLabels.length))}] },
+                    options: { plugins:{ legend:{ position:'bottom' }}}
+                });
+
+                const byService = groupBy(events, 'service');
+                const serviceLabels = Object.keys(byService);
+                const serviceCounts = serviceLabels.map(k => byService[k].length);
+                if (charts.service) charts.service.destroy();
+                charts.service = new Chart(ctxService, {
+                    type: 'bar',
+                    data: { labels: serviceLabels, datasets:[{ label:'Count', data: serviceCounts, backgroundColor:'#6366F1' }]},
+                    options: { plugins:{ legend:{ display:false }}, scales:{ y:{ beginAtZero:true, ticks:{ precision:0 }}} }
+                });
+            }
+
+            calPrev.addEventListener('click', () => { current = new Date(current.getFullYear(), current.getMonth()-1, 1); loadData(true); });
+            calNext.addEventListener('click', () => { current = new Date(current.getFullYear(), current.getMonth()+1, 1); loadData(true); });
+
+            // Bootstrap with server-provided data for current month (fallback when fetch has issues)
+            try {
+                const boot = <?php echo json_encode($initial_calendar ?? null); ?>;
+                if (boot && boot.events) {
+                    // Set current month based on server payload to keep label in sync
+                    current = new Date(boot.year, boot.month - 1, 1);
+                    events = boot.events;
+                    // Seed cache with server data for instant back/forward month revisits
+                    monthCache[`${boot.year}-${String(boot.month).padStart(2,'0')}`] = boot.events.slice();
+                    calCount.textContent = String(events.length);
+                    renderCalendar();
+                    renderDayList(new Date(current.getFullYear(), current.getMonth(), 1));
+                    renderCharts();
+                }
+            } catch (e) { /* ignore */ }
+
+            // Also attempt fetch (for navigation and to refresh data)
+            loadData(false);
+        })();
         const modal = document.getElementById('user-modal');
         const form = document.getElementById('user-form');
         const modalTitle = document.getElementById('modal-title');
