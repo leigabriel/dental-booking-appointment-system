@@ -65,7 +65,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                     Back to Home
                 </a>
                 <a href="<?= site_url('/book') ?>" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm shadow">Book Appointment</a>
-                <a href="#" class="logout-confirm group relative rounded-full p-1 bg-red-700 flex border-2 border-white items-center text-sm/6 font-semibold text-white hover:text-red-300" data-logout-url="<?= site_url('logout') ?>">
+                <a href="#" class="logout-confirm group relative rounded-full p-1 bg-red-700 flex border-2 border-gray-600 items-center text-sm/6 font-semibold text-white hover:text-red-300" data-logout-url="<?= site_url('logout') ?>">
                     <img src="https://cdn-icons-png.flaticon.com/128/10609/10609328.png" alt="Logout" class="h-6 w-6 filter invert">
                     <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-700 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
                         Log out

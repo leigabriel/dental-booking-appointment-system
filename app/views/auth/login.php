@@ -142,7 +142,7 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
 
                 <div class="flex items-center justify-between text-sm">
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" class="h-4 w-4 text-[--primary-color] border-gray-300 rounded">
+                        <input type="checkbox" class="h-4 w-4 text-[--primary-color] border-gray-300 rounded-2xl" required>
                         <span class="text-gray-600">I agree to the <a href="#" class="text-[--primary-color] hover:underline">Terms & Privacy</a></span>
                     </label>
                     <a href="#" class="text-[--primary-color] hover:underline font-medium">Forgot Password?</a>
@@ -168,7 +168,6 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
                     <a href="/auth/google_login" type="button" class="flex items-center space-x-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition text-sm">
                         <img src="https://cdn-icons-png.flaticon.com/128/2991/2991148.png" class="w-4 h-4" alt="Google"> <span>Login with Google</span>
                     </a>
-                    </button>
                 </div>
             </form>
         </div>

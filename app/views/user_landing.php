@@ -45,12 +45,12 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
 
 <body class="bg-blue-950">
 
-    <header class="absolute inset-x-0 top-0 z-50">
-        <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-90 lg:py-10">
+    <header class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
+        <nav aria-label="Global" class="flex items-center justify-center gap-6 px-6 py-3 bg-white/10 backdrop-blur-md rounded-full shadow-xl">
             <div class="flex lg:flex-1">
                 <a href="#" class="-m-1.5 p-1.5">
                     <span class="sr-only">DENTALCARE</span>
-                    <img src="<?= base_url() ?>public/img/favicon-32x32.png" alt="DENTALCARE Logo" class="h-8 w-auto" />
+                    <img src="<?= base_url() ?>public/img/favicon-32x32.png" alt="DENTALCARE Logo" class="h-6 w-auto" />
                 </a>
             </div>
             <div class="flex lg:hidden">
@@ -69,24 +69,24 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                 <a href="#contact" class="text-lg/6 font-semibold text-white hover:text-blue-400">Contact</a>
                 <a href="<?= site_url('book') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Book Now</a>
             </div>
-            <div class="hidden lg:flex lg:flex-1 lg:justify-end gap-x-6">
+            <div class="hidden lg:flex lg:flex-1 lg:justify-end relative gap-x-6">
                 <?php if (isset($is_logged_in) && $is_logged_in): ?>
-                    <a href="<?= site_url('profile') ?>" class="group relative flex items-center gap-x-2 text-lg/6 uppercase font-semibold text-white hover:text-blue-400">
-                        <img src="https://cdn-icons-png.flaticon.com/128/5393/5393061.png" alt="Profile" class="h-8 w-8 rounded-full object-cover invert">
-                        <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-700 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-                            <?= html_escape($username) ?>
-                        </span>
-                    </a>
-                    <a href="#" class="logout-confirm group relative rounded-full p-1 bg-red-700 flex border-2 border-white items-center text-sm/6 font-semibold text-white hover:text-red-300" data-logout-url="<?= site_url('logout') ?>">
-                        <img src="https://cdn-icons-png.flaticon.com/128/10609/10609328.png" alt="Logout" class="h-6 w-6 filter invert">
-                        <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-700 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-                            Log out
-                        </span>
-                    </a>
+                    <!-- Profile Dropdown -->
+                    <div class="group relative">
+                        <a href="<?= site_url('profile') ?>" class="flex items-center gap-x-2 text-lg/6 uppercase font-semibold text-white hover:text-blue-400">
+                            <img src="https://cdn-icons-png.flaticon.com/128/5393/5393061.png" alt="Profile" class="h-6 w-6 rounded-full object-cover invert">
+                        </a>
+                        <!-- Dropdown content -->
+                        <div class="absolute mt-2 w-28 bg-gray-800 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition-all duration-200">
+                            <a href="<?= site_url('profile') ?>" class="block px-4 py-2 text-white hover:bg-gray-700 rounded-t-lg">Profile</a>
+                            <a href="#" class="logout-confirm block px-4 py-2 text-white hover:bg-red-700 rounded-b-lg" data-logout-url="<?= site_url('logout') ?>">Log out</a>
+                        </div>
+                    </div>
                 <?php else : ?>
+                    <!-- Login / Register remain unchanged -->
                     <a href="<?= site_url('login') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Log in</a>
                     <span class="text-white">|</span>
-                    <a href="<?= site_url('register') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Register</span></a>
+                    <a href="<?= site_url('register') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Register</a>
                 <?php endif; ?>
             </div>
         </nav>
@@ -451,8 +451,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
-                <form action="<?= site_url('contact/submit') ?>" method="POST" class="w-full max-w-xl mx-auto bg-white/5 backdrop-blur-sm p-10 rounded-md shadow-2xl ring-1 ring-white/10">
-                    <?= csrf_field() ?>
+                <form action="https://formspree.io/f/mgvpryjn" method="POST" class="w-full max-w-xl mx-auto bg-white/5 backdrop-blur-sm p-10 rounded-md shadow-2xl ring-1 ring-white/10">
                     <h1 class="text-3xl font-bold text-white mb-8 text-center">Contact Us</h1>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -486,6 +485,10 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                                 class="block w-full rounded-md bg-white/10 px-3.5 py-2 text-base text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-500 outline-none transition"></textarea>
                         </div>
                     </div>
+
+                    <!-- Formspree requires a hidden input for redirect or custom response -->
+                    <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html">
+                    <input type="hidden" name="_subject" value="New Contact Form Submission">
 
                     <div class="mt-10">
                         <button type="submit"
@@ -633,8 +636,8 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                 shadowUrl: '<?= $leaflet_base_path ?>images/marker-shadow.png',
             });
 
-            const clinicLat = 13.2500;
-            const clinicLng = 121.2500;
+            const clinicLat = 13.4070;
+            const clinicLng = 121.1778;
             const clinicZoom = 13;
 
             const mapElement = document.getElementById('clinicMap');
