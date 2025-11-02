@@ -198,7 +198,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
     </div>
 
     <!-- View Decline Message Modal -->
-    <div id="view-decline-modal" class="fixed inset-0 bg-blue-950/50 backdrop-blur-sm hidden items-center justify-center z-50 p-4"
+    <div id="view-decline-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4"
         onclick="if(event.target.id==='view-decline-modal') closeViewDeclineModal();">
 
         <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-gray-200 p-6 sm:p-8"
@@ -229,15 +229,35 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
         </div>
     </div>
 
-    <!-- Logout confirmation modal -->
-    <div id="logoutModal" class="fixed inset-0 z-50 hidden items-center justify-center">
-        <div class="fixed inset-0 bg-black/60" tabindex="-1"></div>
-        <div class="bg-blue-950/95 backdrop-blur-md text-white rounded-lg p-6 z-50 max-w-md mx-auto shadow-lg">
-            <h3 class="text-lg font-semibold">Confirm Logout</h3>
-            <p class="mt-2 text-sm text-gray-200">Are you sure you want to log out?</p>
-            <div class="mt-5 flex justify-end gap-3">
-                <button id="cancelLogout" class="px-4 py-2 rounded bg-gray-700 hover:bg-gray-600">Cancel</button>
-                <button id="confirmLogout" class="px-4 py-2 rounded bg-red-600 hover:bg-red-500 font-semibold">Log out</button>
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div
+            class="relative w-96 h-64 border-2 border-white duration-500 group overflow-hidden rounded-xl bg-neutral-900 text-neutral-50 p-6 flex flex-col justify-evenly border border-neutral-800 shadow-xl">
+            <!-- Background Blobs -->
+            <div class="absolute blur duration-500 group-hover:blur-none w-72 h-72 rounded-full group-hover:translate-x-10 group-hover:translate-y-10 bg-red-900 right-1 -bottom-24"></div>
+            <div class="absolute blur duration-500 group-hover:blur-none w-12 h-12 rounded-full group-hover:translate-x-8 group-hover:translate-y-2 bg-rose-700 right-12 bottom-12"></div>
+            <div class="absolute blur duration-500 group-hover:blur-none w-36 h-36 rounded-full group-hover:translate-x-10 group-hover:-translate-y-10 bg-rose-800 right-1 -top-12"></div>
+            <div class="absolute blur duration-500 group-hover:blur-none w-24 h-24 bg-red-700 rounded-full group-hover:-translate-x-10"></div>
+
+            <!-- Foreground Content -->
+            <div class="z-10 flex flex-col justify-evenly h-full text-center">
+                <h3 class="text-2xl font-bold mb-1">Confirm Logout</h3>
+                <p class="text-sm text-gray-300 mb-4">
+                    Are you sure you want to end your current session?
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button
+                        id="cancelLogout"
+                        class="hover:bg-neutral-200 cursor-pointer bg-neutral-50 rounded text-neutral-800 font-semibold w-full sm:w-1/2 py-2 transition">
+                        Cancel
+                    </button>
+                    <button
+                        id="confirmLogout"
+                        class="bg-red-600 cursor-pointer hover:bg-red-500 text-white rounded font-semibold w-full sm:w-1/2 py-2 transition">
+                        Log Out
+                    </button>
+                </div>
             </div>
         </div>
     </div>
