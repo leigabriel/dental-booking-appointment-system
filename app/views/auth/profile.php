@@ -46,7 +46,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
 
     <div class="max-w-8xl bg-blue-900 border-4 border-white rounded-2xl p-8 mx-auto space-y-1">
         <!-- HEADER -->
-        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-white shadow-sm rounded-2xl p-6 border">
+        <header class="mb-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-white shadow-sm rounded-2xl p-6 border">
             <div class="flex items-center gap-4">
                 <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-600 to-sky-500 flex items-center justify-center text-white text-4xl italic font-bold shadow-md">
                     <?= strtoupper(substr($user['username'] ?? 'U', 0, 1)) ?>
@@ -223,7 +223,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                             </div>
                                             <div class="flex-1">
                                                 <p class="text-xs text-slate-500 uppercase tracking-wider">Doctor</p>
-                                                <p class="text-base font-bold text-slate-900">Dr. <?= html_escape($doctor['name']) ?></p>
+                                                <p class="text-base font-bold text-slate-900"><?= html_escape($doctor['name']) ?></p>
                                                 <p class="text-xs text-indigo-600 font-semibold"><?= html_escape($doctor['specialty']) ?></p>
                                             </div>
                                         </div>
@@ -341,7 +341,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                             <?php if (!empty($appointments)): ?>
                                 <?php foreach ($appointments as $app): ?>
                                     <tr class="hover:bg-blue-200">
-                                        <td class="py-3 px-3">Dr. <?= html_escape($doctors[$app['doctor_id']]['name'] ?? 'N/A') ?></td>
+                                        <td class="py-3 px-3"><?= html_escape($doctors[$app['doctor_id']]['name'] ?? 'N/A') ?></td>
                                         <td class="py-3 px-3"><?= html_escape($services[$app['service_id']]['name'] ?? 'N/A') ?></td>
                                         <td class="py-3 px-3"><?= html_escape(date('M j, Y', strtotime($app['appointment_date']))) ?></td>
                                         <td class="py-3 px-3"><span class="font-medium text-slate-700"><?= html_escape(date('g:i A', strtotime($app['time_slot']))) ?></span></td>
