@@ -92,6 +92,53 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
         .chip-idle:hover { background: rgba(30,58,138,0.6); }
         .chip-active { background: #6366f1; color: #fff; border-color: rgba(99,102,241,0.6); box-shadow: 0 2px 10px rgba(99,102,241,0.3); }
 
+        /* Card Selection Styles */
+        .selection-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .selection-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(139,92,246,0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .selection-card:hover::before {
+            opacity: 1;
+        }
+        .selection-card.selected {
+            background: linear-gradient(135deg, rgba(99,102,241,0.3) 0%, rgba(139,92,246,0.3) 100%) !important;
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.3), 0 10px 25px rgba(99,102,241,0.2);
+            transform: translateY(-2px);
+        }
+        .selection-card.selected .check-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .check-icon {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
         /* Hide scrollbars for chip scroller */
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -222,188 +269,290 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
 
             <?php display_validation_errors($errors); ?>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="w-full max-w-7xl mx-auto">
 
-                <div class="lg:col-span-2 bg-blue-800/50 p-6 rounded-xl shadow-lg border border-white/10 ring-1 ring-white/10">
-                    <div class="bg-blue-900/40 p-6 rounded-lg shadow-inner h-full flex flex-col">
-                        <h2 class="text-2xl font-bold text-white border-b border-white/10 pb-2 mb-4">Book Your Slot</h2>
+                <div class="bg-gradient-to-br from-blue-800/50 to-blue-900/50 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border-4 border-white/50 ring-1 ring-white/10">
+                    <div class="space-y-8">
+                        <div class="text-center">
+                            <h2 class="text-4xl font-extrabold text-white mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Book Your Appointment</h2>
+                            <p class="text-gray-300">Follow the steps below to schedule your dental visit</p>
+                        </div>
 
                         <!-- Progress Stepper -->
-                        <ol class="stepper grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6 text-xs text-indigo-200">
-                            <li id="step-service" class="step-idle bg-blue-900/40 rounded-lg px-3 py-2 border border-white/10">Service</li>
-                            <li id="step-doctor" class="step-idle bg-blue-900/40 rounded-lg px-3 py-2 border border-white/10">Doctor</li>
-                            <li id="step-date" class="step-idle bg-blue-900/40 rounded-lg px-3 py-2 border border-white/10">Date</li>
-                            <li id="step-time" class="step-idle bg-blue-900/40 rounded-lg px-3 py-2 border border-white/10">Time</li>
-                            <li id="step-confirm" class="step-idle bg-blue-900/40 rounded-lg px-3 py-2 border border-white/10">Confirm</li>
+                        <ol class="stepper grid grid-cols-5 gap-3 text-xs text-indigo-200">
+                            <li id="step-service" class="step-idle bg-blue-900/40 rounded-lg px-4 py-3 border border-white/10 text-center">
+                                <div class="font-semibold">Service</div>
+                            </li>
+                            <li id="step-doctor" class="step-idle bg-blue-900/40 rounded-lg px-4 py-3 border border-white/10 text-center">
+                                <div class="font-semibold">Doctor</div>
+                            </li>
+                            <li id="step-date" class="step-idle bg-blue-900/40 rounded-lg px-4 py-3 border border-white/10 text-center">
+                                <div class="font-semibold">Date</div>
+                            </li>
+                            <li id="step-time" class="step-idle bg-blue-900/40 rounded-lg px-4 py-3 border border-white/10 text-center">
+                                <div class="font-semibold">Time</div>
+                            </li>
+                            <li id="step-confirm" class="step-idle bg-blue-900/40 rounded-lg px-4 py-3 border border-white/10 text-center">
+                                <div class="font-semibold">Confirm</div>
+                            </li>
                         </ol>
 
-                        <form method="POST" action="<?= site_url('book/submit') ?>" class="space-y-5 flex-grow flex flex-col justify-between">
-                            <div>
-                                <?= csrf_field() ?>
+                        <form method="POST" action="<?= site_url('book/submit') ?>" class="space-y-8">
+                            <?= csrf_field() ?>
 
-                                <div>
-                                    <label for="service_id" class="block text-xs font-medium text-gray-300 mb-1">Service</label>
-                                    <select id="service_id" name="service_id" required class="w-full px-3 py-2 text-sm bg-blue-900/50 border border-white/10 rounded-lg focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 transition text-white placeholder-gray-400">
-                                        <option value="" class="bg-blue-800 text-gray-400">Select Service</option>
-                                        <?php foreach ($services as $service): ?>
-                                            <option value="<?= html_escape($service['id']) ?>"
-                                                data-duration="<?= html_escape($service['duration_mins']) ?>"
-                                                data-price="<?= number_format($service['price'], 2, '.', '') ?>"
-                                                <?= (repopulate('service_id') == $service['id']) ? 'selected' : '' ?>
-                                                class="bg-blue-800 text-white">
-                                                <?= html_escape($service['name']) ?> ($<?= number_format($service['price'], 2) ?>)
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <p id="serviceHelp" class="text-xs text-gray-400 mt-1">Choose a service to see duration and cost.</p>
-                                </div>
-
-                                <div>
-                                    <label for="doctor_id" class="block text-xs font-medium text-gray-300 mb-1">Doctor</label>
-                                    <select id="doctor_id" name="doctor_id" required class="w-full px-3 py-2 text-sm bg-blue-900/50 border border-white/10 rounded-lg focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 transition text-white placeholder-gray-400">
-                                        <option value="" class="bg-blue-800 text-gray-400">Select Doctor</option>
-                                        <?php foreach ($doctors as $doctor): ?>
-                                            <option value="<?= html_escape($doctor['id']) ?>"
-                                                data-name="<?= html_escape('Dr. ' . $doctor['name']) ?>"
-                                                data-specialty="<?= html_escape($doctor['specialty']) ?>"
-                                                <?= (repopulate('doctor_id') == $doctor['id']) ? 'selected' : '' ?>
-                                                class="bg-blue-800 text-white">
-                                                Dr. <?= html_escape($doctor['name']) ?> (<?= html_escape($doctor['specialty']) ?>)
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <p id="doctorHelp" class="text-xs text-gray-400 mt-1">Select a dentist to proceed.</p>
-                                </div>
-
-                                <div>
-                                    <label for="appointment_date" class="block text-xs font-medium text-gray-300 mb-1">Select Date</label>
-                                    <!-- Full month calendar selector -->
-                                    <div id="dateCalendar" class="bg-blue-900/30 border border-white/10 rounded-lg p-3">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <button type="button" id="calPrev" class="px-2 py-1 rounded-md bg-blue-900/60 border border-white/10 text-gray-200 hover:bg-blue-900/80" aria-label="Previous month">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                            </button>
-                                            <div id="calMonthLabel" class="text-sm font-semibold text-white" aria-live="polite">Month YYYY</div>
-                                            <button type="button" id="calNext" class="px-2 py-1 rounded-md bg-blue-900/60 border border-white/10 text-gray-200 hover:bg-blue-900/80" aria-label="Next month">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                            </button>
-                                        </div>
-                                        <div class="grid grid-cols-7 text-[11px] text-indigo-300 mb-1">
-                                            <div class="text-center">Sun</div>
-                                            <div class="text-center">Mon</div>
-                                            <div class="text-center">Tue</div>
-                                            <div class="text-center">Wed</div>
-                                            <div class="text-center">Thu</div>
-                                            <div class="text-center">Fri</div>
-                                            <div class="text-center">Sat</div>
-                                        </div>
-                                        <div id="calGrid" class="cal-grid"></div>
+                            <!-- Service Selection Section -->
+                            <div class="bg-blue-900/30 rounded-xl p-6 border border-white/10">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                            <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                                            </svg>
+                                            Select a Service
+                                        </h3>
+                                        <p id="serviceHelp" class="text-sm text-gray-400 mt-1">Choose the dental service you need</p>
                                     </div>
-                                    <!-- Keep original input for backend; visually hidden but present for validation -->
-                                    <input type="date" id="appointment_date" name="appointment_date" required
-                                        value="<?= repopulate('appointment_date', date('Y-m-d')) ?>"
-                                        min="<?= date('Y-m-d') ?>"
-                                        class="sr-only">
                                 </div>
-
-                                <div>
-                                    <label for="time_slot" class="block text-xs font-medium text-gray-300 mb-1">Select Time</label>
-                                    <div id="timeChips" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                                        <?php foreach ($time_slots as $slot): ?>
-                                            <button type="button" class="chip chip-idle time-chip" data-value="<?= html_escape($slot) ?>">
-                                                <?= date('g:i A', strtotime($slot)) ?>
-                                            </button>
-                                        <?php endforeach; ?>
+                                <div class="relative">
+                                    <div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar snap-x snap-mandatory">
+                                        <?php if (!empty($services)): ?>
+                                            <?php foreach ($services as $service): ?>
+                                                <div class="service-card-select selection-card flex-shrink-0 w-72 p-5 rounded-xl border-2 border-white/10 bg-blue-900/40 snap-start" 
+                                                     data-service-id="<?= html_escape($service['id']) ?>"
+                                                     data-service-name="<?= html_escape($service['name']) ?>"
+                                                     data-duration="<?= html_escape($service['duration_mins']) ?>"
+                                                     data-price="<?= number_format($service['price'], 2, '.', '') ?>">
+                                                    <div class="check-icon">
+                                                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                    </div>
+                                                    <div class="flex items-start gap-4">
+                                                        <div class="flex-shrink-0 w-16 h-16 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
+                                                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                            </svg>
+                                                        </div>
+                                                        <div class="flex-1 min-w-0">
+                                                            <h4 class="text-lg font-bold text-white mb-2 truncate"><?= html_escape($service['name']) ?></h4>
+                                                            <div class="space-y-1 text-sm">
+                                                                <div class="flex items-center text-indigo-300">
+                                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                                    </svg>
+                                                                    <?= html_escape($service['duration_mins']) ?> minutes
+                                                                </div>
+                                                                <div class="flex items-center text-green-400 font-bold text-base">
+                                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                                    </svg>
+                                                                    $<?= number_format($service['price'], 2) ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <p class="text-gray-400 text-center py-8">No services are currently available.</p>
+                                        <?php endif; ?>
                                     </div>
-                                    <!-- Keep original select for backend; visually hidden but present for validation -->
-                                    <select id="time_slot" name="time_slot" required class="sr-only">
-                                        <option value="">Select Time</option>
-                                        <?php foreach ($time_slots as $slot): ?>
-                                            <option value="<?= html_escape($slot) ?>" <?= (repopulate('time_slot') == $slot) ? 'selected' : '' ?>>
-                                                <?= date('g:i A', strtotime($slot)) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <p class="text-xs text-gray-400 mt-1" id="availabilityHint">Times based on availability.</p>
+                                </div>
+                                <input type="hidden" id="service_id" name="service_id" required>
+                            </div>
+
+                            <!-- Doctor Selection Section -->
+                            <div class="bg-blue-900/30 rounded-xl p-6 border border-white/10">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                            <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            Choose Your Doctor
+                                        </h3>
+                                        <p id="doctorHelp" class="text-sm text-gray-400 mt-1">Select your preferred dental professional</p>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar snap-x snap-mandatory">
+                                        <?php if (!empty($doctors)): ?>
+                                            <?php foreach ($doctors as $doctor): ?>
+                                                <div class="doctor-card-select selection-card flex-shrink-0 w-80 p-5 rounded-xl border-2 border-white/10 bg-blue-900/40 snap-start" 
+                                                     data-doctor-id="<?= html_escape($doctor['id']) ?>"
+                                                     data-doctor-name="<?= html_escape('Dr. ' . $doctor['name']) ?>"
+                                                     data-specialty="<?= html_escape($doctor['specialty']) ?>">
+                                                    <div class="check-icon">
+                                                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                    </div>
+                                                    <div class="flex items-start gap-4">
+                                                        <div class="flex-shrink-0">
+                                                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-xl ring-4 ring-blue-500/20">
+                                                                <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                                                </svg>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex-1 min-w-0">
+                                                            <h4 class="text-xl font-bold text-white mb-1">Dr. <?= html_escape($doctor['name']) ?></h4>
+                                                            <div class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-500/30 border border-indigo-400/50">
+                                                                <svg class="w-4 h-4 mr-2 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                                </svg>
+                                                                <span class="text-sm font-semibold text-indigo-200"><?= html_escape($doctor['specialty']) ?></span>
+                                                            </div>
+                                                            <div class="mt-3 flex items-center text-gray-400 text-xs">
+                                                                <svg class="w-4 h-4 mr-1 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                                                </svg>
+                                                                <span>Experienced Professional</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <p class="text-gray-400 text-center py-8">No dentists currently available.</p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="doctor_id" name="doctor_id" required>
+                            </div>
+
+                            <!-- Date Selection Section -->
+                            <div class="bg-blue-900/30 rounded-xl p-6 border border-white/10">
+                                <div class="mb-4">
+                                    <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                        Select Date
+                                    </h3>
+                                    <p class="text-sm text-gray-400 mt-1">Pick your preferred appointment date</p>
+                                </div>
+                                <div id="dateCalendar" class="bg-blue-900/30 border border-white/10 rounded-xl p-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <button type="button" id="calPrev" class="px-3 py-2 rounded-lg bg-blue-900/60 border border-white/10 text-gray-200 hover:bg-blue-800/60 transition-all" aria-label="Previous month">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        </button>
+                                        <div id="calMonthLabel" class="text-lg font-bold text-white" aria-live="polite">Month YYYY</div>
+                                        <button type="button" id="calNext" class="px-3 py-2 rounded-lg bg-blue-900/60 border border-white/10 text-gray-200 hover:bg-blue-800/60 transition-all" aria-label="Next month">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        </button>
+                                    </div>
+                                    <div class="grid grid-cols-7 text-xs text-indigo-300 mb-2 font-semibold">
+                                        <div class="text-center py-2">Sun</div>
+                                        <div class="text-center py-2">Mon</div>
+                                        <div class="text-center py-2">Tue</div>
+                                        <div class="text-center py-2">Wed</div>
+                                        <div class="text-center py-2">Thu</div>
+                                        <div class="text-center py-2">Fri</div>
+                                        <div class="text-center py-2">Sat</div>
+                                    </div>
+                                    <div id="calGrid" class="cal-grid"></div>
+                                </div>
+                                <input type="date" id="appointment_date" name="appointment_date" required
+                                    value="<?= repopulate('appointment_date', date('Y-m-d')) ?>"
+                                    min="<?= date('Y-m-d') ?>"
+                                    class="sr-only">
+                                    
+                                <!-- Daily Limit Warning -->
+                                <div id="dailyLimitWarning" class="hidden mt-4 p-4 rounded-lg bg-amber-900/30 text-amber-200 border border-amber-500/50">
                                 </div>
                             </div>
 
-                            <!-- Live Summary -->
-                            <div class="mt-4 bg-blue-900/40 rounded-lg p-4 border border-white/10" role="status" aria-live="polite">
-                                <h3 class="text-sm font-bold text-white mb-2">Appointment Summary</h3>
-                                <div class="grid sm:grid-cols-2 gap-3 text-xs">
-                                    <div>
-                                        <p class="text-indigo-300">Service</p>
-                                        <p id="sumService" class="font-semibold text-white">—</p>
-                                        <p class="text-indigo-300 mt-2">Doctor</p>
-                                        <p id="sumDoctor" class="font-semibold text-white">—</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-indigo-300">Date & Time</p>
-                                        <p id="sumWhen" class="font-semibold text-white">—</p>
-                                        <p class="text-indigo-300 mt-2">Est. End</p>
-                                        <p id="sumEnd" class="font-semibold text-white">—</p>
-                                    </div>
+                            <!-- Time Selection Section -->
+                            <div class="bg-blue-900/30 rounded-xl p-6 border border-white/10">
+                                <div class="mb-4">
+                                    <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        Choose Time Slot
+                                    </h3>
+                                    <p id="availabilityHint" class="text-sm text-gray-400 mt-1">Select your preferred time</p>
                                 </div>
-                                <div class="mt-3 flex items-center justify-between text-sm">
-                                    <span class="text-indigo-300">Price</span>
-                                    <span id="sumPrice" class="font-bold text-white">—</span>
+                                <div id="timeChips" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                                    <?php foreach ($time_slots as $slot): ?>
+                                        <button type="button" class="chip chip-idle time-chip text-sm py-3 font-semibold" data-value="<?= html_escape($slot) ?>">
+                                            <?= date('g:i A', strtotime($slot)) ?>
+                                        </button>
+                                    <?php endforeach; ?>
                                 </div>
-                                <p id="sumNote" class="mt-2 text-[11px] text-gray-400">Complete all fields to enable confirmation.</p>
+                                <select id="time_slot" name="time_slot" required class="sr-only">
+                                    <option value="">Select Time</option>
+                                    <?php foreach ($time_slots as $slot): ?>
+                                        <option value="<?= html_escape($slot) ?>" <?= (repopulate('time_slot') == $slot) ? 'selected' : '' ?>>
+                                            <?= date('g:i A', strtotime($slot)) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
 
-                            <div class="mt-auto pt-4">
-                                <div class="flex gap-3">
-                                    <button type="button" id="clearForm" class="w-1/3 bg-blue-900/40 text-gray-200 py-2.5 rounded-lg font-semibold text-xs border border-white/10 hover:bg-blue-900/60 transition">Clear</button>
-                                    <button type="submit" id="submitBtn" disabled class="w-2/3 bg-indigo-500/60 cursor-not-allowed text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-indigo-400 transition duration-200 shadow-md shadow-indigo-500/30 disabled:opacity-60 disabled:hover:bg-indigo-500/60">
-                                        <span class="inline-flex items-center gap-2">
-                                            <svg id="submitSpinner" class="size-4 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle class="opacity-25" cx="12" cy="12" r="10" stroke-width="4"></circle><path class="opacity-75" d="M4 12a8 8 0 018-8" stroke-width="4" stroke-linecap="round"></path></svg>
-                                            <span id="submitText">Confirm Appointment</span>
-                                        </span>
-                                    </button>
+                            <!-- Appointment Summary -->
+                            <div class="bg-gradient-to-br from-indigo-900/40 to-purple-900/40 rounded-xl p-6 border border-indigo-500/30 shadow-xl" role="status" aria-live="polite">
+                                <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                                    <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    Appointment Summary
+                                </h3>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <p class="text-xs text-indigo-300 uppercase tracking-wider mb-1">Service</p>
+                                            <p id="sumService" class="text-lg font-bold text-white">—</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-indigo-300 uppercase tracking-wider mb-1">Doctor</p>
+                                            <p id="sumDoctor" class="text-lg font-bold text-white">—</p>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <p class="text-xs text-indigo-300 uppercase tracking-wider mb-1">Date & Time</p>
+                                            <p id="sumWhen" class="text-lg font-bold text-white">—</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-indigo-300 uppercase tracking-wider mb-1">Estimated End</p>
+                                            <p id="sumEnd" class="text-lg font-bold text-white">—</p>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="mt-6 pt-6 border-t border-indigo-500/30 flex items-center justify-between">
+                                    <span class="text-lg text-indigo-300 font-semibold">Total Price</span>
+                                    <span id="sumPrice" class="text-3xl font-extrabold text-white">—</span>
+                                </div>
+                                <p id="sumNote" class="mt-4 text-sm text-gray-400 text-center">Complete all fields to enable confirmation.</p>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-4">
+                                <button type="button" id="clearForm" class="flex-1 bg-blue-900/60 text-white py-4 rounded-xl font-bold text-base border border-white/10 hover:bg-blue-900/80 transition-all transform hover:scale-105">
+                                    <span class="flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                        Clear Form
+                                    </span>
+                                </button>
+                                <button type="submit" id="submitBtn" disabled class="flex-[2] bg-gradient-to-r from-indigo-600 to-purple-600 cursor-not-allowed text-white py-4 rounded-xl font-bold text-base hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 shadow-lg shadow-indigo-500/30 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:from-indigo-600 disabled:hover:to-purple-600 transform hover:scale-105 disabled:transform-none">
+                                    <span class="inline-flex items-center justify-center gap-2">
+                                        <svg id="submitSpinner" class="size-5 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke-width="4"></circle>
+                                            <path class="opacity-75" d="M4 12a8 8 0 018-8" stroke-width="4" stroke-linecap="round"></path>
+                                        </svg>
+                                        <span id="submitText">Confirm Appointment</span>
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                    </span>
+                                </button>
                             </div>
 
                         </form>
-                    </div>
-                </div>
-
-                <div class="space-y-8">
-                    <div class="bg-blue-800/50 p-6 rounded-xl shadow-lg border border-white/10 ring-1 ring-white/10 space-y-4">
-                        <h2 class="text-2xl font-bold text-white border-b border-white/10 pb-2">Available Dentists</h2>
-                        <p class="text-gray-300 text-xs">Choose your preferred dental professional.</p>
-                        <div class="max-h-[250px] overflow-y-auto space-y-3 pr-2">
-                            <?php if (!empty($doctors)): ?>
-                                <?php foreach ($doctors as $doctor): ?>
-                                    <div class="bg-blue-900/40 rounded-lg p-3 border border-white/10 flex items-center space-x-3 transition hover:shadow-sm hover:bg-blue-900/60 doctor-card" data-doctor-id="<?= html_escape($doctor['id']) ?>">
-                                        <div>
-                                            <h3 class="text-sm font-bold text-white">Dr. <?= html_escape($doctor['name']) ?></h3>
-                                            <p class="text-indigo-300 font-semibold text-xs"><?= html_escape($doctor['specialty']) ?></p>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <p class="text-gray-400 text-sm">No dentists currently available.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
-                    <div class="bg-blue-800/50 p-6 rounded-xl shadow-lg border border-white/10 ring-1 ring-white/10 space-y-4">
-                        <h2 class="text-2xl font-bold text-white border-b border-white/10 pb-2">Available Services</h2>
-                        <p class="text-gray-300 text-xs">Review services and duration.</p>
-                        <div class="max-h-[250px] overflow-y-auto space-y-3 pr-2">
-                            <?php if (!empty($services)): ?>
-                                <?php foreach ($services as $service): ?>
-                                    <div class="p-3 rounded-lg border border-white/10 hover:shadow-sm transition bg-blue-900/40 hover:bg-blue-900/60 service-card" data-service-id="<?= html_escape($service['id']) ?>">
-                                        <h3 class="text-sm font-semibold text-indigo-300"><?= html_escape($service['name']) ?></h3>
-                                        <p class="text-xs text-gray-300">Duration: <?= html_escape($service['duration_mins']) ?> mins</p>
-                                        <p class="text-xs font-bold text-white">Price: $<?= number_format($service['price'], 2) ?></p>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <p class="text-gray-400 text-sm">No services are currently available.</p>
-                            <?php endif; ?>
-                        </div>
                     </div>
                 </div>
 
@@ -570,8 +719,8 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             const $ = (sel) => document.querySelector(sel);
             const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
-            const serviceSel = $('#service_id');
-            const doctorSel = $('#doctor_id');
+            const serviceInp = $('#service_id');
+            const doctorInp = $('#doctor_id');
             const dateInp   = $('#appointment_date');
             const timeSel   = $('#time_slot');
             const calGrid = $('#calGrid');
@@ -591,8 +740,8 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             const submitSpin = $('#submitSpinner');
             const clearBtn   = $('#clearForm');
 
-            const serviceCards = $$('.service-card');
-            const doctorCards  = $$('.doctor-card');
+            const serviceCards = $$('.service-card-select');
+            const doctorCards  = $$('.doctor-card-select');
             const timeChips    = $$('.time-chip');
 
             const stepService = $('#step-service');
@@ -606,6 +755,9 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             const doctorHelp = $('#doctorHelp');
 
             const DRAFT_KEY = 'appt_form_draft_v1';
+
+            // Store for booked slots
+            let bookedSlots = [];
 
             function fmtDate(d) {
                 const y = d.getFullYear();
@@ -622,29 +774,30 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                 return `${h}:${m} ${am}`;
             }
 
-            function getSelectedText(sel) {
-                return sel.options[sel.selectedIndex]?.text?.trim() || '';
-            }
-
-            function getSelectedOption(sel) {
-                return sel.options[sel.selectedIndex] || null;
-            }
-
             function updateSummary() {
-                const srvOpt = getSelectedOption(serviceSel);
-                const docOpt = getSelectedOption(doctorSel);
+                const serviceId = serviceInp.value;
+                const doctorId = doctorInp.value;
                 const dateVal = dateInp.value;
                 const timeVal = timeSel.value;
 
-                sumService.textContent = srvOpt ? getSelectedText(serviceSel) : '—';
-                sumDoctor.textContent  = docOpt ? (docOpt.dataset.name || getSelectedText(doctorSel)) : '—';
+                // Get service name and details
+                const serviceCard = serviceCards.find(c => c.dataset.serviceId === serviceId);
+                const serviceName = serviceCard ? serviceCard.dataset.serviceName : '—';
+                const serviceDuration = serviceCard ? parseInt(serviceCard.dataset.duration) : 0;
+                const servicePrice = serviceCard ? parseFloat(serviceCard.dataset.price) : 0;
+
+                // Get doctor name
+                const doctorCard = doctorCards.find(c => c.dataset.doctorId === doctorId);
+                const doctorName = doctorCard ? doctorCard.dataset.doctorName : '—';
+
+                sumService.textContent = serviceName;
+                sumDoctor.textContent = doctorName;
 
                 if (dateVal && timeVal) {
                     const start = new Date(`${dateVal}T${timeVal}`);
                     sumWhen.textContent = `${start.toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' })} • ${fmtTimeHHMM(start)}`;
-                    const mins = parseInt(srvOpt?.dataset.duration || '0', 10) || 0;
-                    if (mins > 0) {
-                        const end = new Date(start.getTime() + mins * 60000);
+                    if (serviceDuration > 0) {
+                        const end = new Date(start.getTime() + serviceDuration * 60000);
                         sumEnd.textContent = fmtTimeHHMM(end);
                     } else {
                         sumEnd.textContent = '—';
@@ -654,8 +807,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                     sumEnd.textContent = '—';
                 }
 
-                const price = parseFloat(srvOpt?.dataset.price || '0');
-                sumPrice.textContent = price ? `$${price.toFixed(2)}` : '—';
+                sumPrice.textContent = servicePrice ? `$${servicePrice.toFixed(2)}` : '—';
             }
 
             function refreshTimeChipSelection() {
@@ -676,8 +828,8 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             }
 
             function updateSteps() {
-                const hasService = !!serviceSel.value;
-                const hasDoctor  = !!doctorSel.value;
+                const hasService = !!serviceInp.value;
+                const hasDoctor  = !!doctorInp.value;
                 const hasDate    = !!dateInp.value;
                 const hasTime    = !!timeSel.value;
 
@@ -689,18 +841,20 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             }
 
             function highlightCards() {
-                const srvId = serviceSel.value;
-                const docId = doctorSel.value;
+                const srvId = serviceInp.value;
+                const docId = doctorInp.value;
+                
                 serviceCards.forEach(c => {
-                    c.classList.remove('ring-2','ring-indigo-400','bg-blue-900/70');
+                    c.classList.remove('selected');
                     if (srvId && c.dataset.serviceId === srvId) {
-                        c.classList.add('ring-2','ring-indigo-400','bg-blue-900/70');
+                        c.classList.add('selected');
                     }
                 });
+                
                 doctorCards.forEach(c => {
-                    c.classList.remove('ring-2','ring-indigo-400','bg-blue-900/70');
+                    c.classList.remove('selected');
                     if (docId && c.dataset.doctorId === docId) {
-                        c.classList.add('ring-2','ring-indigo-400','bg-blue-900/70');
+                        c.classList.add('selected');
                     }
                 });
             }
@@ -718,8 +872,142 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                 }, 600);
             }
 
+            // Fetch booked slots for a specific doctor and date
+            async function fetchBookedSlots(doctorId, date) {
+                if (!doctorId || !date) {
+                    bookedSlots = [];
+                    updateTimeChipsAvailability();
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`<?= site_url('booking/get_booked_slots') ?>?doctor_id=${doctorId}&date=${date}`, {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        credentials: 'include'
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        bookedSlots = data.booked_slots || [];
+                        
+                        // Check daily limit
+                        const dailyCount = data.daily_count || 0;
+                        const dailyLimit = data.daily_limit || 5;
+                        
+                        if (dailyCount >= dailyLimit) {
+                            // Show warning that this date is fully booked
+                            showDailyLimitWarning(date, dailyCount, dailyLimit);
+                        } else {
+                            hideDailyLimitWarning();
+                        }
+                        
+                        updateTimeChipsAvailability();
+                    } else {
+                        bookedSlots = [];
+                        hideDailyLimitWarning();
+                        updateTimeChipsAvailability();
+                    }
+                } catch (error) {
+                    console.error('Error fetching booked slots:', error);
+                    bookedSlots = [];
+                    hideDailyLimitWarning();
+                    updateTimeChipsAvailability();
+                }
+            }
+
+            // Show daily limit warning
+            function showDailyLimitWarning(date, count, limit) {
+                const warningDiv = document.getElementById('dailyLimitWarning');
+                if (warningDiv) {
+                    warningDiv.innerHTML = `
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            <div>
+                                <h4 class="font-bold text-amber-400 mb-1">Daily Limit Reached</h4>
+                                <p class="text-sm text-amber-200">This date has reached the maximum booking limit (${count}/${limit} appointments). Please select a different date.</p>
+                            </div>
+                        </div>
+                    `;
+                    warningDiv.classList.remove('hidden');
+                    
+                    // Disable all time slots
+                    timeChips.forEach(btn => {
+                        btn.disabled = true;
+                        btn.classList.add('opacity-40', 'cursor-not-allowed');
+                    });
+                    
+                    // Clear time selection
+                    timeSel.value = '';
+                    refreshTimeChipSelection();
+                    validateForm();
+                }
+            }
+
+            // Hide daily limit warning
+            function hideDailyLimitWarning() {
+                const warningDiv = document.getElementById('dailyLimitWarning');
+                if (warningDiv) {
+                    warningDiv.classList.add('hidden');
+                    warningDiv.innerHTML = '';
+                }
+            }
+
+            // Update time chips to show which slots are booked
+            function updateTimeChipsAvailability() {
+                let bookedCount = 0;
+                
+                timeChips.forEach(btn => {
+                    const timeValue = btn.dataset.value;
+                    const isBooked = bookedSlots.includes(timeValue);
+                    
+                    if (isBooked) bookedCount++;
+                    
+                    btn.disabled = isBooked;
+                    btn.classList.toggle('opacity-40', isBooked);
+                    btn.classList.toggle('cursor-not-allowed', isBooked);
+                    btn.classList.toggle('hover:bg-blue-900/60', !isBooked);
+                    
+                    if (isBooked) {
+                        btn.classList.add('cal-disabled');
+                        btn.title = 'This time slot is already booked by another patient';
+                        // Add a visual indicator
+                        if (!btn.querySelector('.booked-indicator')) {
+                            btn.innerHTML = btn.innerHTML + ' <span class="booked-indicator">✗</span>';
+                        }
+                        // Clear selection if it was selected
+                        if (timeSel.value === timeValue) {
+                            timeSel.value = '';
+                        }
+                    } else {
+                        btn.classList.remove('cal-disabled');
+                        btn.title = '';
+                        // Remove booked indicator if exists
+                        const indicator = btn.querySelector('.booked-indicator');
+                        if (indicator) indicator.remove();
+                    }
+                });
+                
+                // Update availability hint
+                const availHint = document.getElementById('availabilityHint');
+                if (availHint) {
+                    const totalSlots = timeChips.length;
+                    const availableSlots = totalSlots - bookedCount;
+                    
+                    if (bookedCount > 0) {
+                        availHint.innerHTML = `<span class="text-amber-400">${bookedCount} slot${bookedCount > 1 ? 's' : ''} already booked</span> • ${availableSlots} available`;
+                    } else {
+                        availHint.textContent = 'All time slots are available';
+                    }
+                }
+                
+                refreshTimeChipSelection();
+                validateForm();
+            }
+
             function validateForm() {
-                const allGood = serviceSel.value && doctorSel.value && dateInp.value && timeSel.value;
+                const allGood = serviceInp.value && doctorInp.value && dateInp.value && timeSel.value;
                 submitBtn.disabled = !allGood;
                 submitBtn.classList.toggle('cursor-not-allowed', !allGood);
                 submitBtn.classList.toggle('bg-indigo-500/60', !allGood);
@@ -729,8 +1017,8 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
 
             function persistDraft() {
                 const payload = {
-                    service_id: serviceSel.value || '',
-                    doctor_id: doctorSel.value || '',
+                    service_id: serviceInp.value || '',
+                    doctor_id: doctorInp.value || '',
                     appointment_date: dateInp.value || '',
                     time_slot: timeSel.value || '',
                     ts: Date.now()
@@ -739,15 +1027,15 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             }
 
             function restoreDraftIfEmpty() {
-                if (serviceSel.value || doctorSel.value || dateInp.value || timeSel.value) return;
+                if (serviceInp.value || doctorInp.value || dateInp.value || timeSel.value) return;
                 let raw = null; try { raw = localStorage.getItem(DRAFT_KEY); } catch(_) {}
                 if (!raw) return;
                 try {
                     const d = JSON.parse(raw);
                     if (!d || typeof d !== 'object') return;
                     if (Date.now() - (d.ts||0) > 30*60*1000) return; // older than 30 minutes
-                    if (d.service_id) serviceSel.value = String(d.service_id);
-                    if (d.doctor_id) doctorSel.value = String(d.doctor_id);
+                    if (d.service_id) serviceInp.value = String(d.service_id);
+                    if (d.doctor_id) doctorInp.value = String(d.doctor_id);
                     if (d.appointment_date) dateInp.value = d.appointment_date;
                     if (d.time_slot) timeSel.value = d.time_slot;
                     serviceHelp.textContent = 'Draft restored from last session.';
@@ -765,20 +1053,27 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                 serviceCards.forEach(card => card.addEventListener('click', () => {
                     const id = card.dataset.serviceId;
                     if (!id) return;
-                    serviceSel.value = id;
-                    serviceSel.dispatchEvent(new Event('change'));
+                    serviceInp.value = id;
+                    triggerChange(serviceInp);
                 }));
+                
                 doctorCards.forEach(card => card.addEventListener('click', () => {
                     const id = card.dataset.doctorId;
                     if (!id) return;
-                    doctorSel.value = id;
-                    doctorSel.dispatchEvent(new Event('change'));
+                    doctorInp.value = id;
+                    triggerChange(doctorInp);
                 }));
+                
                 timeChips.forEach(btn => btn.addEventListener('click', () => {
+                    if (btn.disabled) return;
                     const v = btn.dataset.value || '';
                     timeSel.value = v;
-                    timeSel.dispatchEvent(new Event('change'));
+                    triggerChange(timeSel);
                 }));
+            }
+
+            function triggerChange(el) {
+                el.dispatchEvent(new Event('change'));
             }
 
             // Calendar builder with month navigation
@@ -824,7 +1119,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                     btn.addEventListener('click', () => {
                         if (disabled) return;
                         dateInp.value = dayIso;
-                        dateInp.dispatchEvent(new Event('change'));
+                        triggerChange(dateInp);
                         // refresh selection styles
                         Array.from(calGrid.querySelectorAll('.cal-day')).forEach(n => n.classList.remove('cal-selected'));
                         btn.classList.add('cal-selected');
@@ -843,32 +1138,58 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             }
 
             function attachHandlers() {
-                [serviceSel, doctorSel, dateInp, timeSel].forEach(el => {
-                    el.addEventListener('change', () => {
-                        if (el === serviceSel || el === doctorSel) setAvailabilityChecking();
-                        updateSummary();
-                        updateSteps();
-                        highlightCards();
-                        refreshTimeChipSelection();
-                        validateForm();
-                        persistDraft();
-                    });
-                });
-
-                clearBtn?.addEventListener('click', () => {
-                    serviceSel.value = '';
-                    doctorSel.value = '';
-                    dateInp.value = '';
-                    timeSel.value = '';
+                serviceInp.addEventListener('change', () => {
                     updateSummary();
                     updateSteps();
                     highlightCards();
+                    validateForm();
+                    persistDraft();
+                });
+
+                doctorInp.addEventListener('change', () => {
+                    setAvailabilityChecking();
+                    updateSummary();
+                    updateSteps();
+                    highlightCards();
+                    validateForm();
+                    persistDraft();
+                    // Fetch booked slots when doctor or date changes
+                    fetchBookedSlots(doctorInp.value, dateInp.value);
+                });
+
+                dateInp.addEventListener('change', () => {
+                    updateSummary();
+                    updateSteps();
+                    validateForm();
+                    persistDraft();
+                    // Fetch booked slots when date changes
+                    fetchBookedSlots(doctorInp.value, dateInp.value);
+                });
+
+                timeSel.addEventListener('change', () => {
+                    updateSummary();
+                    updateSteps();
+                    refreshTimeChipSelection();
+                    validateForm();
+                    persistDraft();
+                });
+
+                clearBtn?.addEventListener('click', () => {
+                    serviceInp.value = '';
+                    doctorInp.value = '';
+                    dateInp.value = '';
+                    timeSel.value = '';
+                    bookedSlots = [];
+                    updateSummary();
+                    updateSteps();
+                    highlightCards();
+                    updateTimeChipsAvailability();
                     validateForm();
                     try { localStorage.removeItem(DRAFT_KEY); } catch(_) {}
                 });
 
                 // Submit UX
-                const form = serviceSel.closest('form');
+                const form = serviceInp.closest('form');
                 form.addEventListener('submit', () => {
                     submitBtn.disabled = true;
                     submitSpin.classList.remove('hidden');
