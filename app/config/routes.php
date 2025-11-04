@@ -43,13 +43,14 @@ defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 |
 */
 
-// Default route
+// User Landing Page
 $router->get('/', 'Welcome::index');
 
-/*/ User Landing Page
+/* User Landing Page
 $router->get('/', function () {
   lava_instance()->call->view('user_landing');
-});*/
+});
+*/
 
 // Authentication Routes
 $router->get('/login', 'Auth::login');
@@ -62,9 +63,19 @@ $router->get('/logout', 'Auth::logout');
 $router->get('/book', 'Booking::index');
 $router->post('/book/submit', 'Booking::submit');
 
-// ADMIN MANAGEMENT ROUTES
+// PAYMENT ROUTES
+// GCash Payment (PayMongo)
+$router->get('/payment/gcash/{id}', 'Payment::gcash')->where_number('id');
+$router->get('/payment/gcash/success/{id}', 'Payment::gcash_success')->where_number('id');
+$router->get('/payment/gcash/failed/{id}', 'Payment::gcash_failed')->where_number('id');
 
-// NEW: Redirect base /management to appointments
+// PayPal Payment (Sandbox)
+$router->get('/payment/paypal/{id}', 'Payment::paypal')->where_number('id');
+$router->get('/payment/paypal/success/{id}', 'Payment::paypal_success')->where_number('id');
+$router->get('/payment/paypal/cancel/{id}', 'Payment::paypal_cancel')->where_number('id');
+
+// ADMIN MANAGEMENT ROUTES
+// Redirect base /management to appointments
 $router->get('/management', function () {
   redirect('management/appointments');
 });
@@ -85,6 +96,10 @@ $router->get('/management/appointment_cancel/{id}', 'Management::appointment_can
 
 // Decline appointment (admin/staff with message)
 $router->post('/management/appointment_decline', 'Management::appointment_decline');
+
+// Mark clinic payment as paid (admin/staff)
+$router->get('/management/appointment_mark_paid/{id}', 'Management::appointment_mark_paid')
+  ->where_number('id');
 
 // Appointments JSON for calendar/analytics
 $router->get('/management/appointments_json', 'Management::appointments_json');
@@ -141,10 +156,10 @@ $router->get('/profile', 'Auth::profile');
 $router->post('/profile/update', 'Auth::profile_edit_submit');
 $router->get('/profile/delete', 'Auth::profile_delete');
 
-// Cancel appointment (users can cancel their own appointments from profile)
+// Cancel appointment
 $router->post('/profile/cancel_appointment', 'Auth::profile_cancel_appointment');
 
-// Clear appointment history (delete all non-confirmed appointments)
+// Clear appointment history
 $router->post('/profile/clear_history', 'Auth::clear_history');
 
 // APPOINTMENTS
@@ -154,6 +169,7 @@ $router->post('/book/submit', 'Booking::submit');
 // Get booked time slots for a specific doctor and date
 $router->get('/booking/get_booked_slots', 'Booking::get_booked_slots');
 
+// Google Auth
 // This route is for the link/button the user clicks
 $router->get('/auth/google_login', 'Auth@google_login');
 
