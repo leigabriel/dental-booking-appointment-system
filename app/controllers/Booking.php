@@ -48,18 +48,18 @@ class Booking extends Controller
 
             // Check Availability
             if ($this->AppointmentModel->is_slot_booked($post['doctor_id'], $post['appointment_date'], $post['time_slot'])) {
-                $this->session->set_flashdata('error_message', 'The selected time slot is already taken. Please choose another.');
+                $this->session->set_flashdata('error_message', 'This time slot is already booked. Please choose another time.');
                 redirect('book');
             }
 
-            // Enforce daily booking cap (max 10 active bookings per day)
+            // Enforce daily booking cap (max 5 active bookings per day)
             try {
                 $active_count = $this->AppointmentModel->count_active_by_date($post['appointment_date']);
             } catch (Exception $e) {
-                $active_count = 10; // fail-safe to block when counting fails
+                $active_count = 5; // fail-safe to block when counting fails
             }
-            if ($active_count >= 10) {
-                $this->session->set_flashdata('error_message', 'This date has reached the daily booking limit (10). Please select another date.');
+            if ($active_count >= 5) {
+                $this->session->set_flashdata('error_message', 'This date has reached the daily booking limit (5 appointments). Please select another date.');
                 redirect('book');
             }
 
@@ -93,5 +93,41 @@ class Booking extends Controller
 
             $this->call->view('booking/appointment_form', $data);
         }
+    }
+
+    // Get booked time slots for a specific doctor and date (AJAX endpoint)
+    public function get_booked_slots()
+    {
+        // Only allow AJAX requests
+        if (!$this->io->is_ajax()) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid request']);
+            return;
+        }
+
+        $doctor_id = $this->io->get('doctor_id');
+        $date = $this->io->get('date');
+
+        if (!$doctor_id || !$date) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Missing parameters']);
+            return;
+        }
+
+        // Get all booked time slots for this doctor and date
+        $booked_slots = $this->AppointmentModel->get_booked_time_slots($doctor_id, $date);
+        
+        // Get total active bookings for this date (for daily limit check)
+        $daily_count = $this->AppointmentModel->count_active_by_date($date);
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'booked_slots' => $booked_slots,
+            'daily_count' => $daily_count,
+            'daily_limit' => 5,
+            'doctor_id' => $doctor_id,
+            'date' => $date
+        ]);
     }
 }

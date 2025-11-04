@@ -257,6 +257,27 @@ class Auth extends Controller
         redirect('profile');
     }
 
+    // Clear all appointment history (except confirmed)
+    public function clear_history()
+    {
+        if (!$this->session->userdata('is_logged_in')) {
+            redirect('login');
+        }
+
+        $this->call->model('AppointmentModel');
+        $user_id = $this->session->userdata('user_id');
+
+        $success = $this->AppointmentModel->clear_history($user_id);
+
+        if ($success) {
+            $this->session->set_flashdata('success_message', 'Appointment history cleared successfully.');
+        } else {
+            $this->session->set_flashdata('error_message', 'Failed to clear appointment history.');
+        }
+
+        redirect('profile');
+    }
+
     // Initiate Google OAuth login
     public function google_login()
     {
