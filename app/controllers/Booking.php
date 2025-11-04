@@ -130,6 +130,7 @@ class Booking extends Controller
 
         // Get all booked time slots for this doctor and date
         $booked_slots = $this->AppointmentModel->get_booked_time_slots($doctor_id, $date);
+
         // Get total active bookings for this date
         $daily_count = $this->AppointmentModel->count_active_by_date($date);
 
