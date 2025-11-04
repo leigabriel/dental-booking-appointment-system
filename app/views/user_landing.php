@@ -69,7 +69,7 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                 <a href="#contact" class="text-lg/6 font-semibold text-white hover:text-blue-400">Contact</a>
                 <a href="<?= site_url('book') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Book Now</a>
             </div>
-            <div class="hidden lg:flex lg:flex-1 lg:justify-end relative gap-x-6">
+            <div class="hidden lg:flex lg:flex-1 lg:justify-end relative gap-x-3 items-center whitespace-nowrap">
                 <?php if (isset($is_logged_in) && $is_logged_in): ?>
                     <!-- Profile Dropdown -->
                     <div class="group relative">
@@ -83,10 +83,9 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
                         </div>
                     </div>
                 <?php else : ?>
-                    <!-- Login / Register remain unchanged -->
-                    <a href="<?= site_url('login') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Log in</a>
-                    <span class="text-white">|</span>
-                    <a href="<?= site_url('register') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Register</a>
+                    <!-- Login / Register buttons -->
+                    <a href="<?= site_url('login') ?>" class="rounded-md bg-white/10 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-white/20 transition-colors">Log in</a>
+                    <a href="<?= site_url('register') ?>" class="rounded-md bg-indigo-500 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 transition-colors">Register</a>
                 <?php endif; ?>
             </div>
         </nav>

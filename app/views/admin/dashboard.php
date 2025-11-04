@@ -826,6 +826,10 @@ function display_validation_errors($errors)
             }
         }
 
+        // Expose modal functions to global scope for inline onclick handlers
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+
         <?php if (!empty($errors) && !empty($post_data)): ?>
             <?php if (isset($post_data['id']) && !empty($post_data['id'])): ?>
                 openModal('edit', {

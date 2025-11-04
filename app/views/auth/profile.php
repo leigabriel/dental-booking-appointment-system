@@ -82,55 +82,208 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
         <?php endif; ?>
 
         <!-- MAIN CONTENT -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-1">
+        <div class="space-y-6">
 
-            <!-- LEFT: PROFILE SETTINGS -->
-            <aside class="col-span-1 bg-white border rounded-2xl shadow-sm p-6">
-                <h2 class="text-lg font-semibold text-slate-900 mb-4">Profile Settings</h2>
-                <form method="POST" action="<?= site_url('profile/update') ?>" class="space-y-4">
-                    <?= csrf_field() ?>
+            <!-- TOP SECTION: PROFILE & CONFIRMED APPOINTMENTS -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
+                <!-- LEFT: PROFILE SETTINGS -->
+                <aside class="col-span-1 bg-white border rounded-2xl shadow-sm p-6">
+                    <h2 class="text-lg font-semibold text-slate-900 mb-4">Profile Settings</h2>
+                    <form method="POST" action="<?= site_url('profile/update') ?>" class="space-y-4">
+                        <?= csrf_field() ?>
+
+                        <div>
+                            <label for="full_name" class="block text-sm font-medium text-slate-700">Full Name</label>
+                            <input type="text" id="full_name" name="full_name" value="<?= html_escape($user['full_name'] ?? '') ?>" required
+                                class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-slate-700">Email Address</label>
+                            <input type="email" id="email" name="email" value="<?= html_escape($user['email'] ?? '') ?>" required
+                                class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
+                        </div>
+
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-slate-700">Username</label>
+                            <input type="text" id="username" value="<?= html_escape($user['username'] ?? '') ?>" readonly
+                                class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-500">
+                        </div>
+
+                        <h3 class="text-sm font-medium text-slate-800 mt-2">Change Password (Optional)</h3>
+                        <div>
+                            <input type="password" id="new_password" name="new_password" placeholder="New password"
+                                class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
+                        </div>
+
+                        <div>
+                            <input type="password" id="confirm_new_password" name="confirm_new_password" placeholder="Confirm new password"
+                                class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
+                        </div>
+
+                        <div class="flex justify-between items-center pt-2">
+                            <a href="<?= site_url('profile/delete') ?>" onclick="return confirm('WARNING: Are you sure you want to permanently delete your account? This action cannot be undone.');" class="text-sm text-rose-600 hover:underline">Delete account</a>
+                            <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-semibold">Save changes</button>
+                        </div>
+                    </form>
+                </aside>
+
+                <!-- RIGHT: CONFIRMED APPOINTMENTS RECEIPT CARDS -->
+                <section class="col-span-2 bg-white border rounded-2xl shadow-sm p-6">
+                    <?php
+                    $confirmed_appointments = array_filter($appointments, function($app) {
+                        return $app['status'] === 'confirmed';
+                    });
+                    ?>
+                    
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                                <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Confirmed Appointments
+                            </h2>
+                            <p class="text-sm text-slate-500 mt-1">Your upcoming confirmed visits</p>
+                        </div>
+                        <span class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-bold shadow-sm">
+                            <?= count($confirmed_appointments) ?> Active
+                        </span>
+                    </div>
+                    
+                    <?php if (!empty($confirmed_appointments)): ?>
+                        <div class="grid gap-4 md:grid-cols-2 max-h-[600px] overflow-y-auto pr-2">
+                            <?php foreach ($confirmed_appointments as $app): ?>
+                                <?php
+                                $doctor = $doctors[$app['doctor_id']] ?? ['name' => 'N/A', 'specialty' => 'N/A'];
+                                $service = $services[$app['service_id']] ?? ['name' => 'N/A', 'price' => 0, 'duration_mins' => 0];
+                                $appointment_date = date('l, M j, Y', strtotime($app['appointment_date']));
+                                $appointment_time = date('g:i A', strtotime($app['time_slot']));
+                                ?>
+                                <div class="relative bg-gradient-to-br from-emerald-50 to-blue-50 border-2 border-emerald-200 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+                                    <!-- Receipt Header -->
+                                    <div class="bg-emerald-600 text-white p-4 relative">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h3 class="text-lg font-bold">DENTALCARE</h3>
+                                                <p class="text-xs text-emerald-100">Appointment Receipt</p>
+                                            </div>
+                                            <div class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
+                                                <span class="text-xs font-bold">CONFIRMED</span>
+                                            </div>
+                                        </div>
+                                        <!-- Dotted tear line -->
+                                        <div class="absolute bottom-0 left-0 right-0 h-4 bg-white" style="
+                                            background-image: radial-gradient(circle at 10px -5px, transparent 12px, white 13px);
+                                            background-size: 20px 20px;
+                                            background-repeat: repeat-x;
+                                        "></div>
+                                    </div>
+
+                                    <!-- Receipt Body -->
+                                    <div class="p-5 space-y-4">
+                                        <!-- Appointment ID -->
+                                        <div class="text-center pb-3 border-b border-dashed border-slate-300">
+                                            <p class="text-xs text-slate-500 uppercase tracking-wider">Appointment ID</p>
+                                            <p class="text-lg font-mono font-bold text-slate-900">#<?= str_pad($app['id'], 6, '0', STR_PAD_LEFT) ?></p>
+                                        </div>
+
+                                        <!-- Doctor Info -->
+                                        <div class="flex items-start gap-3">
+                                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+                                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-xs text-slate-500 uppercase tracking-wider">Doctor</p>
+                                                <p class="text-base font-bold text-slate-900">Dr. <?= html_escape($doctor['name']) ?></p>
+                                                <p class="text-xs text-indigo-600 font-semibold"><?= html_escape($doctor['specialty']) ?></p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Service Info -->
+                                        <div class="bg-white rounded-lg p-3 border border-slate-200">
+                                            <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Service</p>
+                                            <p class="text-sm font-bold text-slate-900"><?= html_escape($service['name']) ?></p>
+                                            <div class="flex items-center justify-between mt-2 text-xs text-slate-600">
+                                                <span class="flex items-center gap-1">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                    </svg>
+                                                    <?= html_escape($service['duration_mins']) ?> mins
+                                                </span>
+                                                <span class="text-emerald-600 font-bold text-base">$<?= number_format($service['price'], 2) ?></span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Date & Time -->
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <div class="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                                                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Date</p>
+                                                <p class="text-xs font-bold text-slate-900"><?= html_escape($appointment_date) ?></p>
+                                            </div>
+                                            <div class="bg-purple-50 rounded-lg p-3 border border-purple-200">
+                                                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Time</p>
+                                                <p class="text-xs font-bold text-slate-900"><?= html_escape($appointment_time) ?></p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Footer Note -->
+                                        <div class="pt-3 border-t border-dashed border-slate-300 text-center">
+                                            <p class="text-xs text-slate-500">Please arrive 10 minutes early</p>
+                                            <p class="text-xs text-emerald-600 font-semibold mt-1">✓ Confirmed & Ready</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Receipt Bottom Tear -->
+                                    <div class="h-4 bg-emerald-50" style="
+                                        background-image: radial-gradient(circle at 10px 9px, transparent 12px, #ecfdf5 13px);
+                                        background-size: 20px 20px;
+                                        background-repeat: repeat-x;
+                                    "></div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-center py-12">
+                            <svg class="w-20 h-20 mx-auto text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-slate-900 mb-2">No Confirmed Appointments</h3>
+                            <p class="text-slate-500 mb-4">You don't have any confirmed appointments yet.</p>
+                            <a href="<?= site_url('/book') ?>" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold shadow-lg transition">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                                Book Your First Appointment
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </section>
+            </div>
+
+            <!-- BOTTOM SECTION: ALL APPOINTMENTS TABLE -->
+            <section class="bg-white border rounded-2xl shadow-sm p-6">
+                <div class="flex items-center justify-between mb-6">
                     <div>
-                        <label for="full_name" class="block text-sm font-medium text-slate-700">Full Name</label>
-                        <input type="text" id="full_name" name="full_name" value="<?= html_escape($user['full_name'] ?? '') ?>" required
-                            class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
+                        <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                            <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                            Appointment History
+                        </h2>
+                        <p class="text-sm text-slate-500 mt-1">Complete record of all your appointments</p>
                     </div>
-
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-slate-700">Email Address</label>
-                        <input type="email" id="email" name="email" value="<?= html_escape($user['email'] ?? '') ?>" required
-                            class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
-                    </div>
-
-                    <div>
-                        <label for="username" class="block text-sm font-medium text-slate-700">Username</label>
-                        <input type="text" id="username" value="<?= html_escape($user['username'] ?? '') ?>" readonly
-                            class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-500">
-                    </div>
-
-                    <h3 class="text-sm font-medium text-slate-800 mt-2">Change Password (Optional)</h3>
-                    <div>
-                        <input type="password" id="new_password" name="new_password" placeholder="New password"
-                            class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
-                    </div>
-
-                    <div>
-                        <input type="password" id="confirm_new_password" name="confirm_new_password" placeholder="Confirm new password"
-                            class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
-                    </div>
-
-                    <div class="flex justify-between items-center pt-2">
-                        <a href="<?= site_url('profile/delete') ?>" onclick="return confirm('WARNING: Are you sure you want to permanently delete your account? This action cannot be undone.');" class="text-sm text-rose-600 hover:underline">Delete account</a>
-                        <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-semibold">Save changes</button>
-                    </div>
-                </form>
-            </aside>
-
-            <!-- RIGHT: MY APPOINTMENTS -->
-            <section class="col-span-2 bg-white border rounded-2xl shadow-sm p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-semibold text-slate-900">My Appointments</h2>
-                    <p class="text-sm text-slate-500">Upcoming and recent appointments</p>
+                    <?php if (!empty($appointments)): ?>
+                        <button type="button" onclick="openClearHistoryModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-sm font-semibold shadow-lg transition-all transform hover:scale-105">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                            Clear All History
+                        </button>
+                    <?php endif; ?>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -193,7 +346,49 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                     </table>
                 </div>
             </section>
+        </div>
+    </div>
 
+    <!-- Clear All History Confirmation Modal -->
+    <div id="clearHistoryModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="relative w-full max-w-md border-2 border-rose-300 duration-500 group overflow-hidden rounded-2xl bg-white text-slate-900 p-6 shadow-2xl">
+            <!-- Warning Icon -->
+            <div class="flex flex-col items-center text-center mb-6">
+                <div class="mb-4 p-4 rounded-full bg-rose-100">
+                    <svg class="w-12 h-12 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900">Clear All History?</h3>
+                <p class="text-sm text-slate-600 mt-2">This will permanently delete all your appointment records</p>
+            </div>
+
+            <!-- Warning Message -->
+            <div class="bg-rose-50 border border-rose-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-rose-800 font-semibold mb-2">⚠️ Warning: This action cannot be undone!</p>
+                <ul class="text-xs text-rose-700 space-y-1 list-disc list-inside">
+                    <li>All appointment history will be deleted</li>
+                    <li>Pending, declined, and cancelled records will be removed</li>
+                    <li>Confirmed appointments will remain active</li>
+                </ul>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                    id="cancelClearHistory"
+                    class="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg font-semibold transition-all transform hover:scale-105">
+                    Cancel
+                </button>
+                <form method="POST" action="<?= site_url('profile/clear_history') ?>" class="flex-1">
+                    <?= csrf_field() ?>
+                    <button
+                        type="submit"
+                        class="w-full px-6 py-3 bg-rose-600 hover:bg-rose-500 text-white rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
+                        Yes, Clear All History
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -267,6 +462,23 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
     </div>
 
     <script>
+        function openClearHistoryModal() {
+            const modal = document.getElementById('clearHistoryModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeClearHistoryModal() {
+            const modal = document.getElementById('clearHistoryModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Close clear history modal on cancel button
+        document.getElementById('cancelClearHistory')?.addEventListener('click', closeClearHistoryModal);
+
         function openViewDeclineModal(btn) {
             const message = btn.getAttribute('data-message') || '';
             const modal = document.getElementById('view-decline-modal');
@@ -325,8 +537,16 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
             });
 
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                    hideModal();
+                if (e.key === 'Escape') {
+                    if (!modal.classList.contains('hidden')) {
+                        hideModal();
+                    }
+                    if (!document.getElementById('clearHistoryModal').classList.contains('hidden')) {
+                        closeClearHistoryModal();
+                    }
+                    if (!document.getElementById('view-decline-modal').classList.contains('hidden')) {
+                        closeViewDeclineModal();
+                    }
                 }
             });
         })();
