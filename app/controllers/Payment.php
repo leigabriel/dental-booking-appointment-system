@@ -26,11 +26,15 @@ class Payment extends Controller
             redirect('book');
         }
 
-        // Get service details for amount
         $service = $this->ServiceModel->find($appointment['service_id']);
         $amount = $service['price'] * 100; // Convert to cents
 
-        $api_key = 'sk_test_8qWkpzuyouUYnpp86PimNcKb';
+        $api_key = getenv('PAYMONGO_SECRET_KEY');
+        
+        if (!$api_key) {
+            $this->session->set_flashdata('error_message', 'Payment gateway is not configured properly. Please contact support.');
+            redirect('book');
+        }
         
         // Create payment source
         $data = [
@@ -116,10 +120,20 @@ class Payment extends Controller
         // Get service details for amount
         $service = $this->ServiceModel->find($appointment['service_id']);
         $amount = number_format($service['price'], 2, '.', '');
-        // PayPal Sandbox credentials
-        $client_id = 'AXLeP16hnIAruMJoRAdcopKesDd1i1vAyVJLnL_O8v5eLl4oXY0wcKl6SBxt4T5XWdj-lYa4FijryGSj';
-        $secret = 'EN6F2ODnW7v7-unddDynhxEDeC0b_FMz5RdKKoZ-3a09qevTCnTSCIV6jPVoTGUzdPU00UOdEkg6lZDJ';
-        $paypal_url = 'https://api-m.sandbox.paypal.com';
+
+        // Old PayPal Sandbox credentials:
+        // $client_id = 'AXLeP16hnIAruMJoRAdcopKesDd1i1vAyVJLnL_O8v5eLl4oXY0wcKl6SBxt4T5XWdj-lYa4FijryGSj';
+        // $secret = 'EN6F2ODnW7v7-unddDynhxEDeC0b_FMz5RdKKoZ-3a09qevTCnTSCIV6jPVoTGUzdPU00UOdEkg6lZDJ';
+        
+        $client_id = getenv('PAYPAL_CLIENT_ID');
+        $secret = getenv('PAYPAL_SECRET');
+        $paypal_mode = getenv('PAYPAL_MODE') ?: 'sandbox';
+        $paypal_url = ($paypal_mode === 'live') ? 'https://api-m.paypal.com' : 'https://api-m.sandbox.paypal.com';
+        
+        if (!$client_id || !$secret) {
+            $this->session->set_flashdata('error_message', 'PayPal is not configured properly. Please contact support.');
+            redirect('book');
+        }
 
         // Get Access Token
         $ch = curl_init($paypal_url . '/v1/oauth2/token');
@@ -208,10 +222,10 @@ class Payment extends Controller
         
         if ($order_id) {
             
-            // PayPal credentials
-            $client_id = 'AXLeP16hnIAruMJoRAdcopKesDd1i1vAyVJLnL_O8v5eLl4oXY0wcKl6SBxt4T5XWdj-lYa4FijryGSj';
-            $secret = 'EN6F2ODnW7v7-unddDynhxEDeC0b_FMz5RdKKoZ-3a09qevTCnTSCIV6jPVoTGUzdPU00UOdEkg6lZDJ';
-            $paypal_url = 'https://api-m.sandbox.paypal.com';
+            $client_id = getenv('PAYPAL_CLIENT_ID');
+            $secret = getenv('PAYPAL_SECRET');
+            $paypal_mode = getenv('PAYPAL_MODE') ?: 'sandbox';
+            $paypal_url = ($paypal_mode === 'live') ? 'https://api-m.paypal.com' : 'https://api-m.sandbox.paypal.com';
 
             // Get Access Token
             $ch = curl_init($paypal_url . '/v1/oauth2/token');
