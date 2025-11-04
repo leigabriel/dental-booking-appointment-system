@@ -7,7 +7,6 @@ class Booking extends Controller
     {
         parent::__construct();
 
-        // Ensure user is logged in to book appointments
         if (!$this->session->userdata('is_logged_in')) {
             $this->session->set_flashdata('error_message', 'You must be logged in to schedule an appointment.');
             redirect('login');
@@ -18,7 +17,6 @@ class Booking extends Controller
         $this->call->helper(['url', 'language']);
     }
 
-    // Show appointment booking form
     public function index()
     {
         $data['doctors'] = $this->DoctorModel->all();
@@ -42,7 +40,8 @@ class Booking extends Controller
             ->name('doctor_id|Doctor')->required()->numeric()
             ->name('service_id|Service')->required()->numeric()
             ->name('appointment_date|Date')->required()->custom_pattern('^\d{4}-\d{2}-\d{2}$', 'Invalid date format (YYYY-MM-DD)')
-            ->name('time_slot|Time')->required();
+            ->name('time_slot|Time')->required()
+            ->name('payment_method|Payment Method')->required()->in_list('gcash,paypal,clinic');
 
         if ($this->form_validation->run()) {
 
@@ -56,34 +55,49 @@ class Booking extends Controller
             try {
                 $active_count = $this->AppointmentModel->count_active_by_date($post['appointment_date']);
             } catch (Exception $e) {
-                $active_count = 5; // fail-safe to block when counting fails
+                $active_count = 5;
             }
             if ($active_count >= 5) {
                 $this->session->set_flashdata('error_message', 'This date has reached the daily booking limit (5 appointments). Please select another date.');
                 redirect('book');
             }
 
-            // Insert Appointment
             $booking_data = [
                 'user_id' => $user_id,
                 'doctor_id' => $post['doctor_id'],
                 'service_id' => $post['service_id'],
                 'appointment_date' => $post['appointment_date'],
                 'time_slot' => $post['time_slot'],
+                'payment_method' => $post['payment_method'],
+                'payment_status' => ($post['payment_method'] === 'clinic') ? 'pending' : 'unpaid',
                 'status' => 'pending'
             ];
 
             $appointment_id = $this->AppointmentModel->insert($booking_data);
 
             if ($appointment_id) {
-                $this->session->set_flashdata('success_message', 'Appointment scheduled successfully! Awaiting confirmation.');
+                // Handle payment processing based on payment method
+                $payment_method = $post['payment_method'];
+                
+                if ($payment_method === 'gcash') {
+                    // Redirect to GCash payment (PayMongo)
+                    $this->session->set_userdata('pending_appointment_id', $appointment_id);
+                    redirect('payment/gcash/' . $appointment_id);
+                } elseif ($payment_method === 'paypal') {
+                    // Redirect to PayPal payment
+                    $this->session->set_userdata('pending_appointment_id', $appointment_id);
+                    redirect('payment/paypal/' . $appointment_id);
+                } else {
+                    // Pay at clinic - no payment processing needed
+                    $this->session->set_flashdata('success_message', 'Appointment scheduled successfully! Please pay at the clinic. Awaiting confirmation.');
+                    redirect('book');
+                }
             } else {
                 $this->session->set_flashdata('error_message', 'Failed to schedule appointment. Please try again.');
+                redirect('book');
             }
-            redirect('book');
         } else {
 
-            // Validation Failed
             $data['doctors'] = $this->DoctorModel->all();
             $data['services'] = $this->ServiceModel->all();
             $data['errors'] = $this->form_validation->get_errors();
@@ -95,10 +109,10 @@ class Booking extends Controller
         }
     }
 
-    // Get booked time slots for a specific doctor and date (AJAX endpoint)
+    // Get booked time slots for a specific doctor and date
     public function get_booked_slots()
     {
-        // Only allow AJAX requests
+
         if (!$this->io->is_ajax()) {
             http_response_code(400);
             echo json_encode(['error' => 'Invalid request']);
@@ -117,7 +131,7 @@ class Booking extends Controller
         // Get all booked time slots for this doctor and date
         $booked_slots = $this->AppointmentModel->get_booked_time_slots($doctor_id, $date);
         
-        // Get total active bookings for this date (for daily limit check)
+        // Get total active bookings for this date
         $daily_count = $this->AppointmentModel->count_active_by_date($date);
 
         header('Content-Type: application/json');
