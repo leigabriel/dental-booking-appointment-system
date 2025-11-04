@@ -43,7 +43,8 @@ defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 |
 */
 
- $router->get('/', 'Welcome::index');
+// Default route
+$router->get('/', 'Welcome::index');
 
 /*/ User Landing Page
 $router->get('/', function () {
@@ -81,8 +82,10 @@ $router->get('/management/appointment_confirm/{id}', 'Management::appointment_co
   ->where_number('id');
 $router->get('/management/appointment_cancel/{id}', 'Management::appointment_cancel')
   ->where_number('id');
+
 // Decline appointment (admin/staff with message)
 $router->post('/management/appointment_decline', 'Management::appointment_decline');
+
 // Appointments JSON for calendar/analytics
 $router->get('/management/appointments_json', 'Management::appointments_json');
 
@@ -141,11 +144,18 @@ $router->get('/profile/delete', 'Auth::profile_delete');
 // Cancel appointment (users can cancel their own appointments from profile)
 $router->post('/profile/cancel_appointment', 'Auth::profile_cancel_appointment');
 
+// Clear appointment history (delete all non-confirmed appointments)
+$router->post('/profile/clear_history', 'Auth::clear_history');
+
 // APPOINTMENTS
 $router->get('/book', 'Booking::index');
 $router->post('/book/submit', 'Booking::submit');
 
+// Get booked time slots for a specific doctor and date
+$router->get('/booking/get_booked_slots', 'Booking::get_booked_slots');
+
 // This route is for the link/button the user clicks
 $router->get('/auth/google_login', 'Auth@google_login');
+
 // This is the callback URL Google sends the user back to
 $router->get('/auth/google_callback', 'Auth@google_callback');
