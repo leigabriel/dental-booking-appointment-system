@@ -64,4 +64,46 @@ class AppointmentModel extends Model
     $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: ['cnt' => 0];
     return (int) $row['cnt'];
   }
+
+  /**
+   * Get all booked time slots for a specific doctor and date
+   * Returns an array of time slots that are already booked (not cancelled)
+   *
+   * @param int $doctor_id
+   * @param string $date YYYY-MM-DD
+   * @return array Array of time slot strings (e.g., ['08:00:00', '09:00:00'])
+   */
+  public function get_booked_time_slots($doctor_id, $date)
+  {
+    $stmt = $this->db->raw(
+      "SELECT time_slot FROM {$this->table} WHERE doctor_id = ? AND appointment_date = ? AND status NOT IN ('cancelled', 'declined')",
+      [$doctor_id, $date]
+    );
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    
+    // Extract just the time_slot values into a simple array
+    return array_map(function($row) {
+      return $row['time_slot'];
+    }, $results);
+  }
+
+  /**
+   * Clear all appointment history for a user (except confirmed appointments)
+   * Deletes all appointments with status: pending, cancelled, declined
+   *
+   * @param int $user_id
+   * @return bool
+   */
+  public function clear_history($user_id)
+  {
+    try {
+      $stmt = $this->db->raw(
+        "DELETE FROM {$this->table} WHERE user_id = ? AND status IN ('pending', 'cancelled', 'declined')",
+        [$user_id]
+      );
+      return true;
+    } catch (Exception $e) {
+      return false;
+    }
+  }
 }
