@@ -116,7 +116,6 @@ class Payment extends Controller
         // Get service details for amount
         $service = $this->ServiceModel->find($appointment['service_id']);
         $amount = number_format($service['price'], 2, '.', '');
-
         // PayPal Sandbox credentials
         $client_id = 'AXLeP16hnIAruMJoRAdcopKesDd1i1vAyVJLnL_O8v5eLl4oXY0wcKl6SBxt4T5XWdj-lYa4FijryGSj';
         $secret = 'EN6F2ODnW7v7-unddDynhxEDeC0b_FMz5RdKKoZ-3a09qevTCnTSCIV6jPVoTGUzdPU00UOdEkg6lZDJ';
