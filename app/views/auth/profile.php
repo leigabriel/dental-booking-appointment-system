@@ -169,8 +169,33 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                                 <h3 class="text-lg font-bold">DENTALCARE</h3>
                                                 <p class="text-xs text-emerald-100">Appointment Receipt</p>
                                             </div>
-                                            <div class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
-                                                <span class="text-xs font-bold">CONFIRMED</span>
+                                            <div class="flex flex-col gap-1 items-end">
+                                                <div class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
+                                                    <span class="text-xs font-bold">CONFIRMED</span>
+                                                </div>
+                                                <?php
+                                                $payment_method = $app['payment_method'] ?? 'clinic';
+                                                $payment_status = $app['payment_status'] ?? 'pending';
+                                                $payment_icons = [
+                                                    'gcash' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>',
+                                                    'paypal' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8.32 21.97a.546.546 0 01-.26.04h-.06c-.16 0-.31-.06-.42-.18-.13-.13-.18-.31-.16-.49l.52-3.38h2.46c3.27 0 5.93-2.66 5.93-5.93 0-.39-.04-.77-.11-1.14l1.31-8.54A.546.546 0 0118 2h-6.93c-.3 0-.55.21-.61.5l-1.36 8.86c-.05.33-.15.65-.29.96h-.05c-.83 2.12-2.84 3.61-5.2 3.61h-.09l-.52 3.38c-.03.18.02.36.16.49.11.12.26.18.42.18h.06c.09 0 .18-.01.26-.04L8.32 21.97z"/></svg>',
+                                                    'clinic' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>'
+                                                ];
+                                                $payment_labels = [
+                                                    'gcash' => 'GCash',
+                                                    'paypal' => 'PayPal',
+                                                    'clinic' => 'Pay at Clinic'
+                                                ];
+                                                $status_colors = [
+                                                    'paid' => 'bg-green-500/30 text-green-100',
+                                                    'unpaid' => 'bg-yellow-500/30 text-yellow-100',
+                                                    'pending' => 'bg-blue-500/30 text-blue-100'
+                                                ];
+                                                ?>
+                                                <div class="<?= $status_colors[$payment_status] ?? 'bg-gray-500/30 text-gray-100' ?> backdrop-blur-sm px-2 py-1 rounded-full text-xs flex items-center gap-1">
+                                                    <?= $payment_icons[$payment_method] ?? '' ?>
+                                                    <span class="font-semibold"><?= $payment_labels[$payment_method] ?? ucfirst($payment_method) ?></span>
+                                                </div>
                                             </div>
                                         </div>
                                         <!-- Dotted tear line -->
@@ -231,9 +256,22 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                         </div>
 
                                         <!-- Footer Note -->
-                                        <div class="pt-3 border-t border-dashed border-slate-300 text-center">
-                                            <p class="text-xs text-slate-500">Please arrive 10 minutes early</p>
-                                            <p class="text-xs text-emerald-600 font-semibold mt-1">✓ Confirmed & Ready</p>
+                                        <div class="pt-3 border-t border-dashed border-slate-300">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <div class="text-xs text-slate-500">
+                                                    <p class="font-semibold">Payment Status:</p>
+                                                    <?php
+                                                    $status_badges = [
+                                                        'paid' => '<span class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Paid</span>',
+                                                        'unpaid' => '<span class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg> Unpaid</span>',
+                                                        'pending' => '<span class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg> Pending</span>'
+                                                    ];
+                                                    echo $status_badges[$payment_status] ?? '<span class="text-xs text-slate-500">N/A</span>';
+                                                    ?>
+                                                </div>
+                                            </div>
+                                            <p class="text-xs text-slate-500 text-center">Please arrive 10 minutes early</p>
+                                            <p class="text-xs text-emerald-600 font-semibold mt-1 text-center">✓ Confirmed & Ready</p>
                                         </div>
                                     </div>
 
@@ -294,6 +332,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                 <th class="py-2 px-3">Service</th>
                                 <th class="py-2 px-3">Date</th>
                                 <th class="py-2 px-3">Time</th>
+                                <th class="py-2 px-3">Payment</th>
                                 <th class="py-2 px-3">Status</th>
                                 <th class="py-2 px-3">Actions</th>
                             </tr>
@@ -306,6 +345,25 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                         <td class="py-3 px-3"><?= html_escape($services[$app['service_id']]['name'] ?? 'N/A') ?></td>
                                         <td class="py-3 px-3"><?= html_escape(date('M j, Y', strtotime($app['appointment_date']))) ?></td>
                                         <td class="py-3 px-3"><span class="font-medium text-slate-700"><?= html_escape(date('g:i A', strtotime($app['time_slot']))) ?></span></td>
+                                        <td class="py-3 px-3">
+                                            <?php
+                                            $payment_method = $app['payment_method'] ?? 'clinic';
+                                            $payment_status = $app['payment_status'] ?? 'pending';
+                                            $payment_method_badges = [
+                                                'gcash' => '<span class="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>GCash</span>',
+                                                'paypal' => '<span class="inline-flex items-center gap-1.5 px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs font-semibold"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8.32 21.97a.546.546 0 01-.26.04h-.06c-.16 0-.31-.06-.42-.18-.13-.13-.18-.31-.16-.49l.52-3.38h2.46c3.27 0 5.93-2.66 5.93-5.93 0-.39-.04-.77-.11-1.14l1.31-8.54A.546.546 0 0118 2h-6.93c-.3 0-.55.21-.61.5l-1.36 8.86c-.05.33-.15.65-.29.96h-.05c-.83 2.12-2.84 3.61-5.2 3.61h-.09l-.52 3.38c-.03.18.02.36.16.49.11.12.26.18.42.18h.06c.09 0 .18-.01.26-.04L8.32 21.97z"/></svg>PayPal</span>',
+                                                'clinic' => '<span class="inline-flex items-center gap-1.5 px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-semibold"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>Clinic</span>'
+                                            ];
+                                            $payment_status_badges = [
+                                                'paid' => '<span class="inline-block ml-1 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-bold">✓ Paid</span>',
+                                                'unpaid' => '<span class="inline-block ml-1 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-bold">✗ Unpaid</span>',
+                                                'pending' => '<span class="inline-block ml-1 px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold">⏳ Pending</span>'
+                                            ];
+                                            echo $payment_method_badges[$payment_method] ?? '<span class="text-xs text-slate-500">N/A</span>';
+                                            echo '<br>';
+                                            echo $payment_status_badges[$payment_status] ?? '';
+                                            ?>
+                                        </td>
                                         <td class="py-3 px-3">
                                             <?php
                                             $status_class = match ($app['status']) {
@@ -339,7 +397,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6" class="py-6 text-center text-slate-500">You have no scheduled appointments.</td>
+                                    <td colspan="7" class="py-6 text-center text-slate-500">You have no scheduled appointments.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

@@ -139,6 +139,24 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
+        /* Payment Card Styles */
+        .payment-card {
+            position: relative;
+        }
+        .payment-card.selected {
+            background: linear-gradient(135deg, rgba(99,102,241,0.4) 0%, rgba(139,92,246,0.4) 100%) !important;
+            border-color: #6366f1 !important;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.4), 0 10px 30px rgba(99,102,241,0.3);
+        }
+        .payment-card.selected .payment-check {
+            display: block !important;
+        }
+        .payment-check {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+        }
+
         /* Hide scrollbars for chip scroller */
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -491,6 +509,132 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                 </select>
                             </div>
 
+                            <!-- Payment Method Section -->
+                            <div class="bg-blue-900/30 rounded-xl p-6 border border-white/10">
+                                <div class="mb-4">
+                                    <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                        </svg>
+                                        Payment Method
+                                    </h3>
+                                    <p class="text-sm text-gray-400 mt-1">Choose your preferred payment option</p>
+                                </div>
+                                
+                                <!-- Payment Method Cards -->
+                                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                                    <!-- GCash Option -->
+                                    <div class="payment-card selection-card rounded-xl p-4 border-2 border-white/10 bg-gradient-to-br from-blue-900/40 to-blue-800/40 cursor-pointer transition-all hover:scale-105" data-payment="gcash">
+                                        <div class="flex flex-col items-center gap-3">
+                                            <div class="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center">
+                                                <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                                                </svg>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="font-bold text-white text-lg">GCash</h4>
+                                                <p class="text-xs text-gray-400">Mobile Wallet</p>
+                                            </div>
+                                            <div class="payment-check hidden">
+                                                <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- PayPal Option -->
+                                    <div class="payment-card selection-card rounded-xl p-4 border-2 border-white/10 bg-gradient-to-br from-blue-900/40 to-indigo-800/40 cursor-pointer transition-all hover:scale-105" data-payment="paypal">
+                                        <div class="flex flex-col items-center gap-3">
+                                            <div class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center">
+                                                <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M8.32 21.97a.546.546 0 01-.26.04h-.06c-.16 0-.31-.06-.42-.18-.13-.13-.18-.31-.16-.49l.52-3.38h2.46c3.27 0 5.93-2.66 5.93-5.93 0-.39-.04-.77-.11-1.14l1.31-8.54A.546.546 0 0118 2h-6.93c-.3 0-.55.21-.61.5l-1.36 8.86c-.05.33-.15.65-.29.96h-.05c-.83 2.12-2.84 3.61-5.2 3.61h-.09l-.52 3.38c-.03.18.02.36.16.49.11.12.26.18.42.18h.06c.09 0 .18-.01.26-.04L8.32 21.97z"/>
+                                                </svg>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="font-bold text-white text-lg">PayPal</h4>
+                                                <p class="text-xs text-gray-400">Secure Payment</p>
+                                            </div>
+                                            <div class="payment-check hidden">
+                                                <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Pay at Clinic Option -->
+                                    <div class="payment-card selection-card rounded-xl p-4 border-2 border-white/10 bg-gradient-to-br from-blue-900/40 to-purple-800/40 cursor-pointer transition-all hover:scale-105" data-payment="clinic">
+                                        <div class="flex flex-col items-center gap-3">
+                                            <div class="w-16 h-16 rounded-full bg-purple-600 flex items-center justify-center">
+                                                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                                </svg>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="font-bold text-white text-lg">Pay at Clinic</h4>
+                                                <p class="text-xs text-gray-400">Cash Payment</p>
+                                            </div>
+                                            <div class="payment-check hidden">
+                                                <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <input type="hidden" id="payment_method" name="payment_method" required>
+                                
+                                <!-- Payment Instructions -->
+                                <div id="paymentInstructions" class="hidden mt-4 p-4 rounded-lg bg-indigo-900/30 border border-indigo-500/30">
+                                    <div id="gcashInstructions" class="hidden">
+                                        <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                                            <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                            </svg>
+                                            GCash Payment Instructions
+                                        </h4>
+                                        <p class="text-sm text-gray-300 mb-2">You will be redirected to GCash payment page after confirming your appointment.</p>
+                                        <ul class="text-xs text-gray-400 space-y-1 ml-6 list-disc">
+                                            <li>Secure payment processing via PayMongo</li>
+                                            <li>Sandbox mode for testing</li>
+                                            <li>Real payment will be processed in production</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div id="paypalInstructions" class="hidden">
+                                        <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                                            <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                            </svg>
+                                            PayPal Payment Instructions
+                                        </h4>
+                                        <p class="text-sm text-gray-300 mb-2">You will be redirected to PayPal sandbox payment page after confirming your appointment.</p>
+                                        <ul class="text-xs text-gray-400 space-y-1 ml-6 list-disc">
+                                            <li>Use PayPal sandbox credentials for testing</li>
+                                            <li>Test account: sb-test@business.example.com</li>
+                                            <li>Secure SSL encrypted transaction</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div id="clinicInstructions" class="hidden">
+                                        <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                                            <svg class="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                            </svg>
+                                            Pay at Clinic Instructions
+                                        </h4>
+                                        <p class="text-sm text-gray-300 mb-2">You can pay when you arrive at the clinic.</p>
+                                        <ul class="text-xs text-gray-400 space-y-1 ml-6 list-disc">
+                                            <li>Cash payment accepted</li>
+                                            <li>Please arrive 10 minutes early</li>
+                                            <li>Bring exact amount if possible</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Appointment Summary -->
                             <div class="bg-gradient-to-br from-indigo-900/40 to-purple-900/40 rounded-xl p-6 border border-indigo-500/30 shadow-xl" role="status" aria-live="polite">
                                 <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
@@ -743,6 +887,12 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             const serviceCards = $$('.service-card-select');
             const doctorCards  = $$('.doctor-card-select');
             const timeChips    = $$('.time-chip');
+            const paymentCards = $$('.payment-card');
+            const paymentInp   = $('#payment_method');
+            const paymentInstructions = $('#paymentInstructions');
+            const gcashInstructions = $('#gcashInstructions');
+            const paypalInstructions = $('#paypalInstructions');
+            const clinicInstructions = $('#clinicInstructions');
 
             const stepService = $('#step-service');
             const stepDoctor  = $('#step-doctor');
@@ -857,6 +1007,49 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                         c.classList.add('selected');
                     }
                 });
+            }
+
+            function highlightPaymentCards() {
+                const paymentMethod = paymentInp.value;
+                
+                paymentCards.forEach(c => {
+                    c.classList.remove('selected');
+                    if (paymentMethod && c.dataset.payment === paymentMethod) {
+                        c.classList.add('selected');
+                    }
+                });
+            }
+
+            function showPaymentInstructions() {
+                const method = paymentInp.value;
+                
+                // Hide all instructions first
+                gcashInstructions.classList.add('hidden');
+                paypalInstructions.classList.add('hidden');
+                clinicInstructions.classList.add('hidden');
+                
+                if (!method) {
+                    paymentInstructions.classList.add('hidden');
+                    return;
+                }
+                
+                // Show the relevant instructions
+                paymentInstructions.classList.remove('hidden');
+                
+                if (method === 'gcash') {
+                    gcashInstructions.classList.remove('hidden');
+                } else if (method === 'paypal') {
+                    paypalInstructions.classList.remove('hidden');
+                } else if (method === 'clinic') {
+                    clinicInstructions.classList.remove('hidden');
+                }
+            }
+
+            function hidePaymentInstructions() {
+                paymentInstructions.classList.add('hidden');
+                gcashInstructions.classList.add('hidden');
+                paypalInstructions.classList.add('hidden');
+                clinicInstructions.classList.add('hidden');
             }
 
             function setAvailabilityChecking() {
@@ -1007,7 +1200,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             }
 
             function validateForm() {
-                const allGood = serviceInp.value && doctorInp.value && dateInp.value && timeSel.value;
+                const allGood = serviceInp.value && doctorInp.value && dateInp.value && timeSel.value && paymentInp.value;
                 submitBtn.disabled = !allGood;
                 submitBtn.classList.toggle('cursor-not-allowed', !allGood);
                 submitBtn.classList.toggle('bg-indigo-500/60', !allGood);
@@ -1021,6 +1214,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                     doctor_id: doctorInp.value || '',
                     appointment_date: dateInp.value || '',
                     time_slot: timeSel.value || '',
+                    payment_method: paymentInp.value || '',
                     ts: Date.now()
                 };
                 try { localStorage.setItem(DRAFT_KEY, JSON.stringify(payload)); } catch (_) {}
@@ -1038,6 +1232,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                     if (d.doctor_id) doctorInp.value = String(d.doctor_id);
                     if (d.appointment_date) dateInp.value = d.appointment_date;
                     if (d.time_slot) timeSel.value = d.time_slot;
+                    if (d.payment_method) paymentInp.value = d.payment_method;
                     serviceHelp.textContent = 'Draft restored from last session.';
                     serviceHelp.classList.remove('text-gray-400');
                     serviceHelp.classList.add('text-indigo-300');
@@ -1062,6 +1257,13 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                     if (!id) return;
                     doctorInp.value = id;
                     triggerChange(doctorInp);
+                }));
+                
+                paymentCards.forEach(card => card.addEventListener('click', () => {
+                    const method = card.dataset.payment;
+                    if (!method) return;
+                    paymentInp.value = method;
+                    triggerChange(paymentInp);
                 }));
                 
                 timeChips.forEach(btn => btn.addEventListener('click', () => {
@@ -1174,15 +1376,25 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                     persistDraft();
                 });
 
+                paymentInp.addEventListener('change', () => {
+                    highlightPaymentCards();
+                    showPaymentInstructions();
+                    validateForm();
+                    persistDraft();
+                });
+
                 clearBtn?.addEventListener('click', () => {
                     serviceInp.value = '';
                     doctorInp.value = '';
                     dateInp.value = '';
                     timeSel.value = '';
+                    paymentInp.value = '';
                     bookedSlots = [];
                     updateSummary();
                     updateSteps();
                     highlightCards();
+                    highlightPaymentCards();
+                    hidePaymentInstructions();
                     updateTimeChipsAvailability();
                     validateForm();
                     try { localStorage.removeItem(DRAFT_KEY); } catch(_) {}
@@ -1223,6 +1435,8 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                 updateSummary();
                 updateSteps();
                 highlightCards();
+                highlightPaymentCards();
+                showPaymentInstructions();
                 refreshTimeChipSelection();
                 validateForm();
             })();
