@@ -20,7 +20,8 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
         }
 
         ::-webkit-scrollbar {
@@ -132,16 +133,16 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                 <!-- RIGHT: CONFIRMED APPOINTMENTS RECEIPT CARDS -->
                 <section class="col-span-2 bg-white border rounded-2xl shadow-sm p-6">
                     <?php
-                    $confirmed_appointments = array_filter($appointments, function($app) {
+                    $confirmed_appointments = array_filter($appointments, function ($app) {
                         return $app['status'] === 'confirmed';
                     });
                     ?>
-                    
+
                     <div class="flex items-center justify-between mb-6">
                         <div>
                             <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
                                 <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 Confirmed Appointments
                             </h2>
@@ -151,7 +152,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                             <?= count($confirmed_appointments) ?> Active
                         </span>
                     </div>
-                    
+
                     <?php if (!empty($confirmed_appointments)): ?>
                         <div class="grid gap-4 md:grid-cols-2 max-h-[600px] overflow-y-auto pr-2">
                             <?php foreach ($confirmed_appointments as $app): ?>
@@ -218,7 +219,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                         <div class="flex items-start gap-3">
                                             <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
                                                 <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                                                 </svg>
                                             </div>
                                             <div class="flex-1">
@@ -235,7 +236,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                             <div class="flex items-center justify-between mt-2 text-xs text-slate-600">
                                                 <span class="flex items-center gap-1">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                     </svg>
                                                     <?= html_escape($service['duration_mins']) ?> mins
                                                 </span>
@@ -287,13 +288,13 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                     <?php else: ?>
                         <div class="text-center py-12">
                             <svg class="w-20 h-20 mx-auto text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
                             <h3 class="text-lg font-semibold text-slate-900 mb-2">No Confirmed Appointments</h3>
                             <p class="text-slate-500 mb-4">You don't have any confirmed appointments yet.</p>
                             <a href="<?= site_url('/book') ?>" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold shadow-lg transition">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
                                 Book Your First Appointment
                             </a>
@@ -308,7 +309,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                     <div>
                         <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
                             <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
                             Appointment History
                         </h2>
@@ -317,7 +318,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                     <?php if (!empty($appointments)): ?>
                         <button type="button" onclick="openClearHistoryModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-sm font-semibold shadow-lg transition-all transform hover:scale-105">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                             Clear All History
                         </button>
@@ -414,7 +415,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
             <div class="flex flex-col items-center text-center mb-6">
                 <div class="mb-4 p-4 rounded-full bg-rose-100">
                     <svg class="w-12 h-12 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                 </div>
                 <h3 class="text-2xl font-bold text-slate-900">Clear All History?</h3>

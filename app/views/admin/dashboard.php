@@ -107,6 +107,17 @@ function display_validation_errors($errors)
                         </span>
                     </a>
 
+                    <a href="<?= site_url('admin/calendar') ?>" title="Appointments"
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
+                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
+                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
+                              ">
+                        <img src="https://cdn-icons-png.flaticon.com/128/747/747310.png" alt="" class="w-6 h-6 invert">
+                        <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
+                            Calendar
+                        </span>
+                    </a>
+
                     <a href="<?= site_url('management/appointments') ?>" title="Appointments"
                         class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
                               <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
@@ -270,11 +281,15 @@ function display_validation_errors($errors)
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center gap-2">
                                 <button id="calPrev" type="button" class="px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 border border-gray-200" aria-label="Previous month">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4">
+                                        <path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
                                 </button>
                                 <h3 id="calMonthLabel" class="text-lg font-semibold" aria-live="polite">—</h3>
                                 <button id="calNext" type="button" class="px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 border border-gray-200" aria-label="Next month">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4">
+                                        <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
                                 </button>
                             </div>
                             <div class="text-sm text-gray-500">
@@ -558,41 +573,66 @@ function display_validation_errors($errors)
             let current = new Date(); // current in view
             current.setDate(1);
             let events = [];
-            let charts = { daily: null, status: null, service: null };
+            let charts = {
+                daily: null,
+                status: null,
+                service: null
+            };
             let firstLoad = true;
             const monthCache = {}; // key: YYYY-MM -> events array
 
-            function iso(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-            function startOfMonth(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
-            function endOfMonth(d) { return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+            function iso(d) {
+                return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            }
+
+            function startOfMonth(d) {
+                return new Date(d.getFullYear(), d.getMonth(), 1);
+            }
+
+            function endOfMonth(d) {
+                return new Date(d.getFullYear(), d.getMonth() + 1, 0);
+            }
+
             function fmtTime(hhmmss) {
-                const [h,m] = (hhmmss||'00:00:00').split(':');
-                const date = new Date(); date.setHours(+h, +m, 0,0);
-                let hr = date.getHours(); const am = hr<12?'AM':'PM'; hr%=12; if(hr===0) hr=12;
+                const [h, m] = (hhmmss || '00:00:00').split(':');
+                const date = new Date();
+                date.setHours(+h, +m, 0, 0);
+                let hr = date.getHours();
+                const am = hr < 12 ? 'AM' : 'PM';
+                hr %= 12;
+                if (hr === 0) hr = 12;
                 return `${hr}:${String(date.getMinutes()).padStart(2,'0')} ${am}`;
             }
 
             function groupBy(arr, key) {
-                return arr.reduce((acc, it) => { const k = it[key] ?? 'Unknown'; (acc[k] ||= []).push(it); return acc; }, {});
+                return arr.reduce((acc, it) => {
+                    const k = it[key] ?? 'Unknown';
+                    (acc[k] ||= []).push(it);
+                    return acc;
+                }, {});
             }
 
             function renderCalendar() {
-                calLabel.textContent = current.toLocaleDateString(undefined, { month:'long', year:'numeric' });
+                calLabel.textContent = current.toLocaleDateString(undefined, {
+                    month: 'long',
+                    year: 'numeric'
+                });
                 calGrid.innerHTML = '';
                 const first = startOfMonth(current);
                 const last = endOfMonth(current);
-                const minDate = new Date(); minDate.setHours(0,0,0,0);
+                const minDate = new Date();
+                minDate.setHours(0, 0, 0, 0);
                 // leading blanks
-                for (let i=0;i<first.getDay();i++) calGrid.appendChild(document.createElement('div'));
+                for (let i = 0; i < first.getDay(); i++) calGrid.appendChild(document.createElement('div'));
                 const selectedIso = iso(new Date());
-                for (let d=1; d<=last.getDate(); d++) {
+                for (let d = 1; d <= last.getDate(); d++) {
                     const day = new Date(current.getFullYear(), current.getMonth(), d);
                     const dayIso = iso(day);
                     const btn = document.createElement('button');
-                    btn.type='button';
-                    btn.className = 'relative p-2 rounded-lg border text-left hover:bg-gray-50 ' + (dayIso===selectedIso?'ring-2 ring-blue-400':'' );
+                    btn.type = 'button';
+                    btn.className = 'relative p-2 rounded-lg border text-left hover:bg-gray-50 ' + (dayIso === selectedIso ? 'ring-2 ring-blue-400' : '');
                     btn.innerHTML = `<div class="text-xs text-gray-500">${d}</div>`;
-                    const dayCount = events.filter(e => e.date===dayIso).length;
+                    const dayCount = events.filter(e => e.date === dayIso).length;
                     if (dayCount) {
                         const dot = document.createElement('div');
                         dot.className = 'absolute right-2 top-2 w-2 h-2 rounded-full bg-blue-500';
@@ -605,8 +645,13 @@ function display_validation_errors($errors)
 
             function renderDayList(day) {
                 const dayIso = iso(day);
-                dayTitle.textContent = day.toLocaleDateString(undefined, { weekday:'long', month:'short', day:'numeric', year:'numeric' });
-                const list = events.filter(e => e.date===dayIso);
+                dayTitle.textContent = day.toLocaleDateString(undefined, {
+                    weekday: 'long',
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                const list = events.filter(e => e.date === dayIso);
                 dayEvents.innerHTML = '';
                 if (!list.length) {
                     dayEvents.innerHTML = '<div class="p-4 text-sm text-gray-500">No appointments for this day.</div>';
@@ -636,10 +681,13 @@ function display_validation_errors($errors)
                 return map[status] || 'bg-blue-100 text-blue-700';
             }
 
-            function monthKey(dateObj){ return `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}`; }
+            function monthKey(dateObj) {
+                return `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}`;
+            }
 
             async function loadData(immediate = false) {
-                const month = current.getMonth()+1, year = current.getFullYear();
+                const month = current.getMonth() + 1,
+                    year = current.getFullYear();
                 // Use only the path portion from PHP to ensure same-origin fetch even behind proxies/ports
                 const jsonPath = "<?= parse_url(site_url('management/appointments_json'), PHP_URL_PATH) ?>";
                 const url = `${jsonPath}?month=${month}&year=${year}`;
@@ -669,13 +717,20 @@ function display_validation_errors($errors)
                     }
 
                     let res = await fetch(url, {
-                        headers: { 'X-Requested-With':'XMLHttpRequest' },
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
                         credentials: 'include'
                     });
                     let ct = res.headers.get('content-type') || '';
                     if (!res.ok || !ct.includes('application/json')) {
                         // Fallback: try absolute URL (useful when app is served via a dev proxy)
-                        res = await fetch(absUrl, { headers: { 'X-Requested-With':'XMLHttpRequest' }, credentials: 'include' });
+                        res = await fetch(absUrl, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            credentials: 'include'
+                        });
                         ct = res.headers.get('content-type') || '';
                     }
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -713,31 +768,69 @@ function display_validation_errors($errors)
                 const ctxStatus = canvasStatus.getContext('2d');
                 const ctxService = canvasService.getContext('2d');
 
-                const labels = Array.from({length: endOfMonth(current).getDate()}, (_,i)=> i+1);
+                const labels = Array.from({
+                    length: endOfMonth(current).getDate()
+                }, (_, i) => i + 1);
                 const dayCounts = new Array(labels.length).fill(0);
                 events.forEach(e => {
                     const d = new Date(e.date + 'T00:00:00');
-                    if (d.getMonth()===current.getMonth() && d.getFullYear()===current.getFullYear()) {
-                        dayCounts[d.getDate()-1]++;
+                    if (d.getMonth() === current.getMonth() && d.getFullYear() === current.getFullYear()) {
+                        dayCounts[d.getDate() - 1]++;
                     }
                 });
 
                 if (charts.daily) charts.daily.destroy();
                 charts.daily = new Chart(ctxDaily, {
                     type: 'line',
-                    data: { labels, datasets: [{ label: 'Appointments', data: dayCounts, borderColor:'#3B82F6', backgroundColor:'rgba(59,130,246,.15)', fill:true, tension:.3 }]},
-                    options: { plugins:{ legend:{ display:false }}, scales:{ y:{ beginAtZero:true, ticks:{ precision:0 }}} }
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Appointments',
+                            data: dayCounts,
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59,130,246,.15)',
+                            fill: true,
+                            tension: .3
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
                 });
 
                 const byStatus = groupBy(events, 'status');
                 const statusLabels = Object.keys(byStatus);
                 const statusCounts = statusLabels.map(k => byStatus[k].length);
-                const statusColors = ['#22C55E','#EAB308','#EF4444','#9CA3AF','#3B82F6'];
+                const statusColors = ['#22C55E', '#EAB308', '#EF4444', '#9CA3AF', '#3B82F6'];
                 if (charts.status) charts.status.destroy();
                 charts.status = new Chart(ctxStatus, {
                     type: 'doughnut',
-                    data: { labels: statusLabels, datasets:[{ data: statusCounts, backgroundColor: statusColors.slice(0, Math.max(1,statusLabels.length))}] },
-                    options: { plugins:{ legend:{ position:'bottom' }}}
+                    data: {
+                        labels: statusLabels,
+                        datasets: [{
+                            data: statusCounts,
+                            backgroundColor: statusColors.slice(0, Math.max(1, statusLabels.length))
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
                 });
 
                 const byService = groupBy(events, 'service');
@@ -746,13 +839,40 @@ function display_validation_errors($errors)
                 if (charts.service) charts.service.destroy();
                 charts.service = new Chart(ctxService, {
                     type: 'bar',
-                    data: { labels: serviceLabels, datasets:[{ label:'Count', data: serviceCounts, backgroundColor:'#6366F1' }]},
-                    options: { plugins:{ legend:{ display:false }}, scales:{ y:{ beginAtZero:true, ticks:{ precision:0 }}} }
+                    data: {
+                        labels: serviceLabels,
+                        datasets: [{
+                            label: 'Count',
+                            data: serviceCounts,
+                            backgroundColor: '#6366F1'
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0
+                                }
+                            }
+                        }
+                    }
                 });
             }
 
-            calPrev.addEventListener('click', () => { current = new Date(current.getFullYear(), current.getMonth()-1, 1); loadData(true); });
-            calNext.addEventListener('click', () => { current = new Date(current.getFullYear(), current.getMonth()+1, 1); loadData(true); });
+            calPrev.addEventListener('click', () => {
+                current = new Date(current.getFullYear(), current.getMonth() - 1, 1);
+                loadData(true);
+            });
+            calNext.addEventListener('click', () => {
+                current = new Date(current.getFullYear(), current.getMonth() + 1, 1);
+                loadData(true);
+            });
 
             // Bootstrap with server-provided data for current month (fallback when fetch has issues)
             try {
@@ -768,7 +888,9 @@ function display_validation_errors($errors)
                     renderDayList(new Date(current.getFullYear(), current.getMonth(), 1));
                     renderCharts();
                 }
-            } catch (e) { /* ignore */ }
+            } catch (e) {
+                /* ignore */
+            }
 
             // Also attempt fetch (for navigation and to refresh data)
             loadData(false);

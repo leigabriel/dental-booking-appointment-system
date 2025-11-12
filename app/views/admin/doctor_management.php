@@ -86,6 +86,7 @@ function display_validation_errors($errors)
                     <img src="https://cdn-icons-png.flaticon.com/128/3914/3914549.png" alt="Dentalcare Logo" class="w-6 h-6 invert">
                 </a>
 
+
                 <nav class="space-y-4">
                     <a href="<?= site_url('admin/dashboard') ?>" title="Dashboard"
                         class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
@@ -95,6 +96,17 @@ function display_validation_errors($errors)
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914820.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Dashboard
+                        </span>
+                    </a>
+
+                    <a href="<?= site_url('admin/calendar') ?>" title="Appointments"
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
+                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
+                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
+                              ">
+                        <img src="https://cdn-icons-png.flaticon.com/128/747/747310.png" alt="" class="w-6 h-6 invert">
+                        <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
+                            Calendar
                         </span>
                     </a>
 

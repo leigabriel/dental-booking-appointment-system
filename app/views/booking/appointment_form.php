@@ -45,7 +45,8 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
         }
 
         input[type="date"]::-webkit-calendar-picker-indicator {

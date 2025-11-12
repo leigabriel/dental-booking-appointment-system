@@ -17,7 +17,8 @@ $leaflet_base_path = base_url() . PUBLIC_DIR . '/dist/';
     <link rel="stylesheet" href="<?= $leaflet_base_path . 'leaflet.css' ?>" crossorigin="" />
     <style>
         body {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
         }
 
         #clinicMap {

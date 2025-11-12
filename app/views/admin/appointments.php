@@ -64,6 +64,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     <img src="https://cdn-icons-png.flaticon.com/128/3914/3914549.png" alt="Dentalcare Logo" class="w-6 h-6 invert">
                 </a>
 
+
                 <nav class="space-y-4">
                     <a href="<?= site_url('admin/dashboard') ?>" title="Dashboard"
                         class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
@@ -73,6 +74,17 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914820.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Dashboard
+                        </span>
+                    </a>
+
+                    <a href="<?= site_url('admin/calendar') ?>" title="Appointments"
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
+                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
+                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
+                              ">
+                        <img src="https://cdn-icons-png.flaticon.com/128/747/747310.png" alt="" class="w-6 h-6 invert">
+                        <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
+                            Calendar
                         </span>
                     </a>
 
@@ -204,31 +216,31 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                                                 <?php
                                                 $payment_method = $app['payment_method'] ?? 'clinic';
                                                 $payment_status = $app['payment_status'] ?? 'pending';
-                                                
+
                                                 // Payment Method Badge
                                                 $method_badges = [
                                                     'gcash' => '<div class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-md text-xs font-semibold mb-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/></svg> GCash</div>',
                                                     'paypal' => '<div class="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 text-indigo-800 rounded-md text-xs font-semibold mb-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg> PayPal</div>',
                                                     'clinic' => '<div class="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 rounded-md text-xs font-semibold mb-1"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg> At Clinic</div>'
                                                 ];
-                                                
+
                                                 // Payment Status Badge
                                                 $status_badges = [
                                                     'paid' => '<div class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Paid</div>',
                                                     'unpaid' => '<div class="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg> Unpaid</div>',
                                                     'pending' => '<div class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg> Pending</div>'
                                                 ];
-                                                
+
                                                 echo $method_badges[$payment_method] ?? '<span class="text-xs text-gray-500">N/A</span>';
                                                 echo $status_badges[$payment_status] ?? '';
-                                                
+
                                                 // Show "Mark as Paid" button for clinic payments that are not paid
                                                 if ($payment_method === 'clinic' && $payment_status !== 'paid'): ?>
                                                     <div class="mt-2">
-                                                        <button onclick="markAsPaid(<?= html_escape($app['id']) ?>, '<?= html_escape($users[$app['user_id']]['full_name'] ?? 'Patient') ?>')" 
-                                                                class="inline-flex items-center gap-1 px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs font-semibold transition-colors">
+                                                        <button onclick="markAsPaid(<?= html_escape($app['id']) ?>, '<?= html_escape($users[$app['user_id']]['full_name'] ?? 'Patient') ?>')"
+                                                            class="inline-flex items-center gap-1 px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs font-semibold transition-colors">
                                                             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                                             </svg>
                                                             Mark as Paid
                                                         </button>
@@ -369,7 +381,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
             <div class="flex items-center gap-3 mb-4">
                 <div class="flex-shrink-0 w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
                     <svg class="w-6 h-6 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                     </svg>
                 </div>
                 <div>
@@ -388,7 +400,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                 </button>
                 <a id="confirm-mark-paid-btn" href="#" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md font-medium transition-colors inline-flex items-center gap-2">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                     </svg>
                     Confirm Payment
                 </a>
@@ -455,10 +467,10 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
             const modal = document.getElementById('mark-paid-modal');
             const confirmBtn = document.getElementById('confirm-mark-paid-btn');
             const patientNameSpan = document.getElementById('mark-paid-patient-name');
-            
+
             patientNameSpan.textContent = patientName;
             confirmBtn.setAttribute('href', '<?= site_url('management/appointment_mark_paid/') ?>' + appointmentId);
-            
+
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             document.body.classList.add('overflow-hidden');

@@ -33,7 +33,8 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
         }
 
         body {
-            font-family: 'Inter', 'JetBrains Mono', monospace;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
         }
 
         .gradient-bg {
