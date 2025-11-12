@@ -5,7 +5,7 @@ class AppointmentModel extends Model
 {
   protected $table = 'appointments';
   protected $primary_key = 'id';
-  protected $fillable = ['user_id', 'doctor_id', 'service_id', 'appointment_date', 'time_slot', 'status', 'decline_message'];
+  protected $fillable = ['user_id', 'doctor_id', 'service_id', 'appointment_date', 'time_slot', 'status', 'decline_message', 'payment_method', 'payment_status', 'payment_reference'];
 
   public function __construct()
   {

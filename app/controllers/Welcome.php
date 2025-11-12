@@ -3,7 +3,6 @@ defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 
 class Welcome extends Controller
 {
-	// Landing page
 	public function index()
 	{
 		$data = [];

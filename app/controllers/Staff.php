@@ -11,7 +11,6 @@ class Staff extends Controller
         $this->call->helper('url');
         $this->call->helper('language');
 
-        // Ensure only staff can access staff routes
         $role = $this->session->userdata('role');
         if (!$this->session->userdata('is_logged_in') || !in_array($role, ['staff', 'admin'])) {
             $this->session->set_flashdata('error_message', 'Access denied. Staff privileges required.');
@@ -42,7 +41,7 @@ class Staff extends Controller
         $total_patients = $LAVA->db->raw("SELECT COUNT(*) AS count FROM users WHERE role = 'user'")->fetch(PDO::FETCH_ASSOC)['count'];
         $total_appointments = $LAVA->db->raw("SELECT COUNT(*) AS count FROM appointments")->fetch(PDO::FETCH_ASSOC)['count'];
 
-        // Prepare initial calendar data for the current month (server-side bootstrap)
+        // Prepare initial calendar data for the current month
         $month = (int) date('n');
         $year  = (int) date('Y');
         $start = sprintf('%04d-%02d-01', $year, $month);

@@ -198,7 +198,41 @@ class Management extends Controller
         ];
 
         $this->AppointmentModel->update($appointment_id, $update);
-        $this->session->set_flashdata('success_message', "Appointment #{$appointment_id} declined and user notified.");
+
+        $this->session->set_flashdata('success_message', 'Appointment has been declined.');
+        redirect('management/appointments');
+    }
+
+    public function appointment_mark_paid($id)
+    {
+        // Ensure appointment exists
+        $appointment = $this->AppointmentModel->find($id);
+        if (!$appointment) {
+            $this->session->set_flashdata('error_message', 'Appointment not found.');
+            redirect('management/appointments');
+        }
+
+        // Check if payment method is clinic
+        if ($appointment['payment_method'] !== 'clinic') {
+            $this->session->set_flashdata('error_message', 'Only clinic payment appointments can be marked as paid manually.');
+            redirect('management/appointments');
+        }
+
+        // Check if already paid
+        if ($appointment['payment_status'] === 'paid') {
+            $this->session->set_flashdata('error_message', 'This appointment is already marked as paid.');
+            redirect('management/appointments');
+        }
+
+        // Update payment status to paid
+        $update = [
+            'payment_status' => 'paid',
+            'paid_at' => date('Y-m-d H:i:s')
+        ];
+
+        $this->AppointmentModel->update($id, $update);
+
+        $this->session->set_flashdata('success_message', 'Appointment payment has been marked as paid.');
         redirect('management/appointments');
     }
 
