@@ -137,6 +137,26 @@ $router->get('/admin/dashboard', function () {
   }
 });
 
+// Admin Calendar View
+$router->get('/admin/calendar', function () {
+  $LAVA = lava_instance();
+  $LAVA->call->helper('url');
+  $LAVA->call->library('session');
+
+  if ($LAVA->session->userdata('role') === 'admin') {
+    $LAVA->call->controller('Admin', 'calendar');
+  } else {
+    redirect('login');
+  }
+});
+
+// Reports Routes (Admin Only)
+$router->get('/reports', 'Reports::index');
+$router->get('/reports/export_appointments', 'Reports::export_appointments');
+$router->get('/reports/export_revenue', 'Reports::export_revenue');
+$router->get('/reports/export_doctors', 'Reports::export_doctors');
+$router->get('/reports/export_services', 'Reports::export_services');
+
 // Staff Dashboard Access
 $router->get('/staff/dashboard', function () {
   $LAVA = lava_instance();
