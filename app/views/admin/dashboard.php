@@ -150,6 +150,17 @@ function display_validation_errors($errors)
                             Services
                         </span>
                     </a>
+
+                    <a href="<?= site_url('reports') ?>" title="Services"
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
+                              <?php /* ACTIVE STATE for service_management.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
+                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
+                              ">
+                        <img src="https://cdn-icons-png.flaticon.com/128/13085/13085474.png" alt="" class="w-6 h-6 invert">
+                        <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
+                            Reports
+                        </span>
+                    </a>
                 </nav>
             </div>
 
