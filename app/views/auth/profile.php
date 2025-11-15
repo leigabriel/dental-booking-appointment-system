@@ -18,6 +18,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - DENTALCARE</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -35,6 +36,21 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
 
         ::-webkit-scrollbar-thumb {
             border-radius: 10px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-slide-in {
+            animation: slideIn 0.3s ease-out;
         }
     </style>
 </head>
@@ -162,7 +178,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                 $appointment_date = date('l, M j, Y', strtotime($app['appointment_date']));
                                 $appointment_time = date('g:i A', strtotime($app['time_slot']));
                                 ?>
-                                <div class="relative bg-gradient-to-br from-emerald-50 to-blue-50 border-2 border-emerald-200 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+                                <div id="receipt-<?= $app['id'] ?>" class="relative bg-gradient-to-br from-emerald-50 to-blue-50 border-2 border-emerald-200 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
                                     <!-- Receipt Header -->
                                     <div class="bg-emerald-600 text-white p-4 relative">
                                         <div class="flex justify-between items-start">
@@ -274,10 +290,21 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                             <p class="text-xs text-slate-500 text-center">Please arrive 10 minutes early</p>
                                             <p class="text-xs text-emerald-600 font-semibold mt-1 text-center">✓ Confirmed & Ready</p>
                                         </div>
+                                        
+                                        <!-- Download Receipt Button -->
+                                        <div class="mt-3 pt-3 border-t border-dashed border-slate-300" data-download-section>
+                                            <button onclick="downloadReceipt(<?= $app['id'] ?>, '<?= str_pad($app['id'], 6, '0', STR_PAD_LEFT) ?>')" 
+                                                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg text-sm font-semibold shadow-lg transition-all transform hover:scale-105">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                </svg>
+                                                Download Receipt
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <!-- Receipt Bottom Tear -->
-                                    <div class="h-4 bg-emerald-50" style="
+                                    <div class="h-4 bg-emerald-50" data-bottom-tear style="
                                         background-image: radial-gradient(circle at 10px 9px, transparent 12px, #ecfdf5 13px);
                                         background-size: 20px 20px;
                                         background-repeat: repeat-x;
@@ -609,6 +636,121 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                 }
             });
         })();
+
+        // Download Receipt as Image
+        async function downloadReceipt(receiptId, appointmentNumber) {
+            const receiptElement = document.getElementById(`receipt-${receiptId}`);
+            
+            if (!receiptElement) {
+                showNotification('Receipt not found!', 'error');
+                return;
+            }
+
+            // Find elements to hide during capture
+            const downloadSection = receiptElement.querySelector('[data-download-section]');
+            const bottomTear = receiptElement.querySelector('[data-bottom-tear]');
+            
+            try {
+                // Create loading overlay with better design
+                const loadingOverlay = document.createElement('div');
+                loadingOverlay.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50';
+                loadingOverlay.innerHTML = `
+                    <div class="bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-4 animate-pulse">
+                        <div class="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                        <div class="text-center">
+                            <p class="text-lg font-bold text-slate-900">Generating Receipt</p>
+                            <p class="text-sm text-slate-500 mt-1">Please wait a moment...</p>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(loadingOverlay);
+
+                // Hide download button and bottom tear from capture
+                if (downloadSection) downloadSection.style.display = 'none';
+                if (bottomTear) bottomTear.style.display = 'none';
+
+                // Wait for DOM updates
+                await new Promise(resolve => setTimeout(resolve, 150));
+
+                // Generate high-quality canvas
+                const canvas = await html2canvas(receiptElement, {
+                    scale: 3,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff',
+                    windowWidth: receiptElement.scrollWidth,
+                    windowHeight: receiptElement.scrollHeight,
+                    imageTimeout: 0,
+                    removeContainer: false
+                });
+
+                // Restore hidden elements
+                if (downloadSection) downloadSection.style.display = '';
+                if (bottomTear) bottomTear.style.display = '';
+
+                // Remove loading overlay
+                document.body.removeChild(loadingOverlay);
+
+                // Convert canvas to blob and trigger download
+                canvas.toBlob(function(blob) {
+                    if (!blob) {
+                        showNotification('Failed to create image file.', 'error');
+                        return;
+                    }
+                    
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = `dentalcare-receipt-${appointmentNumber}.png`;
+                    link.href = url;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Clean up
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                    
+                    showNotification('Receipt downloaded successfully!', 'success');
+                }, 'image/png', 1.0);
+
+            } catch (error) {
+                console.error('Error generating receipt:', error);
+                
+                // Restore hidden elements in case of error
+                if (downloadSection) downloadSection.style.display = '';
+                if (bottomTear) bottomTear.style.display = '';
+                
+                // Remove loading overlay if it exists
+                const overlay = document.querySelector('.fixed.inset-0.bg-black\\/50');
+                if (overlay) document.body.removeChild(overlay);
+                
+                showNotification('Failed to generate receipt. Please try again.', 'error');
+            }
+        }
+
+        // Show notification helper
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-emerald-500' : type === 'error' ? 'bg-rose-500' : 'bg-blue-500';
+            
+            notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-slide-in flex items-center gap-3`;
+            notification.innerHTML = `
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    ${type === 'success' 
+                        ? '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>'
+                        : '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>'}
+                </svg>
+                <span class="font-semibold">${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                notification.style.transition = 'all 0.3s ease';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
     </script>
 
 </body>
