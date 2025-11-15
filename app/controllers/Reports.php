@@ -352,7 +352,6 @@ class Reports extends Controller
     // PDF Export for Appointments
     private function exportAppointmentsPDF($data, $start_date, $end_date)
     {
-        require_once(APPPATH . '../vendor/autoload.php');
         
         $pdf = new TCPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         
@@ -427,7 +426,6 @@ class Reports extends Controller
     // PDF Export for Revenue
     private function exportRevenuePDF($data, $start_date, $end_date)
     {
-        require_once(APPPATH . '../vendor/autoload.php');
         
         $pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         
@@ -530,7 +528,6 @@ class Reports extends Controller
     // PDF Export for Doctors
     private function exportDoctorsPDF($data, $start_date, $end_date)
     {
-        require_once(APPPATH . '../vendor/autoload.php');
         
         $pdf = new TCPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         
@@ -589,7 +586,6 @@ class Reports extends Controller
     // PDF Export for Services
     private function exportServicesPDF($data, $start_date, $end_date)
     {
-        require_once(APPPATH . '../vendor/autoload.php');
         
         $pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         
