@@ -245,8 +245,8 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                                                 echo $method_badges[$payment_method] ?? '<span class="text-xs text-gray-500">N/A</span>';
                                                 echo $status_badges[$payment_status] ?? '';
 
-                                                // Show "Mark as Paid" button for clinic payments that are not paid
-                                                if ($payment_method === 'clinic' && $payment_status !== 'paid'): ?>
+                                                // Show "Mark as Paid" button for clinic payments that are not paid and appointment is not cancelled/declined
+                                                if ($payment_method === 'clinic' && $payment_status !== 'paid' && !in_array($app['status'], ['cancelled', 'declined'])): ?>
                                                     <div class="mt-2">
                                                         <button onclick="markAsPaid(<?= html_escape($app['id']) ?>, '<?= html_escape($users[$app['user_id']]['full_name'] ?? 'Patient') ?>')"
                                                             class="inline-flex items-center gap-1 px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs font-semibold transition-colors">

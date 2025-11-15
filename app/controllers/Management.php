@@ -163,7 +163,24 @@ class Management extends Controller
             $this->session->set_flashdata('error_message', 'Invalid appointment ID.');
             redirect('management/appointments');
         }
-        $this->AppointmentModel->update($id, ['status' => 'cancelled']);
+
+        // Fetch appointment details
+        $appointment = $this->AppointmentModel->find($id);
+        if (!$appointment) {
+            $this->session->set_flashdata('error_message', 'Appointment not found.');
+            redirect('management/appointments');
+        }
+
+        // Prepare update data
+        $update = ['status' => 'cancelled'];
+
+        // If payment was made at clinic and marked as paid, reset payment status
+        if ($appointment['payment_method'] === 'clinic' && $appointment['payment_status'] === 'paid') {
+            $update['payment_status'] = 'unpaid';
+            $update['paid_at'] = null;
+        }
+
+        $this->AppointmentModel->update($id, $update);
         $this->session->set_flashdata('success_message', "Appointment #{$id} cancelled successfully.");
         redirect('management/appointments');
     }
@@ -197,6 +214,12 @@ class Management extends Controller
             'decline_message' => $message
         ];
 
+        // If payment was made at clinic and marked as paid, reset payment status
+        if ($appointment['payment_method'] === 'clinic' && $appointment['payment_status'] === 'paid') {
+            $update['payment_status'] = 'unpaid';
+            $update['paid_at'] = null;
+        }
+
         $this->AppointmentModel->update($appointment_id, $update);
 
         $this->session->set_flashdata('success_message', 'Appointment has been declined.');
@@ -209,6 +232,12 @@ class Management extends Controller
         $appointment = $this->AppointmentModel->find($id);
         if (!$appointment) {
             $this->session->set_flashdata('error_message', 'Appointment not found.');
+            redirect('management/appointments');
+        }
+
+        // Check appointment status - cannot mark cancelled or declined appointments as paid
+        if (in_array($appointment['status'], ['cancelled', 'declined'])) {
+            $this->session->set_flashdata('error_message', 'Cannot mark cancelled or declined appointments as paid.');
             redirect('management/appointments');
         }
 
