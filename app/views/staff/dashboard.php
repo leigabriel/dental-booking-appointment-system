@@ -88,27 +88,29 @@ function display_validation_errors($errors)
 
         <aside class="w-20 bg-blue-900 text-gray-300 p-3 flex flex-col items-center justify-between shadow-2xl sticky top-0 h-screen z-20">
             <div>
-                <a href="<?= site_url('staff/dashboard') ?>" title="Dentalcare Home" class="flex items-center justify-center h-12 w-12 mb-8 rounded-full bg-blue-500 text-white shadow-md">
-                    <img src="https://cdn-icons-png.flaticon.com/128/3914/3914549.png" alt="Dentalcare Logo" class="w-6 h-6 invert">
+                <a href="<?= site_url('staff/dashboard') ?>" title="Dentalcare Home" class="flex items-center justify-center h-12 w-12 mb-8 rounded-full bg-gray-800 border-gray-700 border-2 text-white shadow-md hover:bg-gray-700">
+                    <img src="<?= site_url('public/img/dentalcare512x512.png') ?>" alt="Dentalcare Logo" class="w-6 h-6">
                 </a>
 
                 <nav class="space-y-4">
                     <a href="<?= site_url('staff/dashboard') ?>" title="Dashboard"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
-                              <?php /* ACTIVE STATE for dashboard.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2 bg-blue-600 border-blue-500 text-white shadow-md hover:bg-gray-800 hover:border-gray-700">
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914820.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Dashboard
                         </span>
                     </a>
 
+                    <a href="<?= site_url('admin/calendar') ?>" title="Calendar"
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2 bg-blue-600 border-blue-500 text-white shadow-md hover:bg-gray-800 hover:border-gray-700">
+                        <img src="https://cdn-icons-png.flaticon.com/128/747/747310.png" alt="" class="w-6 h-6 invert">
+                        <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
+                            Calendar
+                        </span>
+                    </a>
+
                     <a href="<?= site_url('management/appointments') ?>" title="Appointments"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
-                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2 bg-blue-600 border-blue-500 text-white shadow-md hover:bg-gray-800 hover:border-gray-700">
                         <img src="https://cdn-icons-png.flaticon.com/128/19027/19027040.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Appointments
@@ -116,10 +118,7 @@ function display_validation_errors($errors)
                     </a>
 
                     <a href="<?= site_url('management/doctors') ?>" title="Doctors"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
-                              <?php /* ACTIVE STATE for doctor_management.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2 bg-blue-600 border-blue-500 text-white shadow-md hover:bg-gray-800 hover:border-gray-700">
                         <img src="https://cdn-icons-png.flaticon.com/128/9856/9856850.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Doctors
@@ -127,13 +126,18 @@ function display_validation_errors($errors)
                     </a>
 
                     <a href="<?= site_url('management/services') ?>" title="Services"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
-                              <?php /* ACTIVE STATE for service_management.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2 bg-blue-600 border-blue-500 text-white shadow-md hover:bg-gray-800 hover:border-gray-700">
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914079.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Services
+                        </span>
+                    </a>
+
+                    <a href="#" onclick="showPrivilegeModal(event, 'Reports')" title="Reports"
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2 bg-blue-600 border-blue-500 text-white shadow-md hover:bg-gray-800 hover:border-gray-700">
+                        <img src="https://cdn-icons-png.flaticon.com/128/13085/13085474.png" alt="" class="w-6 h-6 invert">
+                        <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
+                            Reports
                         </span>
                     </a>
                 </nav>
@@ -141,7 +145,7 @@ function display_validation_errors($errors)
 
             <div>
                 <a href="<?= site_url('logout') ?>" title="Logout"
-                    class="flex items-center justify-center h-12 w-12 bg-pink-500 rounded-full text-red-400 hover:bg-pink-600 hover:text-red-300 transition-colors relative group">
+                    class="flex items-center justify-center h-12 w-12 bg-red-600 border-2 border-red-500 rounded-full text-white hover:bg-red-700 hover:border-red-600 transition-colors relative group">
                     <img src="https://cdn-icons-png.flaticon.com/128/19006/19006863.png" alt="" class="w-6 h-6 invert">
                     <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                         Logout
@@ -181,14 +185,45 @@ function display_validation_errors($errors)
                     </div>
                 </div>
             </div>
+
+            <!-- Privilege Denied Modal -->
+            <div id="privilege-modal"
+                class="modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-opacity duration-300 ease-in-out"
+                onclick="closePrivilegeModal(event)">
+
+                <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl transform transition-transform duration-300 ease-in-out scale-95"
+                    onclick="event.stopPropagation()">
+
+                    <div class="flex flex-col items-center text-center mb-6">
+                        <div class="mb-4 text-yellow-500 text-5xl">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-gray-800">Access Denied</h3>
+                    </div>
+
+                    <p class="text-gray-600 text-center mb-2">
+                        You don't have the required privileges to access <strong id="privilege-feature-name">this feature</strong>.
+                    </p>
+                    <p class="text-gray-500 text-center text-sm mb-8">
+                        Only administrators can access this section.
+                    </p>
+
+                    <div class="flex justify-center">
+                        <button type="button"
+                            onclick="closePrivilegeModal()"
+                            class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 font-medium shadow-md">
+                            Understood
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </aside>
 
-        <div class="flex-1 flex flex-col lg:flex-row">
-
-            <main class="flex-1 p-6 sm:p-10 overflow-y-auto h-screen">
+        <main class="flex-1 p-6 sm:p-10 overflow-y-auto h-screen">
                 <header class="mb-10">
-                    <h1 class="text-8xl font-extrabold text-gray-900">Dashboard</h1>
-                    <p class="text-lg text-gray-600 mt-1">Welcome back, <?= html_escape($staff_full_name) ?>. Here's a summary for staff.</p>
+                    <h1 class="text-8xl font-extrabold text-gray-900">Staff Dashboard</h1>
+                    <p class="text-lg text-gray-600 mt-1">Welcome back, <?= html_escape($staff_full_name) ?>. View patient data and appointments (limited access).</p>
                 </header>
 
                 <?php if ($flash_message): ?>
@@ -235,11 +270,15 @@ function display_validation_errors($errors)
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center gap-2">
                             <button id="calPrev" type="button" class="px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 border border-gray-200" aria-label="Previous month">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4">
+                                    <path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
                             </button>
                             <h3 id="calMonthLabel" class="text-lg font-semibold" aria-live="polite">—</h3>
                             <button id="calNext" type="button" class="px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 border border-gray-200" aria-label="Next month">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-4 h-4">
+                                    <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
                             </button>
                         </div>
                         <div class="text-sm text-gray-500">
@@ -266,10 +305,17 @@ function display_validation_errors($errors)
                 </section>
 
                 <section class="bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-200">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Registered Patient Accounts</h2>
-                    <p class="text-gray-600 mb-4 text-sm">
-                        View registered patient accounts for reference.
-                    </p>
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Registered Patient Accounts</h2>
+                            <p class="text-gray-600 mt-1 text-sm">
+                                <i class="fas fa-eye mr-1"></i> View-only access for staff members
+                            </p>
+                        </div>
+                        <span class="px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-xs font-semibold">
+                            <i class="fas fa-lock mr-1"></i> Read Only
+                        </span>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
@@ -307,72 +353,6 @@ function display_validation_errors($errors)
                 </section>
             </main>
 
-            <aside class="w-full lg:w-80 h-screen sticky top-0 flex flex-col overflow-y-auto bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900 shadow-2xl border-r border-blue-800 text-white">
-
-                <?php
-                // Keep the same logic as before
-                $details_to_show = $userDetails ?? [];
-                $display_name = html_escape($details_to_show['full_name'] ?? $username);
-                $display_username = html_escape($details_to_show['username'] ?? $username);
-                $display_email = html_escape($details_to_show['email'] ?? 'N/A');
-                $display_role = html_escape(ucfirst($details_to_show['role'] ?? $current_role));
-
-                $icon_class = 'fas fa-user-shield';
-                $gradient_class = 'from-blue-700 to-blue-600';
-                $ring_color_class = 'ring-blue-400 ring-offset-blue-900';
-                $text_color_class = 'text-blue-300';
-                $badge_color_class = 'bg-blue-700 text-blue-100';
-                $info_title = 'Admin Information';
-
-                if (strtolower($details_to_show['role'] ?? $current_role) === 'staff') {
-                    $icon_class = 'fas fa-user-nurse';
-                    $gradient_class = 'from-sky-600 to-sky-500';
-                    $ring_color_class = 'ring-sky-400 ring-offset-blue-900';
-                    $text_color_class = 'text-sky-300';
-                    $badge_color_class = 'bg-sky-700 text-sky-100';
-                    $info_title = 'Staff Information';
-                }
-                ?>
-
-                <!-- Profile Header -->
-                <div class="relative p-6 text-center bg-white/10 backdrop-blur-md rounded-b-3xl shadow-lg mb-6">
-                    <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center mx-auto ring-4 ring-offset-2 <?= $ring_color_class ?> ring-white shadow-xl transition-all hover:scale-105 duration-300">
-                        <i class="<?= $icon_class ?> text-4xl <?= $text_color_class ?>"></i>
-                    </div>
-                    <h2 class="mt-3 text-xl font-bold text-white tracking-wide"><?= $display_name ?></h2>
-                    <p class="mt-1 text-xs uppercase font-semibold <?= $badge_color_class ?> px-4 py-1 rounded-full inline-block tracking-wider shadow-inner"><?= $display_role ?></p>
-                </div>
-
-                <!-- Info Section -->
-                <div class="px-6 pb-10 flex-grow">
-                    <h3 class="text-sm font-semibold text-blue-200 mb-4 uppercase tracking-wider border-b border-blue-700 pb-2"><?= $info_title ?></h3>
-
-                    <ul class="space-y-6 text-sm">
-                        <li>
-                            <span class="block text-blue-200 mb-1">Full Name</span>
-                            <span class="text-white font-semibold text-base"><?= $display_name ?></span>
-                        </li>
-                        <li>
-                            <span class="block text-blue-200 mb-1">Username</span>
-                            <span class="text-white font-semibold text-base"><?= $display_username ?></span>
-                        </li>
-                        <li>
-                            <span class="block text-blue-200 mb-1">Email Address</span>
-                            <span class="text-white font-semibold text-base break-words"><?= $display_email ?></span>
-                        </li>
-                        <li>
-                            <span class="block text-blue-200 mb-1">Role</span>
-                            <span class="text-white font-semibold text-base"><?= $display_role ?></span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Footer -->
-                <footer class="p-6 mt-auto border-t border-blue-800 bg-blue-950/50 backdrop-blur-sm text-center">
-                    <p class="text-xs text-blue-300">&copy; <?= date('Y') ?> DENTALCARE. All rights reserved.</p>
-                </footer>
-            </aside>
-
         </div>
     </div>
 
@@ -395,16 +375,32 @@ function display_validation_errors($errors)
             let firstLoad = true;
             const monthCache = {};
 
-            function iso(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-            function startOfMonth(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
-            function endOfMonth(d) { return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+            function iso(d) {
+                return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            }
+
+            function startOfMonth(d) {
+                return new Date(d.getFullYear(), d.getMonth(), 1);
+            }
+
+            function endOfMonth(d) {
+                return new Date(d.getFullYear(), d.getMonth() + 1, 0);
+            }
+
             function fmtTime(hhmmss) {
-                const [h,m] = (hhmmss||'00:00:00').split(':');
-                const date = new Date(); date.setHours(+h, +m, 0,0);
-                let hr = date.getHours(); const am = hr<12?'AM':'PM'; hr%=12; if(hr===0) hr=12;
+                const [h, m] = (hhmmss || '00:00:00').split(':');
+                const date = new Date();
+                date.setHours(+h, +m, 0, 0);
+                let hr = date.getHours();
+                const am = hr < 12 ? 'AM' : 'PM';
+                hr %= 12;
+                if (hr === 0) hr = 12;
                 return `${hr}:${String(date.getMinutes()).padStart(2,'0')} ${am}`;
             }
-            function monthKey(dateObj){ return `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}`; }
+
+            function monthKey(dateObj) {
+                return `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}`;
+            }
 
             function statusBadge(status) {
                 const map = {
@@ -418,20 +414,23 @@ function display_validation_errors($errors)
 
             function renderCalendar() {
                 if (!calGrid) return;
-                calLabel.textContent = current.toLocaleDateString(undefined, { month:'long', year:'numeric' });
+                calLabel.textContent = current.toLocaleDateString(undefined, {
+                    month: 'long',
+                    year: 'numeric'
+                });
                 calGrid.innerHTML = '';
                 const first = startOfMonth(current);
                 const last = endOfMonth(current);
-                for (let i=0;i<first.getDay();i++) calGrid.appendChild(document.createElement('div'));
+                for (let i = 0; i < first.getDay(); i++) calGrid.appendChild(document.createElement('div'));
                 const selectedIso = iso(new Date());
-                for (let d=1; d<=last.getDate(); d++) {
+                for (let d = 1; d <= last.getDate(); d++) {
                     const day = new Date(current.getFullYear(), current.getMonth(), d);
                     const dayIso = iso(day);
                     const btn = document.createElement('button');
-                    btn.type='button';
-                    btn.className = 'relative p-2 rounded-lg border text-left hover:bg-gray-50 ' + (dayIso===selectedIso?'ring-2 ring-blue-400':'' );
+                    btn.type = 'button';
+                    btn.className = 'relative p-2 rounded-lg border text-left hover:bg-gray-50 ' + (dayIso === selectedIso ? 'ring-2 ring-blue-400' : '');
                     btn.innerHTML = `<div class="text-xs text-gray-500">${d}</div>`;
-                    const dayCount = events.filter(e => e.date===dayIso).length;
+                    const dayCount = events.filter(e => e.date === dayIso).length;
                     if (dayCount) {
                         const dot = document.createElement('div');
                         dot.className = 'absolute right-2 top-2 w-2 h-2 rounded-full bg-blue-500';
@@ -444,8 +443,13 @@ function display_validation_errors($errors)
 
             function renderDayList(day) {
                 const dayIso = iso(day);
-                dayTitle.textContent = day.toLocaleDateString(undefined, { weekday:'long', month:'short', day:'numeric', year:'numeric' });
-                const list = events.filter(e => e.date===dayIso);
+                dayTitle.textContent = day.toLocaleDateString(undefined, {
+                    weekday: 'long',
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                const list = events.filter(e => e.date === dayIso);
                 dayEvents.innerHTML = '';
                 if (!list.length) {
                     dayEvents.innerHTML = '<div class="p-4 text-sm text-gray-500">No appointments for this day.</div>';
@@ -466,7 +470,8 @@ function display_validation_errors($errors)
             }
 
             async function loadData(immediate = false) {
-                const month = current.getMonth()+1, year = current.getFullYear();
+                const month = current.getMonth() + 1,
+                    year = current.getFullYear();
                 const jsonPath = "<?= parse_url(site_url('management/appointments_json'), PHP_URL_PATH) ?>";
                 const url = `${jsonPath}?month=${month}&year=${year}`;
                 const absUrl = `<?= site_url('management/appointments_json') ?>?month=${'${month}'}&year=${'${year}'}`;
@@ -491,10 +496,20 @@ function display_validation_errors($errors)
                         }
                     }
 
-                    let res = await fetch(url, { headers: { 'X-Requested-With':'XMLHttpRequest' }, credentials: 'include' });
+                    let res = await fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        credentials: 'include'
+                    });
                     let ct = res.headers.get('content-type') || '';
                     if (!res.ok || !ct.includes('application/json')) {
-                        res = await fetch(absUrl, { headers: { 'X-Requested-With':'XMLHttpRequest' }, credentials: 'include' });
+                        res = await fetch(absUrl, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            credentials: 'include'
+                        });
                         ct = res.headers.get('content-type') || '';
                     }
                     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -519,8 +534,14 @@ function display_validation_errors($errors)
                 }
             }
 
-            calPrev.addEventListener('click', () => { current = new Date(current.getFullYear(), current.getMonth()-1, 1); loadData(true); });
-            calNext.addEventListener('click', () => { current = new Date(current.getFullYear(), current.getMonth()+1, 1); loadData(true); });
+            calPrev.addEventListener('click', () => {
+                current = new Date(current.getFullYear(), current.getMonth() - 1, 1);
+                loadData(true);
+            });
+            calNext.addEventListener('click', () => {
+                current = new Date(current.getFullYear(), current.getMonth() + 1, 1);
+                loadData(true);
+            });
 
             // Bootstrap from server
             try {
@@ -533,7 +554,8 @@ function display_validation_errors($errors)
                     renderCalendar();
                     renderDayList(new Date(current.getFullYear(), current.getMonth(), 1));
                 }
-            } catch (e) { /* ignore */ }
+            } catch (e) {
+                /* ignore */ }
 
             // Fetch to refresh
             loadData(false);
@@ -571,6 +593,30 @@ function display_validation_errors($errors)
                 });
             }
         })();
+
+        // Privilege modal functions
+        function showPrivilegeModal(event, featureName) {
+            event.preventDefault();
+            const modal = document.getElementById('privilege-modal');
+            const featureNameElement = document.getElementById('privilege-feature-name');
+            featureNameElement.textContent = featureName;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closePrivilegeModal(event = null) {
+            if (!event || event.target.id === 'privilege-modal') {
+                const modal = document.getElementById('privilege-modal');
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        // Expose to global scope
+        window.showPrivilegeModal = showPrivilegeModal;
+        window.closePrivilegeModal = closePrivilegeModal;
     </script>
 </body>
 
