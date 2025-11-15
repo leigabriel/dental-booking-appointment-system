@@ -60,16 +60,15 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
 
         <aside class="w-20 bg-blue-900 text-gray-300 p-3 flex flex-col items-center justify-between shadow-2xl sticky top-0 h-screen z-20">
             <div>
-                <a href="<?= site_url('admin/dashboard') ?>" title="Dentalcare Home" class="flex items-center justify-center h-12 w-12 mb-8 rounded-full bg-blue-500 text-white shadow-md">
-                    <img src="https://cdn-icons-png.flaticon.com/128/3914/3914549.png" alt="Dentalcare Logo" class="w-6 h-6 invert">
+                <a href="<?= site_url('admin/dashboard') ?>" title="Dentalcare Home" class="flex items-center justify-center h-12 w-12 mb-8 rounded-full bg-gray-800 border-gray-700 border-2 text-white shadow-md hover:bg-gray-700">
+                    <img src="<?= site_url('public/img/dentalcare512x512.png') ?>" alt="Dentalcare Logo" class="w-6 h-6">
                 </a>
-
 
                 <nav class="space-y-4">
                     <a href="<?= site_url('admin/dashboard') ?>" title="Dashboard"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
-                              <?php /* ACTIVE STATE for dashboard.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
+                              <?php /* ACTIVE STATE for dashboard.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
+                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
                               ">
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914820.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
@@ -78,9 +77,9 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </a>
 
                     <a href="<?= site_url('admin/calendar') ?>" title="Appointments"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
-                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
+                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
+                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
                               ">
                         <img src="https://cdn-icons-png.flaticon.com/128/747/747310.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
@@ -89,9 +88,9 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </a>
 
                     <a href="<?= site_url('management/appointments') ?>" title="Appointments"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
-                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
+                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
+                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
                               ">
                         <img src="https://cdn-icons-png.flaticon.com/128/19027/19027040.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
@@ -100,9 +99,9 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </a>
 
                     <a href="<?= site_url('management/doctors') ?>" title="Doctors"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
-                              <?php /* ACTIVE STATE for doctor_management.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
+                              <?php /* ACTIVE STATE for doctor_management.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
+                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
                               ">
                         <img src="https://cdn-icons-png.flaticon.com/128/9856/9856850.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
@@ -111,9 +110,9 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </a>
 
                     <a href="<?= site_url('management/services') ?>" title="Services"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
-                              <?php /* ACTIVE STATE for service_management.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
+                              <?php /* ACTIVE STATE for service_management.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
+                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
                               ">
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914079.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
@@ -122,9 +121,9 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </a>
 
                     <a href="<?= site_url('reports') ?>" title="Services"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group
-                              <?php /* ACTIVE STATE for service_management.php: */ ?> bg-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> text-gray-400 hover:bg-blue-600 hover:text-white <?php /* END INACTIVE */ ?>
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
+                              <?php /* ACTIVE STATE for service_management.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
+                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
                               ">
                         <img src="https://cdn-icons-png.flaticon.com/128/13085/13085474.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
@@ -136,7 +135,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
 
             <div>
                 <a href="<?= site_url('logout') ?>" title="Logout"
-                    class="flex items-center justify-center h-12 w-12 bg-pink-500 rounded-full text-red-400 hover:bg-pink-600 hover:text-red-300 transition-colors relative group">
+                    class="flex items-center justify-center h-12 w-12 bg-red-600 border-2 border-red-500 rounded-full text-white hover:bg-red-700 hover:border-red-600 transition-colors relative group">
                     <img src="https://cdn-icons-png.flaticon.com/128/19006/19006863.png" alt="" class="w-6 h-6 invert">
                     <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                         Logout
@@ -176,6 +175,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </div>
                 </div>
             </div>
+
         </aside>
 
         <div class="flex-1 flex flex-col lg:flex-row">
@@ -296,72 +296,6 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </div>
                 </section>
             </main>
-
-            <aside class="w-full lg:w-80 h-screen sticky top-0 flex flex-col overflow-y-auto bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900 shadow-2xl border-r border-blue-800 text-white">
-
-                <?php
-                // Keep the same logic as before
-                $details_to_show = $userDetails ?? [];
-                $display_name = html_escape($details_to_show['full_name'] ?? $username);
-                $display_username = html_escape($details_to_show['username'] ?? $username);
-                $display_email = html_escape($details_to_show['email'] ?? 'N/A');
-                $display_role = html_escape(ucfirst($details_to_show['role'] ?? $current_role));
-
-                $icon_class = 'fas fa-user-shield';
-                $gradient_class = 'from-blue-700 to-blue-600';
-                $ring_color_class = 'ring-blue-400 ring-offset-blue-900';
-                $text_color_class = 'text-blue-300';
-                $badge_color_class = 'bg-blue-700 text-blue-100';
-                $info_title = 'Admin Information';
-
-                if (strtolower($details_to_show['role'] ?? $current_role) === 'staff') {
-                    $icon_class = 'fas fa-user-nurse';
-                    $gradient_class = 'from-sky-600 to-sky-500';
-                    $ring_color_class = 'ring-sky-400 ring-offset-blue-900';
-                    $text_color_class = 'text-sky-300';
-                    $badge_color_class = 'bg-sky-700 text-sky-100';
-                    $info_title = 'Staff Information';
-                }
-                ?>
-
-                <!-- Profile Header -->
-                <div class="relative p-6 text-center bg-white/10 backdrop-blur-md rounded-b-3xl shadow-lg mb-6">
-                    <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center mx-auto ring-4 ring-offset-2 <?= $ring_color_class ?> ring-white shadow-xl transition-all hover:scale-105 duration-300">
-                        <i class="<?= $icon_class ?> text-4xl <?= $text_color_class ?>"></i>
-                    </div>
-                    <h2 class="mt-3 text-xl font-bold text-white tracking-wide"><?= $display_name ?></h2>
-                    <p class="mt-1 text-xs uppercase font-semibold <?= $badge_color_class ?> px-4 py-1 rounded-full inline-block tracking-wider shadow-inner"><?= $display_role ?></p>
-                </div>
-
-                <!-- Info Section -->
-                <div class="px-6 pb-10 flex-grow">
-                    <h3 class="text-sm font-semibold text-blue-200 mb-4 uppercase tracking-wider border-b border-blue-700 pb-2"><?= $info_title ?></h3>
-
-                    <ul class="space-y-6 text-sm">
-                        <li>
-                            <span class="block text-blue-200 mb-1">Full Name</span>
-                            <span class="text-white font-semibold text-base"><?= $display_name ?></span>
-                        </li>
-                        <li>
-                            <span class="block text-blue-200 mb-1">Username</span>
-                            <span class="text-white font-semibold text-base"><?= $display_username ?></span>
-                        </li>
-                        <li>
-                            <span class="block text-blue-200 mb-1">Email Address</span>
-                            <span class="text-white font-semibold text-base break-words"><?= $display_email ?></span>
-                        </li>
-                        <li>
-                            <span class="block text-blue-200 mb-1">Role</span>
-                            <span class="text-white font-semibold text-base"><?= $display_role ?></span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Footer -->
-                <footer class="p-6 mt-auto border-t border-blue-800 bg-blue-950/50 backdrop-blur-sm text-center">
-                    <p class="text-xs text-blue-300">&copy; <?= date('Y') ?> DENTALCARE. All rights reserved.</p>
-                </footer>
-            </aside>
 
         </div>
     </div>
