@@ -79,8 +79,8 @@ $config['ENVIRONMENT']             = 'development';
 | WARNING: You MUST set this value!
 |
 */
-$config['base_url'] 				= 'https://dentalcare-health.onrender.com/';
-// $config['base_url']         = 'http://localhost:3000/';
+// $config['base_url'] 				= 'https://dentalcare-health.onrender.com/';
+$config['base_url']         = 'http://localhost:3000/';
 
 /*
 |--------------------------------------------------------------------------
@@ -129,7 +129,7 @@ $config['log_dir']                  = 'runtime/logs/';
 | Note: This will NOT disable or override the LavaLust-specific
 |	autoloading (app/config/autoload.php)
 */
-$config['composer_autoload']        = FALSE;
+$config['composer_autoload']        = TRUE;
 
 /*
 |--------------------------------------------------------------------------

@@ -57,7 +57,7 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 |   Example: $database['another_example'] = array('key' => 'value')
 */
 
-/* database localhost
+// database localhost
 $database['main'] = array(
     'driver'	=> 'mysql',
     'hostname'	=> 'localhost',
@@ -70,9 +70,9 @@ $database['main'] = array(
     // Optional for SQLite
     'path'      => ''
 );
-*/
 
-// database using environment
+
+/* database using environment
 $database['main'] = array(
     'driver'    => 'mysql',
     'hostname'  => getenv("DB_HOST"),
@@ -83,5 +83,19 @@ $database['main'] = array(
     'charset'   => 'utf8mb4',
     'dbprefix'  => ''
 );
+*/
 
+/*
+$database['main'] = array(
+    'driver'    => 'mysql',
+    'hostname'    => 'sql100.infinityfree.com',
+    'port'        => '3306',
+    'username'    => 'if0_40291210',
+    'password'    => 'lei552005',
+    'database'    => 'if0_40291210_dentalcare_database',
+    'charset'    => 'utf8mb4',
+    'dbprefix'    => '',
+    // Optional for SQLite
+    'path'      => ''
+);*/
 ?>

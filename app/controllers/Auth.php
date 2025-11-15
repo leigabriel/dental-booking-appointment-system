@@ -1,8 +1,6 @@
 <?php
 defined('PREVENT_DIRECT_ACCESS') or exit('No direct script access allowed');
 
-require  'vendor/autoload.php';
-
 class Auth extends Controller
 {
     public function __construct()
@@ -281,14 +279,19 @@ class Auth extends Controller
     // Initiate Google OAuth login
     public function google_login()
     {
-        $google_client = new Google_Client();
-        $google_client->setClientId('298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com');
-        $google_client->setClientSecret('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');
-        //$google_client->setRedirectUri('https://dentalcare-health.onrender.com/auth/google_callback');
-        $google_client->setRedirectUri('http://localhost:3000/auth/google_callback');
-        $google_client->addScope('email');
-        $google_client->addScope('profile');
-        $auth_url = $google_client->createAuthUrl();
+        $client_id = '298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com';
+        $redirect_uri = 'http://localhost:3000/auth/google_callback';
+        // $redirect_uri = 'https://dentalcare-health.onrender.com/auth/google_callback';
+        
+        $params = [
+            'client_id' => $client_id,
+            'redirect_uri' => $redirect_uri,
+            'response_type' => 'code',
+            'scope' => 'email profile',
+            'access_type' => 'online'
+        ];
+        
+        $auth_url = 'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query($params);
         header('Location: ' . filter_var($auth_url, FILTER_SANITIZE_URL));
     }
 
@@ -298,27 +301,52 @@ class Auth extends Controller
         $code = $this->io->get('code');
 
         if ($code) {
-            $google_client = new Google_Client();
+            $client_id = '298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com';
+            $client_secret = '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';
+            $redirect_uri = 'http://localhost:3000/auth/google_callback';
+            // $redirect_uri = 'https://dentalcare-health.onrender.com/auth/google_callback';
 
-            $google_client->setClientId('298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com');
-            $google_client->setClientSecret('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');
-            //$google_client->setRedirectUri('https://dentalcare-health.onrender.com/auth/google_callback');
-            $google_client->setRedirectUri('http://localhost:3000/auth/google_callback');
+            // Exchange authorization code for access token
+            $token_url = 'https://oauth2.googleapis.com/token';
+            $token_data = [
+                'code' => $code,
+                'client_id' => $client_id,
+                'client_secret' => $client_secret,
+                'redirect_uri' => $redirect_uri,
+                'grant_type' => 'authorization_code'
+            ];
 
-            $token = $google_client->fetchAccessTokenWithAuthCode($code);
+            $ch = curl_init($token_url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($token_data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            curl_close($ch);
 
-            if (isset($token['error'])) {
+            $token = json_decode($response, true);
+
+            if (isset($token['error']) || !isset($token['access_token'])) {
                 redirect('/auth/login?error=google_failed');
                 return;
             }
 
-            $google_client->setAccessToken($token['access_token']);
+            // Get user info using access token
+            $userinfo_url = 'https://www.googleapis.com/oauth2/v2/userinfo';
+            $ch = curl_init($userinfo_url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $token['access_token']]);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $userinfo_response = curl_exec($ch);
+            curl_close($ch);
 
-            $google_service = new \Google\Service\Oauth2($google_client);
-            $data = $google_service->userinfo->get();
+            $data = json_decode($userinfo_response, true);
 
-            $user_email = $data->email;
-            $user_name = $data->name;
+            if (!isset($data['email'])) {
+                redirect('/auth/login?error=google_failed');
+                return;
+            }
+
+            $user_email = $data['email'];
+            $user_name = $data['name'] ?? $data['email'];
 
             $this->call->model('UserModel');
             $existing_user = $this->UserModel->findUserByEmail($user_email);

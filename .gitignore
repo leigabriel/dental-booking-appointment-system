@@ -1,6 +1,5 @@
 .env
 
-
 .DS_Store
 
 app/vendor/*
