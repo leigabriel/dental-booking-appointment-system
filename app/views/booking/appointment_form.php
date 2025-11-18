@@ -76,6 +76,20 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             padding-left: 2.5rem;
         }
 
+        /* Responsive adjustment for stepper circle on mobile */
+        @media (max-width: 640px) {
+            .stepper li {
+                padding-left: 0;
+                padding-top: 2rem;
+            }
+
+            .stepper li::before {
+                left: 50%;
+                transform: translateX(-50%);
+                top: 0.5rem;
+            }
+        }
+
         .stepper li::before {
             counter-increment: step;
             content: counter(step);
@@ -260,6 +274,18 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             outline: 2px solid rgba(99, 102, 241, .5);
             outline-offset: 2px;
         }
+
+        /* Mobile Calendar Adjustments */
+        @media (max-width: 640px) {
+            .cal-day {
+                padding: 0.35rem;
+                font-size: 0.75rem;
+            }
+
+            .cal-grid {
+                gap: 0.25rem;
+            }
+        }
     </style>
 </head>
 
@@ -276,7 +302,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             <div class="flex lg:hidden">
                 <button type="button" command="show-modal" commandfor="mobile-menu" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-200">
                     <span class="sr-only">Open main menu</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-8">
                         <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
@@ -289,7 +315,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                 <a href="/#contact" class="text-lg/6 font-semibold text-white hover:text-blue-400">Contact</a>
                 <a href="<?= site_url('book') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Book Now</a>
             </div>
-            <div class="hidden lg:flex lg:flex-1 lg:justify-end relative gap-x-6">
+            <div class="hidden lg:flex lg:flex-1 lg:justify-end relative gap-x-3 items-center whitespace-nowrap">
                 <?php if (isset($is_logged_in) && $is_logged_in): ?>
                     <!-- Profile Dropdown -->
                     <div class="group relative">
@@ -303,17 +329,16 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                         </div>
                     </div>
                 <?php else : ?>
-                    <!-- Login / Register remain unchanged -->
-                    <a href="<?= site_url('login') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Log in</a>
-                    <span class="text-white">|</span>
-                    <a href="<?= site_url('register') ?>" class="text-lg/6 font-semibold text-white hover:text-blue-400">Register</a>
+                    <!-- Login / Register buttons -->
+                    <a href="<?= site_url('login') ?>" class="rounded-md bg-white/10 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-white/20 transition-colors">Log in</a>
+                    <a href="<?= site_url('register') ?>" class="rounded-md bg-indigo-500 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 transition-colors">Register</a>
                 <?php endif; ?>
             </div>
         </nav>
         <el-dialog>
             <dialog id="mobile-menu" class="m-0 p-0 backdrop:bg-transparent lg:hidden">
                 <div tabindex="0" class="fixed inset-0 focus:outline focus:outline-0">
-                    <el-dialog-panel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-blue-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
+                    <el-dialog-panel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-blue-950 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-100/10">
                         <div class="flex items-center justify-between">
                             <a href="#" class="-m-1.5 p-1.5">
                                 <span class="sr-only">DENTALCARE</span>
@@ -321,7 +346,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                             </a>
                             <button type="button" command="close" commandfor="mobile-menu" class="-m-2.5 rounded-md p-2.5 text-gray-200">
                                 <span class="sr-only">Close menu</span>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-8">
                                     <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                             </button>
@@ -329,16 +354,16 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                         <div class="mt-6 flow-root">
                             <div class="-my-6 divide-y divide-white/10">
                                 <div class="space-y-2 py-6">
-                                    <a href="#services" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Services</a>
-                                    <a href="#about" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">About</a>
-                                    <a href="#blog" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Blog</a>
-                                    <a href="#contact" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Contact</a>
-                                    <a href="<?= site_url('book') ?>" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-white hover:bg-white/5">Book Now</a>
+                                    <a href="/#services" class="-mx-3 block rounded-lg px-3 py-2 text-lg/7 font-semibold text-white hover:bg-white/5">Services</a>
+                                    <a href="/#about" class="-mx-3 block rounded-lg px-3 py-2 text-lg/7 font-semibold text-white hover:bg-white/5">About</a>
+                                    <a href="/#blog" class="-mx-3 block rounded-lg px-3 py-2 text-lg/7 font-semibold text-white hover:bg-white/5">Blog</a>
+                                    <a href="/#contact" class="-mx-3 block rounded-lg px-3 py-2 text-lg/7 font-semibold text-white hover:bg-white/5">Contact</a>
+                                    <a href="<?= site_url('book') ?>" class="-mx-3 block rounded-lg px-3 py-2 text-lg/7 font-semibold text-white hover:bg-white/5">Book Now</a>
                                 </div>
                                 <div class="py-6">
                                     <?php if ($is_logged_in) : ?>
                                         <a href="<?= site_url('profile') ?>" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">Profile (<?= html_escape($username) ?>)</a>
-                                        <a href="#" class="logout-confirm -mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5" data-logout-url="<?= site_url('logout') ?>">Log out</a>
+                                        <a href="<?= site_url('logout') ?>" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">Log out</a>
                                     <?php else : ?>
                                         <a href="<?= site_url('login') ?>" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">Log in</a>
                                         <a href="<?= site_url('register') ?>" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-white hover:bg-white/5">Register</a>
@@ -353,15 +378,16 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
     </header>
 
     <main class="flex-grow">
-        <div class="relative isolate max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="relative isolate max-w-7xl mx-auto py-6 sm:py-12 px-4 sm:px-6 lg:px-8 mt-8 sm:mt-0">
             <div aria-hidden="true" class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
                 <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
             </div>
-            <div class="flex justify-between items-center bg-blue-800/50 p-6 rounded-xl shadow-lg border border-white/10 mb-8 ring-1 ring-white/10">
-                <h1 class="text-3xl font-extrabold text-white">
+
+            <div class="flex flex-col sm:flex-row justify-between items-center bg-blue-800/50 p-6 rounded-xl shadow-lg border border-white/10 mb-8 ring-1 ring-white/10 gap-4 sm:gap-0">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white text-center sm:text-left">
                     Schedule Your Visit
                 </h1>
-                <a href="<?= site_url('/profile') ?>" class="text-sm text-indigo-300 hover:text-white hover:underline font-medium">
+                <a href="<?= site_url('/profile') ?>" class="text-sm text-indigo-300 hover:text-white hover:underline font-medium whitespace-nowrap">
                     View Appointments
                 </a>
             </div>
@@ -376,28 +402,27 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
 
             <div class="w-full max-w-7xl mx-auto">
 
-                <div class="bg-gradient-to-br from-blue-800/50 to-blue-900/50 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border-4 border-white/50 ring-1 ring-white/10">
-                    <div class="space-y-8">
+                <div class="bg-gradient-to-br from-blue-800/50 to-blue-900/50 backdrop-blur-sm p-4 sm:p-8 rounded-2xl shadow-2xl border-4 border-white/50 ring-1 ring-white/10">
+                    <div class="space-y-6 sm:space-y-8">
                         <div class="text-center">
-                            <h2 class="text-4xl font-extrabold text-white mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Book Your Appointment</h2>
-                            <p class="text-gray-300">Follow the steps below to schedule your dental visit</p>
+                            <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Book Your Appointment</h2>
+                            <p class="text-gray-300 text-sm sm:text-base">Follow the steps below to schedule your dental visit</p>
                         </div>
 
-                        <!-- Progress Stepper -->
-                        <ol class="stepper grid grid-cols-5 gap-3 text-xs text-indigo-200">
-                            <li id="step-service" class="step-idle bg-blue-900/40 rounded-lg px-4 py-3 border border-white/10 text-center">
+                        <ol class="stepper grid grid-cols-5 gap-1 sm:gap-3 text-[10px] sm:text-xs text-indigo-200">
+                            <li id="step-service" class="step-idle bg-blue-900/40 rounded-lg px-1 sm:px-4 py-3 border border-white/10 text-center flex flex-col justify-center items-center h-full">
                                 <div class="font-semibold">Service</div>
                             </li>
-                            <li id="step-doctor" class="step-idle bg-blue-900/40 rounded-lg px-4 py-3 border border-white/10 text-center">
+                            <li id="step-doctor" class="step-idle bg-blue-900/40 rounded-lg px-1 sm:px-4 py-3 border border-white/10 text-center flex flex-col justify-center items-center h-full">
                                 <div class="font-semibold">Doctor</div>
                             </li>
-                            <li id="step-date" class="step-idle bg-blue-900/40 rounded-lg px-4 py-3 border border-white/10 text-center">
+                            <li id="step-date" class="step-idle bg-blue-900/40 rounded-lg px-1 sm:px-4 py-3 border border-white/10 text-center flex flex-col justify-center items-center h-full">
                                 <div class="font-semibold">Date</div>
                             </li>
-                            <li id="step-time" class="step-idle bg-blue-900/40 rounded-lg px-4 py-3 border border-white/10 text-center">
+                            <li id="step-time" class="step-idle bg-blue-900/40 rounded-lg px-1 sm:px-4 py-3 border border-white/10 text-center flex flex-col justify-center items-center h-full">
                                 <div class="font-semibold">Time</div>
                             </li>
-                            <li id="step-confirm" class="step-idle bg-blue-900/40 rounded-lg px-4 py-3 border border-white/10 text-center">
+                            <li id="step-confirm" class="step-idle bg-blue-900/40 rounded-lg px-1 sm:px-4 py-3 border border-white/10 text-center flex flex-col justify-center items-center h-full">
                                 <div class="font-semibold">Confirm</div>
                             </li>
                         </ol>
@@ -405,19 +430,18 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                         <form method="POST" action="<?= site_url('book/submit') ?>" class="space-y-8">
                             <?= csrf_field() ?>
 
-                            <!-- Service Selection Section -->
-                            <div class="bg-blue-900/30 rounded-xl p-6 border border-white/10">
-                                <div class="flex items-center justify-between mb-4">
+                            <div class="bg-blue-900/30 rounded-xl p-4 sm:p-6 border border-white/10">
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4 sm:gap-0">
                                     <div>
-                                        <h3 class="text-2xl font-bold text-white flex items-center gap-2">
-                                            <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                                            <svg class="w-6 h-6 sm:w-7 sm:h-7 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                                             </svg>
                                             Select a Service
                                         </h3>
                                         <p id="serviceHelp" class="text-sm text-gray-400 mt-1">Choose the dental service you need</p>
                                     </div>
-                                    <div class="flex gap-2">
+                                    <div class="flex gap-2 self-end sm:self-auto">
                                         <button type="button" id="serviceScrollLeft" class="p-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-lg disabled:opacity-40 disabled:cursor-not-allowed">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -478,19 +502,18 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                 <input type="hidden" id="service_id" name="service_id" required>
                             </div>
 
-                            <!-- Doctor Selection Section -->
-                            <div class="bg-blue-900/30 rounded-xl p-6 border border-white/10">
-                                <div class="flex items-center justify-between mb-4">
+                            <div class="bg-blue-900/30 rounded-xl p-4 sm:p-6 border border-white/10">
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4 sm:gap-0">
                                     <div>
-                                        <h3 class="text-2xl font-bold text-white flex items-center gap-2">
-                                            <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                                            <svg class="w-6 h-6 sm:w-7 sm:h-7 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
                                             Choose Your Doctor
                                         </h3>
                                         <p id="doctorHelp" class="text-sm text-gray-400 mt-1">Select your preferred dental professional</p>
                                     </div>
-                                    <div class="flex gap-2">
+                                    <div class="flex gap-2 self-end sm:self-auto">
                                         <button type="button" id="doctorScrollLeft" class="p-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-all shadow-lg disabled:opacity-40 disabled:cursor-not-allowed">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -550,25 +573,24 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                 <input type="hidden" id="doctor_id" name="doctor_id" required>
                             </div>
 
-                            <!-- Date Selection Section -->
-                            <div class="bg-blue-900/30 rounded-xl p-6 border border-white/10">
+                            <div class="bg-blue-900/30 rounded-xl p-4 sm:p-6 border border-white/10">
                                 <div class="mb-4">
-                                    <h3 class="text-2xl font-bold text-white flex items-center gap-2">
-                                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
                                         Select Date
                                     </h3>
                                     <p class="text-sm text-gray-400 mt-1">Pick your preferred appointment date</p>
                                 </div>
-                                <div id="dateCalendar" class="bg-blue-900/30 border border-white/10 rounded-xl p-4">
+                                <div id="dateCalendar" class="bg-blue-900/30 border border-white/10 rounded-xl p-2 sm:p-4">
                                     <div class="flex items-center justify-between mb-3">
                                         <button type="button" id="calPrev" class="px-3 py-2 rounded-lg bg-blue-900/60 border border-white/10 text-gray-200 hover:bg-blue-800/60 transition-all" aria-label="Previous month">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5">
                                                 <path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                         </button>
-                                        <div id="calMonthLabel" class="text-lg font-bold text-white" aria-live="polite">Month YYYY</div>
+                                        <div id="calMonthLabel" class="text-base sm:text-lg font-bold text-white" aria-live="polite">Month YYYY</div>
                                         <button type="button" id="calNext" class="px-3 py-2 rounded-lg bg-blue-900/60 border border-white/10 text-gray-200 hover:bg-blue-800/60 transition-all" aria-label="Next month">
                                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="w-5 h-5">
                                                 <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -591,23 +613,21 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                     min="<?= date('Y-m-d') ?>"
                                     class="sr-only">
 
-                                <!-- Daily Limit Warning -->
                                 <div id="dailyLimitWarning" class="hidden mt-4 p-4 rounded-lg bg-amber-900/30 text-amber-200 border border-amber-500/50">
                                 </div>
                             </div>
 
-                            <!-- Time Selection Section -->
-                            <div class="bg-blue-900/30 rounded-xl p-6 border border-white/10">
+                            <div class="bg-blue-900/30 rounded-xl p-4 sm:p-6 border border-white/10">
                                 <div class="mb-4">
-                                    <h3 class="text-2xl font-bold text-white flex items-center gap-2">
-                                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                         Choose Time Slot
                                     </h3>
                                     <p id="availabilityHint" class="text-sm text-gray-400 mt-1">Select your preferred time</p>
                                 </div>
-                                <div id="timeChips" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                                <div id="timeChips" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
                                     <?php foreach ($time_slots as $slot): ?>
                                         <button type="button" class="chip chip-idle time-chip text-sm py-3 font-semibold" data-value="<?= html_escape($slot) ?>">
                                             <?= date('g:i A', strtotime($slot)) ?>
@@ -624,11 +644,10 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                 </select>
                             </div>
 
-                            <!-- Payment Method Section -->
-                            <div class="bg-blue-900/30 rounded-xl p-6 border border-white/10">
+                            <div class="bg-blue-900/30 rounded-xl p-4 sm:p-6 border border-white/10">
                                 <div class="mb-4">
-                                    <h3 class="text-2xl font-bold text-white flex items-center gap-2">
-                                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                                         </svg>
                                         Payment Method
@@ -636,9 +655,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                     <p class="text-sm text-gray-400 mt-1">Choose your preferred payment option</p>
                                 </div>
 
-                                <!-- Payment Method Cards -->
-                                <div class="grid md:grid-cols-3 gap-4 mb-4">
-                                    <!-- GCash Option -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                                     <div class="payment-card selection-card rounded-xl p-4 border-2 border-white/10 bg-gradient-to-br from-blue-900/40 to-blue-800/40 cursor-pointer transition-all hover:scale-105" data-payment="gcash">
                                         <div class="flex flex-col items-center gap-3">
                                             <div class="w-16 h-16 rounded-full flex items-center justify-center">
@@ -656,7 +673,6 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                         </div>
                                     </div>
 
-                                    <!-- PayPal Option -->
                                     <div class="payment-card selection-card rounded-xl p-4 border-2 border-white/10 bg-gradient-to-br from-blue-900/40 to-indigo-800/40 cursor-pointer transition-all hover:scale-105" data-payment="paypal">
                                         <div class="flex flex-col items-center gap-3">
                                             <div class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center">
@@ -674,7 +690,6 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                         </div>
                                     </div>
 
-                                    <!-- Pay at Clinic Option -->
                                     <div class="payment-card selection-card rounded-xl p-4 border-2 border-white/10 bg-gradient-to-br from-blue-900/40 to-purple-800/40 cursor-pointer transition-all hover:scale-105" data-payment="clinic">
                                         <div class="flex flex-col items-center gap-3">
                                             <div class="w-16 h-16 rounded-full bg-purple-600 flex items-center justify-center">
@@ -697,7 +712,6 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
 
                                 <input type="hidden" id="payment_method" name="payment_method" required>
 
-                                <!-- Payment Instructions -->
                                 <div id="paymentInstructions" class="hidden mt-4 p-4 rounded-lg bg-indigo-900/30 border border-indigo-500/30">
                                     <div id="gcashInstructions" class="hidden">
                                         <h4 class="font-bold text-white mb-2 flex items-center gap-2">
@@ -736,15 +750,14 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                 </div>
                             </div>
 
-                            <!-- Appointment Summary -->
-                            <div class="bg-gradient-to-br from-indigo-900/40 to-purple-900/40 rounded-xl p-6 border border-indigo-500/30 shadow-xl" role="status" aria-live="polite">
-                                <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                            <div class="bg-gradient-to-br from-indigo-900/40 to-purple-900/40 rounded-xl p-4 sm:p-6 border border-indigo-500/30 shadow-xl" role="status" aria-live="polite">
+                                <h3 class="text-xl sm:text-2xl font-bold text-white mb-4 flex items-center gap-2">
                                     <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
                                     Appointment Summary
                                 </h3>
-                                <div class="grid md:grid-cols-2 gap-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div class="space-y-4">
                                         <div>
                                             <p class="text-xs text-indigo-300 uppercase tracking-wider mb-1">Service</p>
@@ -768,14 +781,13 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                 </div>
                                 <div class="mt-6 pt-6 border-t border-indigo-500/30 flex items-center justify-between">
                                     <span class="text-lg text-indigo-300 font-semibold">Total Price</span>
-                                    <span id="sumPrice" class="text-3xl font-extrabold text-white">—</span>
+                                    <span id="sumPrice" class="text-2xl sm:text-3xl font-extrabold text-white">—</span>
                                 </div>
                                 <p id="sumNote" class="mt-4 text-sm text-gray-400 text-center">Complete all fields to enable confirmation.</p>
                             </div>
 
-                            <!-- Action Buttons -->
-                            <div class="flex gap-4">
-                                <button type="button" id="clearForm" class="flex-1 bg-blue-900/60 text-white py-4 rounded-xl font-bold text-base border border-white/10 hover:bg-blue-900/80 transition-all transform hover:scale-105">
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <button type="button" id="clearForm" class="w-full sm:flex-1 bg-blue-900/60 text-white py-4 rounded-xl font-bold text-base border border-white/10 hover:bg-blue-900/80 transition-all transform hover:scale-105">
                                     <span class="flex items-center justify-center gap-2">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -783,7 +795,7 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                         Clear Form
                                     </span>
                                 </button>
-                                <button type="submit" id="submitBtn" disabled class="flex-[2] bg-gradient-to-r from-indigo-600 to-purple-600 cursor-not-allowed text-white py-4 rounded-xl font-bold text-base hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 shadow-lg shadow-indigo-500/30 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:from-indigo-600 disabled:hover:to-purple-600 transform hover:scale-105 disabled:transform-none">
+                                <button type="submit" id="submitBtn" disabled class="w-full sm:flex-[2] bg-gradient-to-r from-indigo-600 to-purple-600 cursor-not-allowed text-white py-4 rounded-xl font-bold text-base hover:from-indigo-500 hover:to-purple-500 transition-all duration-300 shadow-lg shadow-indigo-500/30 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:from-indigo-600 disabled:hover:to-purple-600 transform hover:scale-105 disabled:transform-none">
                                     <span class="inline-flex items-center justify-center gap-2">
                                         <svg id="submitSpinner" class="size-5 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke-width="4"></circle>
@@ -871,17 +883,14 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
         </div>
     </footer>
 
-    <!-- Logout Confirmation Modal -->
     <div id="logoutModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
         <div
             class="relative w-96 h-64 border-2 border-white duration-500 group overflow-hidden rounded-xl bg-neutral-900 text-neutral-50 p-6 flex flex-col justify-evenly border border-neutral-800 shadow-xl">
-            <!-- Background Blobs -->
             <div class="absolute blur duration-500 group-hover:blur-none w-72 h-72 rounded-full group-hover:translate-x-10 group-hover:translate-y-10 bg-red-900 right-1 -bottom-24"></div>
             <div class="absolute blur duration-500 group-hover:blur-none w-12 h-12 rounded-full group-hover:translate-x-8 group-hover:translate-y-2 bg-rose-700 right-12 bottom-12"></div>
             <div class="absolute blur duration-500 group-hover:blur-none w-36 h-36 rounded-full group-hover:translate-x-10 group-hover:-translate-y-10 bg-rose-800 right-1 -top-12"></div>
             <div class="absolute blur duration-500 group-hover:blur-none w-24 h-24 bg-red-700 rounded-full group-hover:-translate-x-10"></div>
 
-            <!-- Foreground Content -->
             <div class="z-10 flex flex-col justify-evenly h-full text-center">
                 <h3 class="text-2xl font-bold mb-1">Confirm Logout</h3>
                 <p class="text-sm text-gray-300 mb-4">
@@ -904,7 +913,6 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
         </div>
     </div>
 
-    <!-- Elfsight AI Chatbot | Untitled AI Chatbot -->
     <script src="https://elfsightcdn.com/platform.js" async></script>
     <div class="elfsight-app-4f03267f-b8d0-4e92-9be7-5901554b587c" data-elfsight-app-lazy></div>
 
@@ -958,7 +966,6 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
         })();
     </script>
 
-    <!-- Appointment Form Interactivity -->
     <script>
         (function() {
             const $ = (sel) => document.querySelector(sel);
