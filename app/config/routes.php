@@ -101,6 +101,12 @@ $router->post('/management/appointment_decline', 'Management::appointment_declin
 $router->get('/management/appointment_mark_paid/{id}', 'Management::appointment_mark_paid')
   ->where_number('id');
 
+// Suspend/Unsuspend User Routes (Admin/Staff)
+$router->get('/management/user_suspend/{id}', 'Management::user_suspend')
+  ->where_number('id');
+$router->get('/management/user_unsuspend/{id}', 'Management::user_unsuspend')
+  ->where_number('id');
+
 // Appointments JSON for calendar/analytics
 $router->get('/management/appointments_json', 'Management::appointments_json');
 
@@ -170,6 +176,24 @@ $router->get('/staff/dashboard', function () {
     redirect('login');
   }
 });
+
+// Doctor Dashboard Access
+$router->get('/doctor/dashboard', function () {
+  $LAVA = lava_instance();
+  $LAVA->call->helper('url');
+  $LAVA->call->library('session');
+
+  if ($LAVA->session->userdata('role') === 'doctor') {
+    $LAVA->call->controller('Doctor', 'dashboard');
+  } else {
+    redirect('login');
+  }
+});
+
+// Doctor Profile Management
+$router->get('/doctor/profile', 'Doctor::profile');
+$router->post('/doctor/profile/update', 'Doctor::profile_update');
+$router->post('/doctor/profile_delete', 'Doctor::profile_delete');
 
 // User Profile Management Routes
 $router->get('/profile', 'Auth::profile');
