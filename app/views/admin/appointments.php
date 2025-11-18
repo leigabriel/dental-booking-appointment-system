@@ -66,10 +66,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
 
                 <nav class="space-y-4">
                     <a href="<?= site_url('admin/dashboard') ?>" title="Dashboard"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for dashboard.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914820.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Dashboard
@@ -77,10 +74,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </a>
 
                     <a href="<?= site_url('admin/calendar') ?>" title="Appointments"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-purple-500 to-purple-600 border-purple-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/747/747310.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Calendar
@@ -88,10 +82,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </a>
 
                     <a href="<?= site_url('management/appointments') ?>" title="Appointments"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-amber-500 to-amber-600 border-amber-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/19027/19027040.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Appointments
@@ -99,10 +90,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </a>
 
                     <a href="<?= site_url('management/doctors') ?>" title="Doctors"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for doctor_management.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-teal-500 to-teal-600 border-teal-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/9856/9856850.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Doctors
@@ -110,10 +98,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </a>
 
                     <a href="<?= site_url('management/services') ?>" title="Services"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for service_management.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-indigo-500 to-indigo-600 border-indigo-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914079.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Services
@@ -177,7 +162,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
             </div>
 
         </aside>
-
+        
         <div class="flex-1 flex flex-col lg:flex-row">
 
             <main class="flex-1 p-6 sm:p-10 overflow-y-auto h-screen">
@@ -194,6 +179,20 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                 <?php endif; ?>
 
                 <section class="bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-200">
+                    <!-- Search Bar -->
+                    <div class="mb-4">
+                        <div class="relative">
+                            <input
+                                type="text"
+                                id="search-appointments"
+                                placeholder="Search by Patient Name, Doctor, Service, or Status..."
+                                class="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+                            <svg class="absolute left-4 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
+
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
@@ -273,10 +272,8 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                                             <td class="px-3 py-4 text-sm space-x-2 whitespace-nowrap">
                                                 <?php if ($app['status'] === 'pending'): ?>
                                                     <a href="<?= site_url('management/appointment_confirm/' . $app['id']) ?>" class="text-green-600 hover:text-green-800 font-medium">Confirm</a>
-                                                    <a href="<?= site_url('management/appointment_cancel/' . $app['id']) ?>" class="text-red-600 hover:text-red-800 font-medium">Cancel</a>
                                                     <button type="button" onclick="openDeclineModal(<?= html_escape($app['id']) ?>, '<?= html_escape($users[$app['user_id']]['full_name'] ?? 'Patient') ?>')" class="text-orange-600 hover:text-orange-800 font-medium">Decline</button>
                                                 <?php elseif ($app['status'] === 'confirmed'): ?>
-                                                    <a href="<?= site_url('management/appointment_cancel/' . $app['id']) ?>" class="text-red-600 hover:text-red-800 font-medium">Cancel</a>
                                                     <button type="button" onclick="openDeclineModal(<?= html_escape($app['id']) ?>, '<?= html_escape($users[$app['user_id']]['full_name'] ?? 'Patient') ?>')" class="text-orange-600 hover:text-orange-800 font-medium">Decline</button>
                                                 <?php elseif ($app['status'] === 'declined'): ?>
                                                     <span class="text-sm text-gray-600">Declined</span>
@@ -354,6 +351,21 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
     </div>
 
     <script>
+        // Search functionality
+        document.getElementById('search-appointments')?.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
         // Logout modal functions
         (function() {
             const logoutAnchor = document.querySelector('a[title="Logout"]');

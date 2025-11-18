@@ -146,7 +146,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                     </form>
                 </aside>
 
-                <!-- RIGHT: CONFIRMED APPOINTMENTS RECEIPT CARDS -->
+                <!-- RIGHT: CONFIRMED APPOINTMENTS LIST -->
                 <section class="col-span-2 bg-white border rounded-2xl shadow-sm p-6">
                     <?php
                     $confirmed_appointments = array_filter($appointments, function ($app) {
@@ -162,7 +162,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                 </svg>
                                 Confirmed Appointments
                             </h2>
-                            <p class="text-sm text-slate-500 mt-1">Your upcoming confirmed visits</p>
+                            <p class="text-sm text-slate-500 mt-1">Click on any appointment to view details</p>
                         </div>
                         <span class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-bold shadow-sm">
                             <?= count($confirmed_appointments) ?> Active
@@ -170,7 +170,8 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                     </div>
 
                     <?php if (!empty($confirmed_appointments)): ?>
-                        <div class="grid gap-4 md:grid-cols-2 max-h-[600px] overflow-y-auto pr-2">
+                        <p class="text-sm text-slate-600 mb-4">Click on any appointment to view full details</p>
+                        <div class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
                             <?php foreach ($confirmed_appointments as $app): ?>
                                 <?php
                                 $doctor = $doctors[$app['doctor_id']] ?? ['name' => 'N/A', 'specialty' => 'N/A'];
@@ -178,7 +179,55 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                 $appointment_date = date('l, M j, Y', strtotime($app['appointment_date']));
                                 $appointment_time = date('g:i A', strtotime($app['time_slot']));
                                 ?>
-                                <div id="receipt-<?= $app['id'] ?>" class="relative bg-gradient-to-br from-emerald-50 to-blue-50 border-2 border-emerald-200 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+                                <div onclick="openAppointmentModal(<?= $app['id'] ?>)" 
+                                    class="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-50 to-blue-50 hover:from-emerald-100 hover:to-blue-100 border-2 border-emerald-200 rounded-xl shadow-md hover:shadow-lg cursor-pointer transition-all duration-300 transform hover:scale-[1.02]">
+                                    <div class="flex items-center gap-4 flex-1">
+                                        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-md">
+                                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <h3 class="text-base font-bold text-slate-900"><?= html_escape($service['name']) ?></h3>
+                                                <span class="px-2 py-0.5 bg-emerald-500 text-white rounded-full text-xs font-bold">CONFIRMED</span>
+                                            </div>
+                                            <p class="text-sm text-slate-600">Dr. <?= html_escape($doctor['name']) ?> • <?= html_escape($doctor['specialty']) ?></p>
+                                            <div class="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                                                <span class="flex items-center gap-1">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    <?= html_escape(date('M j, Y', strtotime($app['appointment_date']))) ?>
+                                                </span>
+                                                <span class="flex items-center gap-1">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <?= html_escape($appointment_time) ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-shrink-0 text-emerald-600">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden Modal for this appointment -->
+                                <div id="modal-<?= $app['id'] ?>" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" onclick="closeAppointmentModal(event, <?= $app['id'] ?>)">
+                                    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative" onclick="event.stopPropagation()">
+                                        <!-- Close Button -->
+                                        <button onclick="closeAppointmentModal(event, <?= $app['id'] ?>)" class="absolute top-4 right-4 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all z-10">
+                                            <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+
+                                        <!-- Receipt Card -->
+                                        <div id="receipt-<?= $app['id'] ?>" class="relative bg-gradient-to-br from-emerald-50 to-blue-50 border-2 border-emerald-200">
                                     <!-- Receipt Header -->
                                     <div class="bg-emerald-600 text-white p-4 relative">
                                         <div class="flex justify-between items-start">
@@ -310,6 +359,9 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                         background-repeat: repeat-x;
                                     "></div>
                                 </div>
+                                    </div>
+                                </div>
+
                             <?php endforeach; ?>
                         </div>
                     <?php else: ?>
@@ -408,7 +460,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
 
                                         <td class="py-3 px-3">
                                             <div class="flex items-center gap-2">
-                                                <?php if (in_array($app['status'], ['pending'])): ?>
+                                                <?php if (in_array($app['status'], ['pending', 'confirmed'])): ?>
                                                     <form method="POST" action="<?= site_url('profile/cancel_appointment') ?>" onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
                                                         <?= csrf_field() ?>
                                                         <input type="hidden" name="appointment_id" value="<?= html_escape($app['id']) ?>">
@@ -548,6 +600,27 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
     </div>
 
     <script>
+        // Open appointment modal
+        function openAppointmentModal(appointmentId) {
+            const modal = document.getElementById('modal-' + appointmentId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+            }
+        }
+
+        // Close appointment modal
+        function closeAppointmentModal(event, appointmentId) {
+            event.stopPropagation();
+            const modal = document.getElementById('modal-' + appointmentId);
+            if (modal) {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
         function openClearHistoryModal() {
             const modal = document.getElementById('clearHistoryModal');
             modal.classList.remove('hidden');

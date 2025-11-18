@@ -97,10 +97,7 @@ function display_validation_errors($errors)
 
                 <nav class="space-y-4">
                     <a href="<?= site_url('admin/dashboard') ?>" title="Dashboard"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for dashboard.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914820.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Dashboard
@@ -108,10 +105,7 @@ function display_validation_errors($errors)
                     </a>
 
                     <a href="<?= site_url('admin/calendar') ?>" title="Appointments"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-purple-500 to-purple-600 border-purple-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/747/747310.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Calendar
@@ -119,10 +113,7 @@ function display_validation_errors($errors)
                     </a>
 
                     <a href="<?= site_url('management/appointments') ?>" title="Appointments"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-amber-500 to-amber-600 border-amber-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/19027/19027040.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Appointments
@@ -130,10 +121,7 @@ function display_validation_errors($errors)
                     </a>
 
                     <a href="<?= site_url('management/doctors') ?>" title="Doctors"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for doctor_management.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-teal-500 to-teal-600 border-teal-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/9856/9856850.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Doctors
@@ -141,10 +129,7 @@ function display_validation_errors($errors)
                     </a>
 
                     <a href="<?= site_url('management/services') ?>" title="Services"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for service_management.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-indigo-500 to-indigo-600 border-indigo-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914079.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Services
@@ -225,7 +210,7 @@ function display_validation_errors($errors)
                 <?php endif; ?>
                 <?php display_validation_errors($errors); ?>
 
-                <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+                <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-10">
 
                     <div class="flex min-h-[20em] flex-col justify-between gap-[0.5em] rounded-[1.5em] bg-[#E0F2FE] p-[1.5em] text-[#0369A1] shadow-[0px_4px_16px_0px_rgba(0,0,0,0.1)] transition hover:shadow-lg">
                         <div class="flex h-fit w-full items-start justify-between">
@@ -281,6 +266,20 @@ function display_validation_errors($errors)
                         </div>
                         <div class="h-[1px] w-full rounded-full bg-[hsla(39,90%,40%,0.2)]"></div>
                         <p class="text-[0.75rem] font-light text-amber-700">All appointment records.</p>
+                    </div>
+
+                    <div class="flex min-h-[20em] flex-col justify-between gap-[0.5em] rounded-[1.5em] bg-[#F3E8FF] p-[1.5em] text-[#7C3AED] shadow-[0px_4px_16px_0px_rgba(0,0,0,0.1)] transition hover:shadow-lg">
+                        <div class="flex h-fit w-full items-start justify-between">
+                            <div class="flex flex-col items-start justify-center">
+                                <p class="text-[1rem] font-semibold uppercase tracking-wider">Total Doctors</p>
+                                <p class="text-[8em] font-extrabold mt-1"><?= html_escape($total_doctors ?? 0) ?></p>
+                            </div>
+                            <div class="text-4xl opacity-80">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                        </div>
+                        <div class="h-[1px] w-full rounded-full bg-[hsla(270,90%,50%,0.2)]"></div>
+                        <p class="text-[0.75rem] font-light text-purple-600">All registered doctors.</p>
                     </div>
 
                 </section>
@@ -354,8 +353,24 @@ function display_validation_errors($errors)
                             <i class="fas fa-plus mr-1"></i> Add Admin/Staff
                         </button>
                     </div>
+                    
+                    <!-- Search Bar -->
+                    <div class="mb-4">
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                id="search-users" 
+                                placeholder="Search by Name, Email, Username, or Role..." 
+                                class="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            />
+                            <svg class="absolute left-4 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200" id="users-table">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
@@ -363,6 +378,7 @@ function display_validation_errors($errors)
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Username</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                                 </tr>
                             </thead>
@@ -379,11 +395,21 @@ function display_validation_errors($errors)
                                                 $role_class = match ($user['role']) {
                                                     'admin' => 'bg-blue-100 text-blue-800',
                                                     'staff' => 'bg-sky-100 text-sky-800',
+                                                    'user' => 'bg-green-100 text-green-800',
+                                                    'doctor' => 'bg-purple-100 text-purple-800',
                                                     default => 'bg-gray-100 text-gray-800',
                                                 };
                                                 ?>
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $role_class ?>">
                                                     <?= html_escape(ucfirst($user['role'])) ?>
+                                                </span>
+                                            </td>
+                                            <td class="px-3 py-4">
+                                                <?php
+                                                $is_suspended = isset($user['is_suspended']) && $user['is_suspended'] == 1;
+                                                ?>
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= $is_suspended ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' ?>">
+                                                    <?= $is_suspended ? 'Suspended' : 'Active' ?>
                                                 </span>
                                             </td>
                                             <td class="px-3 py-4 text-sm space-x-2">
@@ -435,18 +461,36 @@ function display_validation_errors($errors)
                                                                     Delete
                                                                 </a>
                                                             </div>
-                                                        </div>
-                                                    </div>
+                                                        Delete
+                                                    </button>
 
                                                 <?php else: ?>
-                                                    <span class="text-gray-400">N/A</span>
+                                                    <?php if ($user['role'] !== 'admin'): ?>
+                                                        <?php
+                                                        $is_suspended = isset($user['is_suspended']) && $user['is_suspended'] == 1;
+                                                        ?>
+                                                        <?php if ($is_suspended): ?>
+                                                            <a href="#" 
+                                                               class="text-green-600 hover:text-green-800 font-medium"
+                                                               onclick="event.preventDefault(); openUnsuspendModal(<?= $user['id'] ?>, '<?= html_escape($user['username']) ?>')">
+                                                                Unsuspend
+                                                            </a>
+                                                        <?php else: ?>
+                                                            <a href="#" 
+                                                               class="text-orange-600 hover:text-orange-800 font-medium"
+                                                               onclick="event.preventDefault(); openSuspendModal(<?= $user['id'] ?>, '<?= html_escape($user['username']) ?>', '<?= html_escape($user['full_name']) ?>')">
+                                                                Suspend
+                                                            </a>
+                                                        <?php endif; ?>
+                                                    <?php endif; ?>
+                                                    <span class="text-gray-400">—</span>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="6" class="px-3 py-4 text-center text-gray-500">No registered accounts found.</td>
+                                        <td colspan="7" class="px-3 py-4 text-center text-gray-500">No registered accounts found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -455,6 +499,79 @@ function display_validation_errors($errors)
                 </section>
             </main>
 
+        </div>
+    </div>
+
+    <!-- Suspend Confirmation Modal -->
+    <div id="suspend-modal" class="modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" onclick="closeSuspendModal(event)">
+        <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl" onclick="event.stopPropagation()">
+            <div class="flex flex-col items-center text-center mb-6">
+                <div class="mb-4 text-orange-500 text-5xl">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-800">Suspend User Account</h3>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-gray-600 text-center mb-2">
+                    Are you sure you want to suspend:
+                </p>
+                <p class="text-center font-semibold text-gray-800" id="suspend-user-info"></p>
+                <p class="text-sm text-gray-500 text-center mt-2">
+                    This will prevent the user from logging in.
+                </p>
+            </div>
+
+            <form id="suspend-form" method="GET" action="">
+                <div class="mb-6">
+                    <label for="suspend-reason" class="block text-sm font-medium text-gray-700 mb-2">Reason (Optional)</label>
+                    <textarea id="suspend-reason" name="reason" rows="3" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        placeholder="Enter reason for suspension..."></textarea>
+                </div>
+
+                <div class="flex justify-center gap-4">
+                    <button type="button" onclick="closeSuspendModal()"
+                        class="px-6 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition font-medium">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-6 py-2.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition font-medium shadow-md">
+                        Suspend User
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Unsuspend Confirmation Modal -->
+    <div id="unsuspend-modal" class="modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" onclick="closeUnsuspendModal(event)">
+        <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl" onclick="event.stopPropagation()">
+            <div class="flex flex-col items-center text-center mb-6">
+                <div class="mb-4 text-green-500 text-5xl">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-800">Unsuspend User Account</h3>
+            </div>
+
+            <p class="text-gray-600 text-center mb-6">
+                Are you sure you want to unsuspend:
+            </p>
+            <p class="text-center font-semibold text-gray-800 mb-6" id="unsuspend-user-info"></p>
+            <p class="text-sm text-gray-500 text-center mb-8">
+                This will allow the user to login again.
+            </p>
+
+            <div class="flex justify-center gap-4">
+                <button type="button" onclick="closeUnsuspendModal()"
+                    class="px-6 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition font-medium">
+                    Cancel
+                </button>
+                <a id="confirm-unsuspend-btn" href="#"
+                    class="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium shadow-md">
+                    Unsuspend User
+                </a>
+            </div>
         </div>
     </div>
 
@@ -503,6 +620,21 @@ function display_validation_errors($errors)
     </div>
 
     <script>
+        // Search functionality for users table
+        document.getElementById('search-users')?.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#users-table tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
         // Dashboard Calendar + Analytics
         (function() {
             const calGrid = document.getElementById('calGrid');
@@ -940,6 +1072,52 @@ function display_validation_errors($errors)
                 // Expose to global scope for inline onclick calls used in markup
                 window.openLogoutModal = openLogoutModal;
                 window.closeLogoutModal = closeLogoutModal;
+
+                // Suspend/Unsuspend Modal Functions
+                const suspendModal = document.getElementById('suspend-modal');
+                const unsuspendModal = document.getElementById('unsuspend-modal');
+                const suspendForm = document.getElementById('suspend-form');
+                const suspendUserInfo = document.getElementById('suspend-user-info');
+                const unsuspendUserInfo = document.getElementById('unsuspend-user-info');
+                const confirmUnsuspendBtn = document.getElementById('confirm-unsuspend-btn');
+
+                function openSuspendModal(userId, username, fullName) {
+                    suspendUserInfo.textContent = `${fullName} (@${username})`;
+                    suspendForm.action = `<?= site_url('management/user_suspend/') ?>${userId}`;
+                    suspendModal.classList.remove('hidden');
+                    suspendModal.classList.add('flex');
+                    document.body.classList.add('overflow-hidden');
+                }
+
+                function closeSuspendModal(event = null) {
+                    if (!event || event.target.id === 'suspend-modal') {
+                        suspendModal.classList.remove('flex');
+                        suspendModal.classList.add('hidden');
+                        document.body.classList.remove('overflow-hidden');
+                        document.getElementById('suspend-reason').value = '';
+                    }
+                }
+
+                function openUnsuspendModal(userId, username) {
+                    unsuspendUserInfo.textContent = `@${username}`;
+                    confirmUnsuspendBtn.href = `<?= site_url('management/user_unsuspend/') ?>${userId}`;
+                    unsuspendModal.classList.remove('hidden');
+                    unsuspendModal.classList.add('flex');
+                    document.body.classList.add('overflow-hidden');
+                }
+
+                function closeUnsuspendModal(event = null) {
+                    if (!event || event.target.id === 'unsuspend-modal') {
+                        unsuspendModal.classList.remove('flex');
+                        unsuspendModal.classList.add('hidden');
+                        document.body.classList.remove('overflow-hidden');
+                    }
+                }
+
+                window.openSuspendModal = openSuspendModal;
+                window.closeSuspendModal = closeSuspendModal;
+                window.openUnsuspendModal = openUnsuspendModal;
+                window.closeUnsuspendModal = closeUnsuspendModal;
 
                 if (logoutAnchor) {
                     logoutAnchor.addEventListener('click', function(e) {

@@ -88,10 +88,7 @@ function display_validation_errors($errors)
 
                 <nav class="space-y-4">
                     <a href="<?= site_url('admin/dashboard') ?>" title="Dashboard"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for dashboard.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-blue-500 to-blue-600 border-blue-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914820.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Dashboard
@@ -99,10 +96,7 @@ function display_validation_errors($errors)
                     </a>
 
                     <a href="<?= site_url('admin/calendar') ?>" title="Appointments"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-purple-500 to-purple-600 border-purple-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/747/747310.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Calendar
@@ -110,10 +104,7 @@ function display_validation_errors($errors)
                     </a>
 
                     <a href="<?= site_url('management/appointments') ?>" title="Appointments"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for appointments.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-amber-500 to-amber-600 border-amber-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/19027/19027040.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Appointments
@@ -121,10 +112,7 @@ function display_validation_errors($errors)
                     </a>
 
                     <a href="<?= site_url('management/doctors') ?>" title="Doctors"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for doctor_management.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-teal-500 to-teal-600 border-teal-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/9856/9856850.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Doctors
@@ -132,10 +120,7 @@ function display_validation_errors($errors)
                     </a>
 
                     <a href="<?= site_url('management/services') ?>" title="Services"
-                        class="flex items-center justify-center h-12 w-12 rounded-full transition-colors duration-200 relative group border-2
-                              <?php /* ACTIVE STATE for service_management.php: */ ?> bg-blue-600 border-blue-500 text-white shadow-md <?php /* END ACTIVE */ ?>
-                              <?php /* INACTIVE STATE for other pages: */ ?> border-transparent text-gray-400 hover:bg-gray-800 hover:border-gray-700 hover:text-white <?php /* END INACTIVE */ ?>
-                              ">
+                        class="flex items-center justify-center h-12 w-12 rounded-full transition-all duration-300 relative group border-2 bg-gradient-to-br from-indigo-500 to-indigo-600 border-indigo-400 text-white shadow-lg hover:shadow-xl hover:scale-105">
                         <img src="https://cdn-icons-png.flaticon.com/128/3914/3914079.png" alt="" class="w-6 h-6 invert">
                         <span class="absolute left-full ml-3 px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap -translate-x-2 group-hover:translate-x-0 pointer-events-none z-30">
                             Services
@@ -233,6 +218,7 @@ function display_validation_errors($errors)
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Specialty</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Account</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                                 </tr>
                             </thead>
@@ -244,6 +230,19 @@ function display_validation_errors($errors)
                                             <td class="px-3 py-4 text-sm text-gray-600"><?= html_escape($doctor['name']) ?></td>
                                             <td class="px-3 py-4 text-sm text-gray-600"><?= html_escape($doctor['specialty']) ?></td>
                                             <td class="px-3 py-4 text-sm text-gray-600"><?= html_escape($doctor['email']) ?></td>
+                                            <td class="px-3 py-4 text-sm text-gray-600">
+                                                <?php if (!empty($doctor['user_id'])): ?>
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                        <i class="fas fa-user-check mr-1"></i>
+                                                        <?= html_escape($doctor['username'] ?? 'Linked') ?>
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                                        <i class="fas fa-user-slash mr-1"></i>
+                                                        No Account
+                                                    </span>
+                                                <?php endif; ?>
+                                            </td>
                                             <td class="px-3 py-4 text-sm space-x-2 whitespace-nowrap">
                                                 <button
                                                     class="text-blue-600 hover:text-blue-800 font-medium"
@@ -262,7 +261,7 @@ function display_validation_errors($errors)
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="5" class="px-3 py-4 text-center text-gray-500">No doctors found.</td>
+                                        <td colspan="6" class="px-3 py-4 text-center text-gray-500">No doctors found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -330,6 +329,25 @@ function display_validation_errors($errors)
                         <input type="email" id="form-email" name="email" required
                             class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[--primary-color] focus:border-[--primary-color]">
                     </div>
+                    <div id="account-fields">
+                        <div class="border-t pt-4 mt-4">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-3">Login Account</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="form-username" class="block text-sm font-medium text-gray-700">Username</label>
+                                    <input type="text" id="form-username" name="username" required
+                                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[--primary-color] focus:border-[--primary-color]">
+                                    <p class="text-xs text-gray-500 mt-1">Used for doctor login</p>
+                                </div>
+                                <div>
+                                    <label for="form-password" class="block text-sm font-medium text-gray-700">Password</label>
+                                    <input type="password" id="form-password" name="password" minlength="6"
+                                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[--primary-color] focus:border-[--primary-color]">
+                                    <p class="text-xs text-gray-500 mt-1" id="password-hint">Minimum 6 characters</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex justify-end space-x-3 mt-6">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition">Cancel</button>
@@ -347,6 +365,10 @@ function display_validation_errors($errors)
         const formName = document.getElementById('form-name');
         const formSpecialty = document.getElementById('form-specialty');
         const formEmail = document.getElementById('form-email');
+        const formUsername = document.getElementById('form-username');
+        const formPassword = document.getElementById('form-password');
+        const passwordHint = document.getElementById('password-hint');
+        const accountFields = document.getElementById('account-fields');
         const formSubmitButton = document.getElementById('form-submit-button');
 
         const doctorsData = <?= $doctors_list_json ?>;
@@ -362,6 +384,10 @@ function display_validation_errors($errors)
                 modalTitle.textContent = "Add New Doctor";
                 form.action = addUrl;
                 formSubmitButton.textContent = "Add Doctor";
+                accountFields.style.display = 'block';
+                formPassword.setAttribute('required', 'required');
+                formUsername.setAttribute('required', 'required');
+                passwordHint.textContent = "Minimum 6 characters";
             } else if (mode === 'edit' && doctorsData[doctorId]) {
                 const doctor = doctorsData[doctorId];
                 modalTitle.textContent = `Edit Doctor: ${doctor.name}`;
@@ -371,6 +397,19 @@ function display_validation_errors($errors)
                 formSpecialty.value = doctor.specialty;
                 formEmail.value = doctor.email;
                 formSubmitButton.textContent = "Save Changes";
+
+                if (doctor.user_id) {
+                    accountFields.style.display = 'block';
+                    formUsername.value = doctor.username || '';
+                    formPassword.removeAttribute('required');
+                    formUsername.removeAttribute('required');
+                    passwordHint.textContent = "Leave blank to keep current password";
+                } else {
+                    accountFields.style.display = 'block';
+                    formPassword.setAttribute('required', 'required');
+                    formUsername.setAttribute('required', 'required');
+                    passwordHint.textContent = "Create login account for this doctor";
+                }
             }
             modal.classList.remove('hidden');
             modal.classList.add('flex');

@@ -160,14 +160,23 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
                     </div>
                 </div>
 
-                <div hidden>
+                <div>
                     <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Select Role</label>
                     <select id="role" name="role" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition">
                         <option value="user">User</option>
+                        <option value="doctor">Doctor</option>
                         <option value="staff">Staff</option>
                         <option value="admin">Admin</option>
                     </select>
+                </div>
+
+                <!-- Specialty field for doctors -->
+                <div id="specialty-field" style="display: none;">
+                    <label for="specialty" class="block text-sm font-medium text-gray-700 mb-1">Specialty</label>
+                    <input type="text" id="specialty" name="specialty"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--primary-color] focus:border-transparent transition"
+                        placeholder="e.g., General Dentistry, Orthodontics">
                 </div>
 
                 <button type="submit"
@@ -203,6 +212,7 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
         const showIconUrl = '<?= $show_pass_icon ?>';
         const hideIconUrl = '<?= $hide_pass_icon ?>';
 
+        // Toggle password visibility
         document.querySelectorAll('.toggle-password').forEach(toggleButton => {
             toggleButton.addEventListener('click', function(e) {
                 const targetId = this.getAttribute('data-target');
@@ -212,9 +222,25 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
 
                 passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
                 eyeIcon.src = isPassword ? showIconUrl : hideIconUrl;
-                eyeIcon.alt = isPassword ? 'Hide Password' : 'Show Password';
             });
         });
+
+        // Show/hide specialty field based on role selection
+        const roleSelect = document.getElementById('role');
+        const specialtyField = document.getElementById('specialty-field');
+        const specialtyInput = document.getElementById('specialty');
+
+        roleSelect.addEventListener('change', function() {
+            if (this.value === 'doctor') {
+                specialtyField.style.display = 'block';
+                specialtyInput.required = true;
+            } else {
+                specialtyField.style.display = 'none';
+                specialtyInput.required = false;
+            }
+        });
+    </script>
+
     </script>
 </body>
 
