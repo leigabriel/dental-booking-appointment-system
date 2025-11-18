@@ -30,7 +30,7 @@ class Doctor extends Controller
             $this->session->set_flashdata('error_message', 'Session invalid. Please login again.');
             redirect('login');
         }
-        
+
         $userDetails = $this->UserModel->find($loggedInUserId);
         if (!$userDetails) {
             $this->session->set_flashdata('error_message', 'User account not found.');
@@ -40,7 +40,7 @@ class Doctor extends Controller
 
         // Fetch doctor profile linked to this user
         $doctorProfile = $this->DoctorModel->filter(['user_id' => $loggedInUserId])->get();
-        
+
         return [
             'user' => $userDetails,
             'doctor' => $doctorProfile
@@ -54,16 +54,22 @@ class Doctor extends Controller
         $data['userDetails'] = $details['user'];
         $data['doctorProfile'] = $details['doctor'];
 
-        // Get doctor's appointments
+        // Initialize arrays to prevent view errors
+        $data['appointments'] = [];
+        $data['pending_appointments'] = [];
+        $data['confirmed_appointments'] = [];
+
+        // Get doctor's appointments only if a doctor profile exists
         if ($details['doctor']) {
             $doctorId = $details['doctor']['id'];
-            
+
             // Ensure DB loaded for raw queries
             if (!isset($this->db)) {
                 $this->call->database();
             }
 
             // Fetch all appointments for this doctor
+            // We join users and services to get readable names
             $sql = "SELECT a.*, 
                            u.username, u.full_name as user_full_name, u.email as user_email,
                            s.name as service_name, s.price, s.duration_mins
@@ -72,27 +78,106 @@ class Doctor extends Controller
                     LEFT JOIN services s ON s.id = a.service_id
                     WHERE a.doctor_id = ?
                     ORDER BY a.appointment_date DESC, a.time_slot DESC";
-            
+
             $stmt = $this->db->raw($sql, [$doctorId]);
             $appointments = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-            
+
             $data['appointments'] = $appointments;
-            
-            // Separate appointments by status
-            $data['pending_appointments'] = array_filter($appointments, function($apt) {
-                return $apt['status'] === 'pending';
+
+            // Separate appointments by status (Case Insensitive Check)
+            $data['pending_appointments'] = array_filter($appointments, function ($apt) {
+                return strtolower($apt['status']) === 'pending';
             });
-            
-            $data['confirmed_appointments'] = array_filter($appointments, function($apt) {
-                return $apt['status'] === 'confirmed';
+
+            $data['confirmed_appointments'] = array_filter($appointments, function ($apt) {
+                return strtolower($apt['status']) === 'confirmed';
             });
         } else {
-            $data['appointments'] = [];
-            $data['pending_appointments'] = [];
-            $data['confirmed_appointments'] = [];
+            // Optional: Alert the user if their account isn't linked to a doctor profile
+            $this->session->set_flashdata('error_message', 'Your user account is not linked to a Doctor Profile. Please contact the administrator.');
         }
 
         $this->call->view('doctor/dashboard', $data);
+    }
+
+    // Confirm Appointment (Doctor)
+    public function appointment_confirm($id)
+    {
+        if (!$id) {
+            $this->session->set_flashdata('error_message', 'Invalid appointment ID.');
+            redirect('doctor/dashboard');
+        }
+
+        $details = $this->_fetchDoctorDetails();
+
+        // Security: Ensure doctor profile exists
+        if (!$details['doctor']) {
+            $this->session->set_flashdata('error_message', 'Doctor profile not found.');
+            redirect('doctor/dashboard');
+        }
+
+        $doctorId = $details['doctor']['id'];
+
+        // Verify appointment belongs to this doctor
+        $appointment = $this->AppointmentModel->find($id);
+        if (!$appointment || $appointment['doctor_id'] != $doctorId) {
+            $this->session->set_flashdata('error_message', 'Appointment not found or access denied.');
+            redirect('doctor/dashboard');
+        }
+
+        $this->AppointmentModel->update($id, ['status' => 'confirmed']);
+        $this->session->set_flashdata('success_message', "Appointment #{$id} confirmed successfully.");
+        redirect('doctor/dashboard');
+    }
+
+    // Decline Appointment (Doctor)
+    public function appointment_decline()
+    {
+        if ($this->io->method() !== 'POST') {
+            redirect('doctor/dashboard');
+        }
+
+        $post = $this->io->post();
+        $appointment_id = $post['appointment_id'] ?? null;
+        $message = trim($post['decline_message'] ?? '');
+
+        if (empty($appointment_id) || $message === '') {
+            $this->session->set_flashdata('error_message', 'Appointment ID and decline message are required.');
+            redirect('doctor/dashboard');
+        }
+
+        $details = $this->_fetchDoctorDetails();
+
+        if (!$details['doctor']) {
+            $this->session->set_flashdata('error_message', 'Doctor profile not found.');
+            redirect('doctor/dashboard');
+        }
+
+        $doctorId = $details['doctor']['id'];
+
+        // Verify appointment belongs to this doctor
+        $appointment = $this->AppointmentModel->find($appointment_id);
+        if (!$appointment || $appointment['doctor_id'] != $doctorId) {
+            $this->session->set_flashdata('error_message', 'Appointment not found or access denied.');
+            redirect('doctor/dashboard');
+        }
+
+        // Update appointment status and store decline message
+        $update = [
+            'status' => 'declined',
+            'decline_message' => $message
+        ];
+
+        // If payment was made at clinic and marked as paid, reset payment status
+        if ($appointment['payment_method'] === 'clinic' && $appointment['payment_status'] === 'paid') {
+            $update['payment_status'] = 'unpaid';
+            $update['paid_at'] = null;
+        }
+
+        $this->AppointmentModel->update($appointment_id, $update);
+
+        $this->session->set_flashdata('success_message', 'Appointment has been declined.');
+        redirect('doctor/dashboard');
     }
 
     // View and edit doctor profile
@@ -101,9 +186,9 @@ class Doctor extends Controller
         $details = $this->_fetchDoctorDetails();
         $data['userDetails'] = $details['user'];
         $data['doctorProfile'] = $details['doctor'];
-        
+
         $data['errors'] = $this->session->flashdata('errors');
-        
+
         $this->call->view('doctor/profile', $data);
     }
 
@@ -173,8 +258,6 @@ class Doctor extends Controller
         $userId = $details['user']['id'];
         $doctorProfile = $details['doctor'];
 
-        // Note: Deleting user will set doctor.user_id to NULL due to ON DELETE SET NULL
-        // The doctor profile will remain in the system for admin management
         if ($doctorProfile) {
             // Unlink user from doctor profile
             $this->DoctorModel->update($doctorProfile['id'], ['user_id' => NULL]);
