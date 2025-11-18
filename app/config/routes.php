@@ -190,6 +190,14 @@ $router->get('/doctor/dashboard', function () {
   }
 });
 
+// DOCTOR ACTIONS
+$router->get('/doctor/appointment_confirm/{id}', 'Doctor::appointment_confirm')->where_number('id');
+$router->post('/doctor/appointment_decline', 'Doctor::appointment_decline');
+
+$router->get('/doctor/profile', 'Doctor::profile');
+$router->post('/doctor/profile/update', 'Doctor::profile_update');
+$router->post('/doctor/profile_delete', 'Doctor::profile_delete');
+
 // Doctor Profile Management
 $router->get('/doctor/profile', 'Doctor::profile');
 $router->post('/doctor/profile/update', 'Doctor::profile_update');
