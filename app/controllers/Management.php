@@ -65,7 +65,10 @@ class Management extends Controller
     public function doctors()
     {
         $userDetails = $this->_fetchUserDetails();
-        $doctors_list = $this->DoctorModel->all() ?? [];
+        
+        // Get all doctors with their linked user accounts
+        $doctors_list = $this->DoctorModel->getAllWithUsers();
+        
         $data['doctors_list_json'] = json_encode(array_column($doctors_list, null, 'id'));
         $data['doctors'] = $doctors_list;
         $data['errors'] = $this->session->flashdata('errors');
@@ -275,11 +278,25 @@ class Management extends Controller
         $post_data = $this->io->post();
         $is_update = !empty($id);
 
+        // Basic validation
         $this->form_validation
             ->name('name|Doctor Name')->required()->valid_name()
             ->name('specialty|Specialty')->required()
             ->name('email|Email')->required()->valid_email();
 
+        // Username validation for new doctors or if username is provided
+        if (!$is_update || !empty($post_data['username'])) {
+            $this->form_validation->name('username|Username')->required()->min_length(3)->max_length(50);
+        }
+
+        // Password validation - required for new doctors or if password is provided
+        if (!$is_update) {
+            $this->form_validation->name('password|Password')->required()->min_length(6);
+        } else if (!empty($post_data['password'])) {
+            $this->form_validation->name('password|Password')->min_length(6);
+        }
+
+        // Check for duplicate email in doctors table
         $existingDoctor = null;
         if ($is_update) {
             $existingDoctor = $this->DoctorModel->filter(['email' => $post_data['email']])->not_where('id', $id)->get();
@@ -291,19 +308,98 @@ class Management extends Controller
             $this->form_validation->set_error('email', 'Email address is already in use by another doctor.');
         }
 
-        if ($this->form_validation->run()) {
-            $save_data = [
-                'name' => $post_data['name'],
-                'specialty' => $post_data['specialty'],
-                'email' => $post_data['email']
-            ];
-
+        // Check for duplicate username in users table
+        if (!empty($post_data['username'])) {
             if ($is_update) {
-                $this->DoctorModel->update($id, $save_data);
+                $doctor = $this->DoctorModel->find($id);
+                $existingUser = $this->UserModel->filter(['username' => $post_data['username']])
+                    ->not_where('id', $doctor['user_id'] ?? 0)
+                    ->get();
+            } else {
+                $existingUser = $this->UserModel->find_by_username($post_data['username']);
+            }
+
+            if ($existingUser) {
+                $this->form_validation->set_error('username', 'Username is already taken.');
+            }
+        }
+
+        if ($this->form_validation->run()) {
+            if ($is_update) {
+                // UPDATE mode
+                $doctor = $this->DoctorModel->find($id);
+                if (!$doctor) {
+                    $this->session->set_flashdata('error_message', 'Doctor not found.');
+                    redirect('management/doctors');
+                }
+
+                // Update doctor table
+                $doctor_data = [
+                    'name' => $post_data['name'],
+                    'specialty' => $post_data['specialty'],
+                    'email' => $post_data['email']
+                ];
+                $this->DoctorModel->update($id, $doctor_data);
+
+                // Handle user account
+                if (!empty($doctor['user_id'])) {
+                    // Update existing user account
+                    $user_data = [
+                        'full_name' => $post_data['name'],
+                        'email' => $post_data['email']
+                    ];
+                    
+                    if (!empty($post_data['username'])) {
+                        $user_data['username'] = $post_data['username'];
+                    }
+                    
+                    if (!empty($post_data['password'])) {
+                        $user_data['password'] = password_hash($post_data['password'], PASSWORD_DEFAULT);
+                    }
+                    
+                    $this->UserModel->update($doctor['user_id'], $user_data);
+                } else if (!empty($post_data['username']) && !empty($post_data['password'])) {
+                    // Create new user account for existing doctor
+                    $user_data = [
+                        'username' => $post_data['username'],
+                        'password' => password_hash($post_data['password'], PASSWORD_DEFAULT),
+                        'full_name' => $post_data['name'],
+                        'email' => $post_data['email'],
+                        'role' => 'doctor'
+                    ];
+                    $user_id = $this->UserModel->create_user($user_data);
+                    
+                    if ($user_id) {
+                        $this->DoctorModel->update($id, ['user_id' => $user_id]);
+                    }
+                }
+
                 $this->session->set_flashdata('success_message', 'Doctor updated successfully.');
             } else {
-                $this->DoctorModel->insert($save_data);
-                $this->session->set_flashdata('success_message', 'New doctor added successfully.');
+                // INSERT mode - always create user account
+                $user_data = [
+                    'username' => $post_data['username'],
+                    'password' => password_hash($post_data['password'], PASSWORD_DEFAULT),
+                    'full_name' => $post_data['name'],
+                    'email' => $post_data['email'],
+                    'role' => 'doctor'
+                ];
+                
+                $user_id = $this->UserModel->create_user($user_data);
+                
+                if ($user_id) {
+                    $doctor_data = [
+                        'name' => $post_data['name'],
+                        'specialty' => $post_data['specialty'],
+                        'email' => $post_data['email'],
+                        'user_id' => $user_id
+                    ];
+                    
+                    $this->DoctorModel->insert($doctor_data);
+                    $this->session->set_flashdata('success_message', 'New doctor added successfully with login account.');
+                } else {
+                    $this->session->set_flashdata('error_message', 'Failed to create user account.');
+                }
             }
         } else {
             $this->session->set_flashdata('errors', $this->form_validation->get_errors());
@@ -323,7 +419,15 @@ class Management extends Controller
             redirect('management/doctors');
         }
 
+        // Delete associated appointments first
         $this->AppointmentModel->filter(['doctor_id' => $id])->delete();
+        
+        // Delete user account if linked
+        if (!empty($doctor['user_id'])) {
+            $this->UserModel->delete($doctor['user_id']);
+        }
+        
+        // Delete doctor record
         $this->DoctorModel->delete($id);
 
         $this->session->set_flashdata('success_message', "Doctor '{$doctor['name']}' deleted successfully.");
@@ -382,5 +486,77 @@ class Management extends Controller
 
         $this->session->set_flashdata('success_message', "Service '{$service['name']}' deleted successfully.");
         redirect('management/services');
+    }
+
+    // Suspend a user account (Admin/Staff can access)
+    public function user_suspend($id)
+    {
+        // Admin or Staff can suspend users
+        $this->_check_admin_or_staff();
+        
+        if (!$id) {
+            $this->session->set_flashdata('error_message', 'Invalid user ID.');
+            redirect($_SERVER['HTTP_REFERER'] ?? 'admin/dashboard');
+        }
+
+        $user = $this->UserModel->find($id);
+        if (!$user) {
+            $this->session->set_flashdata('error_message', 'User not found.');
+            redirect($_SERVER['HTTP_REFERER'] ?? 'admin/dashboard');
+        }
+
+        // Prevent suspending admin accounts
+        if ($user['role'] === 'admin') {
+            $this->session->set_flashdata('error_message', 'Cannot suspend admin accounts.');
+            redirect($_SERVER['HTTP_REFERER'] ?? 'admin/dashboard');
+        }
+
+        // Prevent suspending self
+        if ($user['id'] == $this->session->userdata('user_id')) {
+            $this->session->set_flashdata('error_message', 'Cannot suspend your own account.');
+            redirect($_SERVER['HTTP_REFERER'] ?? 'admin/dashboard');
+        }
+
+        // Get optional reason from query parameter
+        $reason = $this->io->get('reason');
+        $default_reason = 'Account suspended by ' . $this->session->userdata('username');
+        
+        $update_data = [
+            'is_suspended' => 1,
+            'suspended_at' => date('Y-m-d H:i:s'),
+            'suspension_reason' => !empty($reason) ? trim($reason) : $default_reason
+        ];
+
+        $this->UserModel->update($id, $update_data);
+        $this->session->set_flashdata('success_message', "User '{$user['username']}' has been suspended.");
+        redirect($_SERVER['HTTP_REFERER'] ?? 'admin/dashboard');
+    }
+
+    // Unsuspend a user account (Admin/Staff can access)
+    public function user_unsuspend($id)
+    {
+        // Admin or Staff can unsuspend users
+        $this->_check_admin_or_staff();
+        
+        if (!$id) {
+            $this->session->set_flashdata('error_message', 'Invalid user ID.');
+            redirect($_SERVER['HTTP_REFERER'] ?? 'admin/dashboard');
+        }
+
+        $user = $this->UserModel->find($id);
+        if (!$user) {
+            $this->session->set_flashdata('error_message', 'User not found.');
+            redirect($_SERVER['HTTP_REFERER'] ?? 'admin/dashboard');
+        }
+
+        $update_data = [
+            'is_suspended' => 0,
+            'suspended_at' => null,
+            'suspension_reason' => null
+        ];
+
+        $this->UserModel->update($id, $update_data);
+        $this->session->set_flashdata('success_message', "User '{$user['username']}' has been unsuspended.");
+        redirect($_SERVER['HTTP_REFERER'] ?? 'admin/dashboard');
     }
 }

@@ -53,6 +53,7 @@ class Admin extends Controller
         $total_users = $LAVA->db->raw("SELECT COUNT(*) AS count FROM users WHERE role = 'user'")->fetch(PDO::FETCH_ASSOC)['count'];
         $total_staff = $LAVA->db->raw("SELECT COUNT(*) AS count FROM users WHERE role = 'staff'")->fetch(PDO::FETCH_ASSOC)['count'];
         $total_admin = $LAVA->db->raw("SELECT COUNT(*) AS count FROM users WHERE role = 'admin'")->fetch(PDO::FETCH_ASSOC)['count'];
+        $total_doctors = $LAVA->db->raw("SELECT COUNT(*) AS count FROM doctors")->fetch(PDO::FETCH_ASSOC)['count'];
         $total_appointments = $LAVA->db->raw("SELECT COUNT(*) AS count FROM appointments")->fetch(PDO::FETCH_ASSOC)['count'];
         $all_users = $this->UserModel->all();
 
@@ -100,6 +101,7 @@ class Admin extends Controller
             'total_users' => $total_users,
             'total_staff' => $total_staff,
             'total_admin' => $total_admin,
+            'total_doctors' => $total_doctors,
             'total_appointments' => $total_appointments,
             'all_users' => $all_users ?? [],
             'userDetails' => $admin_details,
@@ -203,8 +205,10 @@ class Admin extends Controller
     // Calendar view
     public function calendar()
     {
-        if ($this->session->userdata('role') !== 'admin') {
-            $this->session->set_flashdata('error_message', 'Admin privileges required.');
+        // Allow both admin and staff to access calendar
+        $current_role = $this->session->userdata('role');
+        if (!in_array($current_role, ['admin', 'staff'])) {
+            $this->session->set_flashdata('error_message', 'Admin or Staff privileges required.');
             redirect('login');
         }
 
@@ -222,7 +226,7 @@ class Admin extends Controller
 
         $admin_details = $this->UserModel->find($admin_user_id);
         if (!$admin_details) {
-            $this->session->set_flashdata('error_message', 'Admin account not found. Please contact support.');
+            $this->session->set_flashdata('error_message', 'Account not found. Please contact support.');
             $this->session->sess_destroy();
             redirect('login');
         }

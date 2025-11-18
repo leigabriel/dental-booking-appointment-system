@@ -20,6 +20,9 @@ class Auth extends Controller
             case 'staff':
                 redirect('staff/dashboard');
                 break;
+            case 'doctor':
+                redirect('doctor/dashboard');
+                break;
             case 'user':
             default:
                 redirect('/');
@@ -76,6 +79,15 @@ class Auth extends Controller
 
             if ($user && password_verify($data['password'], $user['password'])) {
 
+                // Check if account is suspended
+                if (isset($user['is_suspended']) && $user['is_suspended'] == 1) {
+                    $reason = $user['suspension_reason'] ?? 'Your account has been suspended. Please contact support.';
+                    $data['error'] = $reason;
+                    $data['username'] = $identifier;
+                    $this->call->view('auth/login', $data);
+                    return;
+                }
+
                 $session_data = [
                     'user_id' => $user['id'],
                     'username' => $user['username'],
@@ -110,13 +122,18 @@ class Auth extends Controller
             ->name('password|Password')->required()->min_length(6)
             ->name('confirm_password|Confirm Password')->required()->matches('password');
 
-        $this->form_validation->name('role|Role')->required()->in_list('user,staff,admin');
+        $this->form_validation->name('role|Role')->required()->in_list('user,staff,admin,doctor');
 
         if ($this->form_validation->run()) {
 
             $hashed_password = password_hash($data['password'], PASSWORD_BCRYPT);
 
             $final_role = $this->io->post('role');
+
+            // If registering as doctor, create doctor profile
+            if ($final_role === 'doctor') {
+                $this->call->model('DoctorModel');
+            }
 
             $new_user_data = [
                 'full_name' => $this->io->post('full_name'),
@@ -126,7 +143,20 @@ class Auth extends Controller
                 'role' => $final_role
             ];
 
-            if ($this->UserModel->create_user($new_user_data)) {
+            $user_id = $this->UserModel->create_user($new_user_data);
+            
+            if ($user_id) {
+                // If registering as doctor, create doctor profile and link to user
+                if ($final_role === 'doctor') {
+                    $doctor_data = [
+                        'user_id' => $user_id,
+                        'name' => $this->io->post('full_name'),
+                        'specialty' => $this->io->post('specialty') ?: 'General Dentistry',
+                        'email' => $this->io->post('email')
+                    ];
+                    $this->DoctorModel->createDoctor($doctor_data);
+                }
+                
                 $this->session->set_flashdata('success_message', 'Registration successful! You may now login.');
                 redirect('login');
             } else {
@@ -280,7 +310,8 @@ class Auth extends Controller
     public function google_login()
     {
         $client_id = '298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com';
-        $redirect_uri = 'http://localhost:3000/auth/google_callback';
+        // $redirect_uri = 'https://dentalcare-health.ct.ws/auth/google_callback';
+         $redirect_uri = 'http://localhost:3000/auth/google_callback';
         // $redirect_uri = 'https://dentalcare-health.onrender.com/auth/google_callback';
         
         $params = [
@@ -303,6 +334,7 @@ class Auth extends Controller
         if ($code) {
             $client_id = '298110887489-apjnbc92tgt4k0d8t107fg1v7kntin44.apps.googleusercontent.com';
             $client_secret = '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';
+            // $redirect_uri = 'https://dentalcare-health.ct.ws/auth/google_callback';
             $redirect_uri = 'http://localhost:3000/auth/google_callback';
             // $redirect_uri = 'https://dentalcare-health.onrender.com/auth/google_callback';
 

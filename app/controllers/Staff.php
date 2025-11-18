@@ -36,9 +36,10 @@ class Staff extends Controller
             redirect('login');
         }
 
-        // Fetch statistics
-        $patient_users = $this->UserModel->filter(['role' => 'user'])->get_all() ?? [];
+        // Fetch statistics - Get ALL users (not just patients)
+        $all_users = $LAVA->db->raw("SELECT id, username, full_name, email, role, is_suspended, suspended_at, suspension_reason FROM users ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC) ?: [];
         $total_patients = $LAVA->db->raw("SELECT COUNT(*) AS count FROM users WHERE role = 'user'")->fetch(PDO::FETCH_ASSOC)['count'];
+        $total_doctors = $LAVA->db->raw("SELECT COUNT(*) AS count FROM doctors")->fetch(PDO::FETCH_ASSOC)['count'];
         $total_appointments = $LAVA->db->raw("SELECT COUNT(*) AS count FROM appointments")->fetch(PDO::FETCH_ASSOC)['count'];
 
         // Prepare initial calendar data for the current month
@@ -82,10 +83,11 @@ class Staff extends Controller
         ];
 
         $data = [
-            'all_users' => $patient_users,
+            'all_users' => $all_users,
             'total_patients' => $total_patients,
+            'total_doctors' => $total_doctors,
             'total_appointments' => $total_appointments,
-            'userDetails' => $staff_details,
+            'staff_details' => $staff_details,
             'initial_calendar' => $initial_calendar,
         ];
 
