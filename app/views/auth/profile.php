@@ -27,6 +27,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
 
         ::-webkit-scrollbar {
             width: 2px;
+            height: 2px;
         }
 
         ::-webkit-scrollbar-track {
@@ -35,6 +36,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
         }
 
         ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
             border-radius: 10px;
         }
 
@@ -43,6 +45,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                 transform: translateX(100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -55,57 +58,54 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
     </style>
 </head>
 
-<body class="relative isolate bg-blue-950 flex items-center justify-center min-h-screen p-6 sm:p-10 text-slate-800">
+<body class="relative isolate bg-blue-950 min-h-screen text-slate-800 pb-10">
 
-    <div aria-hidden="true" class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
+    <div aria-hidden="true" class="fixed inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
         <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
     </div>
 
-    <div class="max-w-8xl bg-blue-900 border-4 border-white rounded-2xl p-8 mx-auto space-y-1">
-        <!-- HEADER -->
-        <header class="mb-6 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 bg-white shadow-sm rounded-2xl p-6 border">
-            <div class="flex items-center gap-4">
-                <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-600 to-sky-500 flex items-center justify-center text-white text-4xl italic font-bold shadow-md">
+    <div class="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 mt-4 sm:mt-8 bg-blue-900 border-4 border-white rounded-2xl shadow-2xl space-y-1">
+
+        <header class="mb-6 flex flex-col lg:flex-row justify-between items-center gap-6 bg-white shadow-sm rounded-2xl p-6 border">
+            <div class="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-600 to-sky-500 flex items-center justify-center text-white text-4xl italic font-bold shadow-md shrink-0">
                     <?= strtoupper(substr($user['username'] ?? 'U', 0, 1)) ?>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-extrabold text-slate-900"><?= html_escape($user['full_name'] ?? 'User') ?></h1>
-                    <p class="bg-blue-600 p-1 px-4 rounded-2xl text-sm text-white">@<?= html_escape($user['username'] ?? '') ?> • <span class="text-xs text-gray-300">Member since <?= date('M Y', strtotime($user['created_at'] ?? date('Y-m-d'))) ?></span></p>
+                    <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900"><?= html_escape($user['full_name'] ?? 'User') ?></h1>
+                    <p class="bg-blue-600 p-1 px-4 rounded-2xl text-sm text-white mt-1 inline-block">@<?= html_escape($user['username'] ?? '') ?> <span class="hidden sm:inline">•</span> <span class="block sm:inline text-xs text-gray-300 mt-1 sm:mt-0">Member since <?= date('M Y', strtotime($user['created_at'] ?? date('Y-m-d'))) ?></span></p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-3">
-                <a href="<?= site_url('/') ?>" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-50 border rounded-lg text-sm text-slate-700">
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+                <a href="<?= site_url('/') ?>" class="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-4 py-3 sm:py-2 bg-slate-100 hover:bg-slate-50 border rounded-lg text-sm text-slate-700">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                     Back to Home
                 </a>
-                <a href="<?= site_url('/book') ?>" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm shadow">Book Appointment</a>
-                <a href="#" class="logout-confirm group relative rounded-full p-1 bg-red-700 flex border-2 border-gray-600 items-center text-sm/6 font-semibold text-white hover:text-red-300" data-logout-url="<?= site_url('logout') ?>">
-                    <img src="https://cdn-icons-png.flaticon.com/128/10609/10609328.png" alt="Logout" class="h-6 w-6 filter invert">
-                    <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-700 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+                <a href="<?= site_url('/book') ?>" class="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-4 py-3 sm:py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm shadow">Book Appointment</a>
+                <a href="#" class="w-full sm:w-auto justify-center logout-confirm group relative rounded-lg sm:rounded-full p-3 sm:p-1 bg-red-700 flex border-2 border-gray-600 items-center text-sm font-semibold text-white hover:text-red-300" data-logout-url="<?= site_url('logout') ?>">
+                    <img src="https://cdn-icons-png.flaticon.com/128/10609/10609328.png" alt="Logout" class="h-6 w-6 filter invert mr-2 sm:mr-0">
+                    <span class="sm:hidden">Log Out</span>
+                    <span class="hidden sm:block absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded bg-gray-700 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
                         Log out
                     </span>
                 </a>
             </div>
         </header>
 
-        <!-- FLASH MESSAGE -->
         <?php if ($flash_message): ?>
-            <div class="p-4 rounded-xl <?= $is_success ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200' ?>">
+            <div class="p-4 rounded-xl mb-4 <?= $is_success ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200' ?>">
                 <?= html_escape($flash_message) ?>
             </div>
         <?php endif; ?>
 
-        <!-- MAIN CONTENT -->
         <div class="space-y-6">
 
-            <!-- TOP SECTION: PROFILE & CONFIRMED APPOINTMENTS -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                <!-- LEFT: PROFILE SETTINGS -->
-                <aside class="col-span-1 bg-white border rounded-2xl shadow-sm p-6">
+                <aside class="col-span-1 bg-white border rounded-2xl shadow-sm p-6 order-2 lg:order-1">
                     <h2 class="text-lg font-semibold text-slate-900 mb-4">Profile Settings</h2>
                     <form method="POST" action="<?= site_url('profile/update') ?>" class="space-y-4">
                         <?= csrf_field() ?>
@@ -113,65 +113,63 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                         <div>
                             <label for="full_name" class="block text-sm font-medium text-slate-700">Full Name</label>
                             <input type="text" id="full_name" name="full_name" value="<?= html_escape($user['full_name'] ?? '') ?>" required
-                                class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
+                                class="mt-1 block w-full px-3 py-3 sm:py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
                         </div>
 
                         <div>
                             <label for="email" class="block text-sm font-medium text-slate-700">Email Address</label>
                             <input type="email" id="email" name="email" value="<?= html_escape($user['email'] ?? '') ?>" required
-                                class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
+                                class="mt-1 block w-full px-3 py-3 sm:py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
                         </div>
 
                         <div>
                             <label for="username" class="block text-sm font-medium text-slate-700">Username</label>
                             <input type="text" id="username" value="<?= html_escape($user['username'] ?? '') ?>" readonly
-                                class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-500">
+                                class="mt-1 block w-full px-3 py-3 sm:py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 bg-gray-100">
                         </div>
 
-                        <h3 class="text-sm font-medium text-slate-800 mt-2">Change Password (Optional)</h3>
+                        <h3 class="text-sm font-medium text-slate-800 mt-2 pt-2 border-t">Change Password (Optional)</h3>
                         <div>
                             <input type="password" id="new_password" name="new_password" placeholder="New password"
-                                class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
+                                class="mt-1 block w-full px-3 py-3 sm:py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
                         </div>
 
                         <div>
                             <input type="password" id="confirm_new_password" name="confirm_new_password" placeholder="Confirm new password"
-                                class="mt-1 block w-full px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
+                                class="mt-1 block w-full px-3 py-3 sm:py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-indigo-400 outline-none transition">
                         </div>
 
-                        <div class="flex justify-between items-center pt-2">
+                        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
                             <a href="<?= site_url('profile/delete') ?>" onclick="return confirm('WARNING: Are you sure you want to permanently delete your account? This action cannot be undone.');" class="text-sm text-rose-600 hover:underline">Delete account</a>
-                            <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-semibold">Save changes</button>
+                            <button type="submit" class="w-full sm:w-auto px-6 py-3 sm:py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-semibold">Save changes</button>
                         </div>
                     </form>
                 </aside>
 
-                <!-- RIGHT: CONFIRMED APPOINTMENTS LIST -->
-                <section class="col-span-2 bg-white border rounded-2xl shadow-sm p-6">
+                <section class="col-span-1 lg:col-span-2 bg-white border rounded-2xl shadow-sm p-4 sm:p-6 order-1 lg:order-2">
                     <?php
                     $confirmed_appointments = array_filter($appointments, function ($app) {
                         return $app['status'] === 'confirmed';
                     });
                     ?>
 
-                    <div class="flex items-center justify-between mb-6">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
                         <div>
-                            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                                <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+                                <svg class="w-6 h-6 sm:w-7 sm:h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 Confirmed Appointments
                             </h2>
                             <p class="text-sm text-slate-500 mt-1">Click on any appointment to view details</p>
                         </div>
-                        <span class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-bold shadow-sm">
+                        <span class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-full text-sm font-bold shadow-sm self-start sm:self-center">
                             <?= count($confirmed_appointments) ?> Active
                         </span>
                     </div>
 
                     <?php if (!empty($confirmed_appointments)): ?>
-                        <p class="text-sm text-slate-600 mb-4">Click on any appointment to view full details</p>
-                        <div class="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                        <div class="space-y-3 max-h-[600px] overflow-y-auto pr-1 custom-scrollbar">
                             <?php foreach ($confirmed_appointments as $app): ?>
                                 <?php
                                 $doctor = $doctors[$app['doctor_id']] ?? ['name' => 'N/A', 'specialty' => 'N/A'];
@@ -179,26 +177,27 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                 $appointment_date = date('l, M j, Y', strtotime($app['appointment_date']));
                                 $appointment_time = date('g:i A', strtotime($app['time_slot']));
                                 ?>
-                                <div onclick="openAppointmentModal(<?= $app['id'] ?>)" 
-                                    class="flex items-center justify-between p-4 bg-gradient-to-r from-emerald-50 to-blue-50 hover:from-emerald-100 hover:to-blue-100 border-2 border-emerald-200 rounded-xl shadow-md hover:shadow-lg cursor-pointer transition-all duration-300 transform hover:scale-[1.02]">
-                                    <div class="flex items-center gap-4 flex-1">
-                                        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-md">
+                                <div onclick="openAppointmentModal(<?= $app['id'] ?>)"
+                                    class="group relative flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gradient-to-r from-emerald-50 to-blue-50 hover:from-emerald-100 hover:to-blue-100 border-2 border-emerald-200 rounded-xl shadow-md hover:shadow-lg cursor-pointer transition-all duration-300 transform hover:scale-[1.01]">
+
+                                    <div class="flex items-start sm:items-center gap-4 flex-1 w-full">
+                                        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-md mt-1 sm:mt-0">
                                             <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
                                             </svg>
                                         </div>
-                                        <div class="flex-1">
-                                            <div class="flex items-center gap-2 mb-1">
-                                                <h3 class="text-base font-bold text-slate-900"><?= html_escape($service['name']) ?></h3>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex flex-wrap items-center gap-2 mb-1">
+                                                <h3 class="text-base font-bold text-slate-900 truncate"><?= html_escape($service['name']) ?></h3>
                                                 <span class="px-2 py-0.5 bg-emerald-500 text-white rounded-full text-xs font-bold">CONFIRMED</span>
                                             </div>
-                                            <p class="text-sm text-slate-600">Dr. <?= html_escape($doctor['name']) ?> • <?= html_escape($doctor['specialty']) ?></p>
-                                            <div class="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                                            <p class="text-sm text-slate-600 truncate">Dr. <?= html_escape($doctor['name']) ?> • <?= html_escape($doctor['specialty']) ?></p>
+                                            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-slate-500">
                                                 <span class="flex items-center gap-1">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                     </svg>
-                                                    <?= html_escape(date('M j, Y', strtotime($app['appointment_date']))) ?>
+                                                    <?= html_escape(date('M j', strtotime($app['appointment_date']))) ?>
                                                 </span>
                                                 <span class="flex items-center gap-1">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,156 +208,133 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="flex-shrink-0 text-emerald-600">
+                                    <div class="absolute top-4 right-4 sm:relative sm:top-0 sm:right-0 flex-shrink-0 text-emerald-600">
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                         </svg>
                                     </div>
                                 </div>
 
-                                <!-- Hidden Modal for this appointment -->
-                                <div id="modal-<?= $app['id'] ?>" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" onclick="closeAppointmentModal(event, <?= $app['id'] ?>)">
-                                    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative" onclick="event.stopPropagation()">
-                                        <!-- Close Button -->
-                                        <button onclick="closeAppointmentModal(event, <?= $app['id'] ?>)" class="absolute top-4 right-4 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all z-10">
-                                            <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
+                                <div id="modal-<?= $app['id'] ?>" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" onclick="closeAppointmentModal(event, <?= $app['id'] ?>)">
+                                    <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
 
-                                        <!-- Receipt Card -->
-                                        <div id="receipt-<?= $app['id'] ?>" class="relative bg-gradient-to-br from-emerald-50 to-blue-50 border-2 border-emerald-200">
-                                    <!-- Receipt Header -->
-                                    <div class="bg-emerald-600 text-white p-4 relative">
-                                        <div class="flex justify-between items-start">
-                                            <div>
-                                                <h3 class="text-lg font-bold">DENTALCARE</h3>
-                                                <p class="text-xs text-emerald-100">Appointment Receipt</p>
-                                            </div>
-                                            <div class="flex flex-col gap-1 items-end">
-                                                <div class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
-                                                    <span class="text-xs font-bold">CONFIRMED</span>
-                                                </div>
-                                                <?php
-                                                $payment_method = $app['payment_method'] ?? 'clinic';
-                                                $payment_status = $app['payment_status'] ?? 'pending';
-                                                $payment_icons = [
-                                                    'gcash' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>',
-                                                    'paypal' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8.32 21.97a.546.546 0 01-.26.04h-.06c-.16 0-.31-.06-.42-.18-.13-.13-.18-.31-.16-.49l.52-3.38h2.46c3.27 0 5.93-2.66 5.93-5.93 0-.39-.04-.77-.11-1.14l1.31-8.54A.546.546 0 0118 2h-6.93c-.3 0-.55.21-.61.5l-1.36 8.86c-.05.33-.15.65-.29.96h-.05c-.83 2.12-2.84 3.61-5.2 3.61h-.09l-.52 3.38c-.03.18.02.36.16.49.11.12.26.18.42.18h.06c.09 0 .18-.01.26-.04L8.32 21.97z"/></svg>',
-                                                    'clinic' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>'
-                                                ];
-                                                $payment_labels = [
-                                                    'gcash' => 'GCash',
-                                                    'paypal' => 'PayPal',
-                                                    'clinic' => 'Pay at Clinic'
-                                                ];
-                                                $status_colors = [
-                                                    'paid' => 'bg-green-500/30 text-green-100',
-                                                    'unpaid' => 'bg-yellow-500/30 text-yellow-100',
-                                                    'pending' => 'bg-blue-500/30 text-blue-100'
-                                                ];
-                                                ?>
-                                                <div class="<?= $status_colors[$payment_status] ?? 'bg-gray-500/30 text-gray-100' ?> backdrop-blur-sm px-2 py-1 rounded-full text-xs flex items-center gap-1">
-                                                    <?= $payment_icons[$payment_method] ?? '' ?>
-                                                    <span class="font-semibold"><?= $payment_labels[$payment_method] ?? ucfirst($payment_method) ?></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Dotted tear line -->
-                                        <div class="absolute bottom-0 left-0 right-0 h-4 bg-white" style="
-                                            background-image: radial-gradient(circle at 10px -5px, transparent 12px, white 13px);
-                                            background-size: 20px 20px;
-                                            background-repeat: repeat-x;
-                                        "></div>
-                                    </div>
+                                    <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                                        <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg w-full" onclick="event.stopPropagation()">
 
-                                    <!-- Receipt Body -->
-                                    <div class="p-5 space-y-4">
-                                        <!-- Appointment ID -->
-                                        <div class="text-center pb-3 border-b border-dashed border-slate-300">
-                                            <p class="text-xs text-slate-500 uppercase tracking-wider">Appointment ID</p>
-                                            <p class="text-lg font-mono font-bold text-slate-900">#<?= str_pad($app['id'], 6, '0', STR_PAD_LEFT) ?></p>
-                                        </div>
-
-                                        <!-- Doctor Info -->
-                                        <div class="flex items-start gap-3">
-                                            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
-                                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                            <button onclick="closeAppointmentModal(event, <?= $app['id'] ?>)" class="absolute top-4 right-4 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all z-10">
+                                                <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
-                                            </div>
-                                            <div class="flex-1">
-                                                <p class="text-xs text-slate-500 uppercase tracking-wider">Doctor</p>
-                                                <p class="text-base font-bold text-slate-900"><?= html_escape($doctor['name']) ?></p>
-                                                <p class="text-xs text-indigo-600 font-semibold"><?= html_escape($doctor['specialty']) ?></p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Service Info -->
-                                        <div class="bg-white rounded-lg p-3 border border-slate-200">
-                                            <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Service</p>
-                                            <p class="text-sm font-bold text-slate-900"><?= html_escape($service['name']) ?></p>
-                                            <div class="flex items-center justify-between mt-2 text-xs text-slate-600">
-                                                <span class="flex items-center gap-1">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                    <?= html_escape($service['duration_mins']) ?> mins
-                                                </span>
-                                                <span class="text-emerald-600 font-bold text-base">$<?= number_format($service['price'], 2) ?></span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Date & Time -->
-                                        <div class="grid grid-cols-2 gap-3">
-                                            <div class="bg-blue-50 rounded-lg p-3 border border-blue-200">
-                                                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Date</p>
-                                                <p class="text-xs font-bold text-slate-900"><?= html_escape($appointment_date) ?></p>
-                                            </div>
-                                            <div class="bg-purple-50 rounded-lg p-3 border border-purple-200">
-                                                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Time</p>
-                                                <p class="text-xs font-bold text-slate-900"><?= html_escape($appointment_time) ?></p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Footer Note -->
-                                        <div class="pt-3 border-t border-dashed border-slate-300">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <div class="text-xs text-slate-500">
-                                                    <p class="font-semibold">Payment Status:</p>
-                                                    <?php
-                                                    $status_badges = [
-                                                        'paid' => '<span class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Paid</span>',
-                                                        'unpaid' => '<span class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg> Unpaid</span>',
-                                                        'pending' => '<span class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg> Pending</span>'
-                                                    ];
-                                                    echo $status_badges[$payment_status] ?? '<span class="text-xs text-slate-500">N/A</span>';
-                                                    ?>
-                                                </div>
-                                            </div>
-                                            <p class="text-xs text-slate-500 text-center">Please arrive 10 minutes early</p>
-                                            <p class="text-xs text-emerald-600 font-semibold mt-1 text-center">✓ Confirmed & Ready</p>
-                                        </div>
-                                        
-                                        <!-- Download Receipt Button -->
-                                        <div class="mt-3 pt-3 border-t border-dashed border-slate-300" data-download-section>
-                                            <button onclick="downloadReceipt(<?= $app['id'] ?>, '<?= str_pad($app['id'], 6, '0', STR_PAD_LEFT) ?>')" 
-                                                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg text-sm font-semibold shadow-lg transition-all transform hover:scale-105">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                                </svg>
-                                                Download Receipt
                                             </button>
-                                        </div>
-                                    </div>
 
-                                    <!-- Receipt Bottom Tear -->
-                                    <div class="h-4 bg-emerald-50" data-bottom-tear style="
-                                        background-image: radial-gradient(circle at 10px 9px, transparent 12px, #ecfdf5 13px);
-                                        background-size: 20px 20px;
-                                        background-repeat: repeat-x;
-                                    "></div>
-                                </div>
+                                            <div id="receipt-<?= $app['id'] ?>" class="relative bg-gradient-to-br from-emerald-50 to-blue-50 border-2 border-emerald-200">
+                                                <div class="bg-emerald-600 text-white p-4 relative">
+                                                    <div class="flex justify-between items-start">
+                                                        <div>
+                                                            <h3 class="text-lg font-bold">DENTALCARE</h3>
+                                                            <p class="text-xs text-emerald-100">Appointment Receipt</p>
+                                                        </div>
+                                                        <div class="flex flex-col gap-1 items-end">
+                                                            <div class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
+                                                                <span class="text-xs font-bold">CONFIRMED</span>
+                                                            </div>
+                                                            <?php
+                                                            // Payment badges logic (kept same)
+                                                            $payment_method = $app['payment_method'] ?? 'clinic';
+                                                            $payment_status = $app['payment_status'] ?? 'pending';
+                                                            $payment_icons = [
+                                                                'gcash' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>',
+                                                                'paypal' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8.32 21.97a.546.546 0 01-.26.04h-.06c-.16 0-.31-.06-.42-.18-.13-.13-.18-.31-.16-.49l.52-3.38h2.46c3.27 0 5.93-2.66 5.93-5.93 0-.39-.04-.77-.11-1.14l1.31-8.54A.546.546 0 0118 2h-6.93c-.3 0-.55.21-.61.5l-1.36 8.86c-.05.33-.15.65-.29.96h-.05c-.83 2.12-2.84 3.61-5.2 3.61h-.09l-.52 3.38c-.03.18.02.36.16.49.11.12.26.18.42.18h.06c.09 0 .18-.01.26-.04L8.32 21.97z"/></svg>',
+                                                                'clinic' => '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>'
+                                                            ];
+                                                            $payment_labels = ['gcash' => 'GCash', 'paypal' => 'PayPal', 'clinic' => 'Pay at Clinic'];
+                                                            $status_colors = ['paid' => 'bg-green-500/30 text-green-100', 'unpaid' => 'bg-yellow-500/30 text-yellow-100', 'pending' => 'bg-blue-500/30 text-blue-100'];
+                                                            ?>
+                                                            <div class="<?= $status_colors[$payment_status] ?? 'bg-gray-500/30 text-gray-100' ?> backdrop-blur-sm px-2 py-1 rounded-full text-xs flex items-center gap-1">
+                                                                <?= $payment_icons[$payment_method] ?? '' ?>
+                                                                <span class="font-semibold"><?= $payment_labels[$payment_method] ?? ucfirst($payment_method) ?></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="absolute bottom-0 left-0 right-0 h-4 bg-white" style="background-image: radial-gradient(circle at 10px -5px, transparent 12px, white 13px); background-size: 20px 20px; background-repeat: repeat-x;"></div>
+                                                </div>
+
+                                                <div class="p-5 space-y-4">
+                                                    <div class="text-center pb-3 border-b border-dashed border-slate-300">
+                                                        <p class="text-xs text-slate-500 uppercase tracking-wider">Appointment ID</p>
+                                                        <p class="text-lg font-mono font-bold text-slate-900 break-all">#<?= str_pad($app['id'], 6, '0', STR_PAD_LEFT) ?></p>
+                                                    </div>
+
+                                                    <div class="flex items-start gap-3">
+                                                        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+                                                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                                            </svg>
+                                                        </div>
+                                                        <div class="flex-1">
+                                                            <p class="text-xs text-slate-500 uppercase tracking-wider">Doctor</p>
+                                                            <p class="text-base font-bold text-slate-900"><?= html_escape($doctor['name']) ?></p>
+                                                            <p class="text-xs text-indigo-600 font-semibold"><?= html_escape($doctor['specialty']) ?></p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="bg-white rounded-lg p-3 border border-slate-200">
+                                                        <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Service</p>
+                                                        <p class="text-sm font-bold text-slate-900"><?= html_escape($service['name']) ?></p>
+                                                        <div class="flex items-center justify-between mt-2 text-xs text-slate-600">
+                                                            <span class="flex items-center gap-1">
+                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                </svg>
+                                                                <?= html_escape($service['duration_mins']) ?> mins
+                                                            </span>
+                                                            <span class="text-emerald-600 font-bold text-base">$<?= number_format($service['price'], 2) ?></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="grid grid-cols-2 gap-3">
+                                                        <div class="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                                                            <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Date</p>
+                                                            <p class="text-xs font-bold text-slate-900"><?= html_escape($appointment_date) ?></p>
+                                                        </div>
+                                                        <div class="bg-purple-50 rounded-lg p-3 border border-purple-200">
+                                                            <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Time</p>
+                                                            <p class="text-xs font-bold text-slate-900"><?= html_escape($appointment_time) ?></p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="pt-3 border-t border-dashed border-slate-300">
+                                                        <div class="flex items-center justify-between mb-2">
+                                                            <div class="text-xs text-slate-500">
+                                                                <p class="font-semibold">Payment Status:</p>
+                                                                <?php
+                                                                $status_badges = [
+                                                                    'paid' => '<span class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Paid</span>',
+                                                                    'unpaid' => '<span class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg> Unpaid</span>',
+                                                                    'pending' => '<span class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg> Pending</span>'
+                                                                ];
+                                                                echo $status_badges[$payment_status] ?? '<span class="text-xs text-slate-500">N/A</span>';
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                        <p class="text-xs text-slate-500 text-center">Please arrive 10 minutes early</p>
+                                                        <p class="text-xs text-emerald-600 font-semibold mt-1 text-center">✓ Confirmed & Ready</p>
+                                                    </div>
+
+                                                    <div class="mt-3 pt-3 border-t border-dashed border-slate-300" data-download-section>
+                                                        <button onclick="downloadReceipt(<?= $app['id'] ?>, '<?= str_pad($app['id'], 6, '0', STR_PAD_LEFT) ?>')"
+                                                            class="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg text-sm font-semibold shadow-lg transition-all transform hover:scale-105">
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                            </svg>
+                                                            Download Receipt
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="h-4 bg-emerald-50" data-bottom-tear style="background-image: radial-gradient(circle at 10px 9px, transparent 12px, #ecfdf5 13px); background-size: 20px 20px; background-repeat: repeat-x;"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -382,12 +358,11 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                 </section>
             </div>
 
-            <!-- BOTTOM SECTION: ALL APPOINTMENTS TABLE -->
-            <section class="bg-white border rounded-2xl shadow-sm p-6">
-                <div class="flex items-center justify-between mb-6">
+            <section class="bg-white border rounded-2xl shadow-sm p-4 sm:p-6 order-3">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
                     <div>
-                        <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                            <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+                            <svg class="w-6 h-6 sm:w-7 sm:h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                             </svg>
                             Appointment History
@@ -395,7 +370,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                         <p class="text-sm text-slate-500 mt-1">Complete record of all your appointments</p>
                     </div>
                     <?php if (!empty($appointments)): ?>
-                        <button type="button" onclick="openClearHistoryModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-sm font-semibold shadow-lg transition-all transform hover:scale-105">
+                        <button type="button" onclick="openClearHistoryModal()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-sm font-semibold shadow-lg transition-all transform hover:scale-105">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
@@ -405,7 +380,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm border-collapse">
+                    <table class="w-full text-sm border-collapse whitespace-nowrap">
                         <thead>
                             <tr class="text-left text-xs text-slate-500 border border-gray-300/50">
                                 <th class="py-2 px-3">Doctor</th>
@@ -420,7 +395,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                         <tbody class="divide-y border border-gray-300/50">
                             <?php if (!empty($appointments)): ?>
                                 <?php foreach ($appointments as $app): ?>
-                                    <tr class="hover:bg-blue-200">
+                                    <tr class="hover:bg-blue-200 transition-colors">
                                         <td class="py-3 px-3"><?= html_escape($doctors[$app['doctor_id']]['name'] ?? 'N/A') ?></td>
                                         <td class="py-3 px-3"><?= html_escape($services[$app['service_id']]['name'] ?? 'N/A') ?></td>
                                         <td class="py-3 px-3"><?= html_escape(date('M j, Y', strtotime($app['appointment_date']))) ?></td>
@@ -487,10 +462,8 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
         </div>
     </div>
 
-    <!-- Clear All History Confirmation Modal -->
     <div id="clearHistoryModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
         <div class="relative w-full max-w-md border-2 border-rose-300 duration-500 group overflow-hidden rounded-2xl bg-white text-slate-900 p-6 shadow-2xl">
-            <!-- Warning Icon -->
             <div class="flex flex-col items-center text-center mb-6">
                 <div class="mb-4 p-4 rounded-full bg-rose-100">
                     <svg class="w-12 h-12 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -501,7 +474,6 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                 <p class="text-sm text-slate-600 mt-2">This will permanently delete all your appointment records</p>
             </div>
 
-            <!-- Warning Message -->
             <div class="bg-rose-50 border border-rose-200 rounded-lg p-4 mb-6">
                 <p class="text-sm text-rose-800 font-semibold mb-2">⚠️ Warning: This action cannot be undone!</p>
                 <ul class="text-xs text-rose-700 space-y-1 list-disc list-inside">
@@ -511,7 +483,6 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                 </ul>
             </div>
 
-            <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
                     id="cancelClearHistory"
@@ -530,7 +501,6 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
         </div>
     </div>
 
-    <!-- View Decline Message Modal -->
     <div id="view-decline-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4"
         onclick="if(event.target.id==='view-decline-modal') closeViewDeclineModal();">
 
@@ -562,22 +532,21 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
         </div>
     </div>
 
-    <!-- Logout Confirmation Modal -->
     <div id="logoutModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
         <div
-            class="relative w-96 h-64 border-2 border-white duration-500 group overflow-hidden rounded-xl bg-neutral-900 text-neutral-50 p-6 flex flex-col justify-evenly border border-neutral-800 shadow-xl">
-            <!-- Background Blobs -->
+            class="relative w-full max-w-md sm:w-96 border-2 border-white duration-500 group overflow-hidden rounded-xl bg-neutral-900 text-neutral-50 p-6 flex flex-col justify-evenly border border-neutral-800 shadow-xl">
             <div class="absolute blur duration-500 group-hover:blur-none w-72 h-72 rounded-full group-hover:translate-x-10 group-hover:translate-y-10 bg-red-900 right-1 -bottom-24"></div>
             <div class="absolute blur duration-500 group-hover:blur-none w-12 h-12 rounded-full group-hover:translate-x-8 group-hover:translate-y-2 bg-rose-700 right-12 bottom-12"></div>
             <div class="absolute blur duration-500 group-hover:blur-none w-36 h-36 rounded-full group-hover:translate-x-10 group-hover:-translate-y-10 bg-rose-800 right-1 -top-12"></div>
             <div class="absolute blur duration-500 group-hover:blur-none w-24 h-24 bg-red-700 rounded-full group-hover:-translate-x-10"></div>
 
-            <!-- Foreground Content -->
-            <div class="z-10 flex flex-col justify-evenly h-full text-center">
-                <h3 class="text-2xl font-bold mb-1">Confirm Logout</h3>
-                <p class="text-sm text-gray-300 mb-4">
-                    Are you sure you want to end your current session?
-                </p>
+            <div class="z-10 flex flex-col justify-evenly h-full text-center space-y-6">
+                <div class="space-y-2">
+                    <h3 class="text-2xl font-bold mb-1">Confirm Logout</h3>
+                    <p class="text-sm text-gray-300">
+                        Are you sure you want to end your current session?
+                    </p>
+                </div>
 
                 <div class="flex flex-col sm:flex-row gap-3 justify-center">
                     <button
@@ -605,17 +574,16 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
             const modal = document.getElementById('modal-' + appointmentId);
             if (modal) {
                 modal.classList.remove('hidden');
-                modal.classList.add('flex');
+                // Used to fix scrolling issues on body when modal is open
                 document.body.classList.add('overflow-hidden');
             }
         }
 
         // Close appointment modal
         function closeAppointmentModal(event, appointmentId) {
-            event.stopPropagation();
+            if (event) event.stopPropagation();
             const modal = document.getElementById('modal-' + appointmentId);
             if (modal) {
-                modal.classList.remove('flex');
                 modal.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
             }
@@ -713,7 +681,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
         // Download Receipt as Image
         async function downloadReceipt(receiptId, appointmentNumber) {
             const receiptElement = document.getElementById(`receipt-${receiptId}`);
-            
+
             if (!receiptElement) {
                 showNotification('Receipt not found!', 'error');
                 return;
@@ -722,7 +690,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
             // Find elements to hide during capture
             const downloadSection = receiptElement.querySelector('[data-download-section]');
             const bottomTear = receiptElement.querySelector('[data-bottom-tear]');
-            
+
             try {
                 // Create loading overlay with better design
                 const loadingOverlay = document.createElement('div');
@@ -770,7 +738,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                         showNotification('Failed to create image file.', 'error');
                         return;
                     }
-                    
+
                     const url = URL.createObjectURL(blob);
                     const link = document.createElement('a');
                     link.download = `dentalcare-receipt-${appointmentNumber}.png`;
@@ -778,24 +746,24 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                    
+
                     // Clean up
                     setTimeout(() => URL.revokeObjectURL(url), 100);
-                    
+
                     showNotification('Receipt downloaded successfully!', 'success');
                 }, 'image/png', 1.0);
 
             } catch (error) {
                 console.error('Error generating receipt:', error);
-                
+
                 // Restore hidden elements in case of error
                 if (downloadSection) downloadSection.style.display = '';
                 if (bottomTear) bottomTear.style.display = '';
-                
+
                 // Remove loading overlay if it exists
                 const overlay = document.querySelector('.fixed.inset-0.bg-black\\/50');
                 if (overlay) document.body.removeChild(overlay);
-                
+
                 showNotification('Failed to generate receipt. Please try again.', 'error');
             }
         }
@@ -804,7 +772,7 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             const bgColor = type === 'success' ? 'bg-emerald-500' : type === 'error' ? 'bg-rose-500' : 'bg-blue-500';
-            
+
             notification.className = `fixed top-4 right-4 ${bgColor} text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-slide-in flex items-center gap-3`;
             notification.innerHTML = `
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -814,9 +782,9 @@ $is_success = $LAVA->session->flashdata('success_message') ? true : false;
                 </svg>
                 <span class="font-semibold">${message}</span>
             `;
-            
+
             document.body.appendChild(notification);
-            
+
             setTimeout(() => {
                 notification.style.opacity = '0';
                 notification.style.transform = 'translateX(100%)';
