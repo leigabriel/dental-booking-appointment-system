@@ -53,7 +53,6 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
 <body class="bg-gray-100">
 
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
         <aside class="w-20 bg-blue-900 text-gray-300 p-3 flex flex-col items-center justify-between shadow-2xl sticky top-0 h-screen z-20">
             <div>
                 <a href="<?= site_url('doctor/dashboard') ?>" title="Dentalcare Home" class="flex items-center justify-center h-12 w-12 mb-8 rounded-full bg-gray-800 border-gray-700 border-2 text-white shadow-md hover:bg-gray-700">
@@ -88,47 +87,59 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
             </a>
         </aside>
 
-        <!-- Logout Confirmation Modal -->
         <div id="logout-modal"
             class="modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-opacity duration-300 ease-in-out"
             onclick="closeLogoutModal(event)">
-
             <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-xl transform transition-transform duration-300 ease-in-out scale-95"
                 onclick="event.stopPropagation()">
-
                 <div class="flex flex-col items-center text-center mb-6">
                     <div class="mb-4 text-red-500 text-5xl">
                         <i class="fas fa-right-from-bracket"></i>
                     </div>
                     <h3 class="text-2xl font-semibold text-gray-800">Confirm Logout</h3>
                 </div>
-
-                <p class="text-gray-600 text-center mb-8">
-                    Are you sure you want to logout? This will end your current session.
-                </p>
-
+                <p class="text-gray-600 text-center mb-8">Are you sure you want to logout? This will end your current session.</p>
                 <div class="flex justify-center gap-4">
-                    <button type="button"
-                        onclick="closeLogoutModal()"
-                        class="px-6 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition duration-150 font-medium">
-                        Cancel
-                    </button>
-                    <a id="confirm-logout-btn"
-                        href="<?= site_url('logout') ?>"
-                        class="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 font-medium shadow-md">
-                        Logout
-                    </a>
+                    <button type="button" onclick="closeLogoutModal()"
+                        class="px-6 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 font-medium">Cancel</button>
+                    <a id="confirm-logout-btn" href="<?= site_url('logout') ?>"
+                        class="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium shadow-md">Logout</a>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <main class="flex-1 p-8">
+        <div id="decline-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4" onclick="closeDeclineModal(event)">
+            <div class="bg-white w-full max-w-md p-6 rounded-xl shadow-xl transform transition-all" onclick="event.stopPropagation()">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Decline Appointment</h3>
+                <form action="<?= site_url('doctor/appointment_decline') ?>" method="POST">
+                    <input type="hidden" name="appointment_id" id="decline_appointment_id">
+                    <div class="mb-4">
+                        <label for="decline_message" class="block text-sm font-medium text-gray-700 mb-1">Reason for declining:</label>
+                        <textarea name="decline_message" id="decline_message" rows="3" required
+                            class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
+                            placeholder="e.g., Doctor unavailable, schedule conflict..."></textarea>
+                    </div>
+                    <div class="flex justify-end gap-3">
+                        <button type="button" onclick="closeDeclineModal()"
+                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">Cancel</button>
+                        <button type="submit"
+                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Decline Appointment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <main class="flex-1 p-8 overflow-y-auto h-screen">
             <div class="max-w-7xl mx-auto">
-                <!-- Header -->
                 <div class="mb-8">
                     <h1 class="text-3xl font-bold text-gray-800">Doctor Dashboard</h1>
                     <p class="text-gray-600 mt-2">Welcome back, Dr. <?= html_escape($doctor_name) ?>!</p>
+                    <?php if (!$doctorProfile): ?>
+                        <p class="mt-2 p-2 bg-yellow-100 text-yellow-700 rounded border border-yellow-300 inline-block">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            Your account is not linked to a doctor profile. Appointments may not appear.
+                        </p>
+                    <?php endif; ?>
                 </div>
 
                 <?php if ($flash_message): ?>
@@ -137,7 +148,6 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </div>
                 <?php endif; ?>
 
-                <!-- Doctor Profile Card -->
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
                     <h2 class="text-xl font-bold text-gray-800 mb-4">My Profile</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -155,13 +165,10 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                         </div>
                     </div>
                     <div class="mt-4 flex gap-3">
-                        <a href="<?= site_url('doctor/profile') ?>" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-                            Edit Profile
-                        </a>
+                        <a href="<?= site_url('doctor/profile') ?>" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Edit Profile</a>
                     </div>
                 </div>
 
-                <!-- Appointments Statistics -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div class="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl shadow-lg p-6 text-white">
                         <div class="flex items-center justify-between">
@@ -176,7 +183,6 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                             </div>
                         </div>
                     </div>
-
                     <div class="bg-gradient-to-br from-green-400 to-green-600 rounded-xl shadow-lg p-6 text-white">
                         <div class="flex items-center justify-between">
                             <div>
@@ -190,7 +196,6 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                             </div>
                         </div>
                     </div>
-
                     <div class="bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl shadow-lg p-6 text-white">
                         <div class="flex items-center justify-between">
                             <div>
@@ -206,7 +211,6 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     </div>
                 </div>
 
-                <!-- Pending Appointments -->
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
                     <h2 class="text-xl font-bold text-gray-800 mb-4">Pending Appointments</h2>
                     <?php if (empty($pending_appointments)): ?>
@@ -221,6 +225,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                                         <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
                                         <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Time</th>
                                         <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
@@ -231,9 +236,18 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                                             <td class="px-4 py-3 text-sm text-gray-800"><?= html_escape(date('M d, Y', strtotime($apt['appointment_date']))) ?></td>
                                             <td class="px-4 py-3 text-sm text-gray-800"><?= html_escape(date('h:i A', strtotime($apt['time_slot']))) ?></td>
                                             <td class="px-4 py-3">
-                                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                    Pending
-                                                </span>
+                                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                                            </td>
+                                            <td class="px-4 py-3 text-sm flex gap-2">
+                                                <a href="<?= site_url('doctor/appointment_confirm/' . $apt['id']) ?>"
+                                                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs transition"
+                                                    onclick="return confirm('Confirm this appointment?');">
+                                                    Confirm
+                                                </a>
+                                                <button onclick="openDeclineModal(<?= $apt['id'] ?>)"
+                                                    class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition">
+                                                    Decline
+                                                </button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -243,7 +257,6 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                     <?php endif; ?>
                 </div>
 
-                <!-- Confirmed Appointments -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <h2 class="text-xl font-bold text-gray-800 mb-4">Confirmed Appointments</h2>
                     <?php if (empty($confirmed_appointments)): ?>
@@ -274,9 +287,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
                                                 </span>
                                             </td>
                                             <td class="px-4 py-3">
-                                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                                    Confirmed
-                                                </span>
+                                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -292,6 +303,7 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
 
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script>
+        // Logout Modal
         const logoutModal = document.getElementById('logout-modal');
 
         function openLogoutModal() {
@@ -308,8 +320,27 @@ $flash_message = $LAVA->session->flashdata('success_message') ?? $LAVA->session-
             }
         }
 
+        // Decline Modal
+        const declineModal = document.getElementById('decline-modal');
+        const declineInput = document.getElementById('decline_appointment_id');
+
+        function openDeclineModal(id) {
+            declineInput.value = id;
+            declineModal.classList.remove('hidden');
+            declineModal.classList.add('flex');
+        }
+
+        function closeDeclineModal(event = null) {
+            if (!event || event.target.id === 'decline-modal') {
+                declineModal.classList.remove('flex');
+                declineModal.classList.add('hidden');
+            }
+        }
+
         window.openLogoutModal = openLogoutModal;
         window.closeLogoutModal = closeLogoutModal;
+        window.openDeclineModal = openDeclineModal;
+        window.closeDeclineModal = closeDeclineModal;
     </script>
 
 </body>
