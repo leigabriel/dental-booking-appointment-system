@@ -491,6 +491,39 @@ $admin_full_name = $admin_details['full_name'] ?? $username;
     </div>
 
     <script>
+        (function() {
+            const logoutAnchor = document.querySelector('a[title="Logout"]');
+            const logoutModal = document.getElementById('logout-modal');
+            const confirmBtn = document.getElementById('confirm-logout-btn');
+            const logoutUrl = "<?= site_url('logout') ?>";
+
+            function openLogoutModal() {
+                confirmBtn.setAttribute('href', logoutUrl);
+                logoutModal.classList.remove('hidden');
+                logoutModal.classList.add('flex');
+                document.body.classList.add('overflow-hidden');
+            }
+
+            function closeLogoutModal(event = null) {
+                if (!event || event.target.id === 'logout-modal') {
+                    logoutModal.classList.remove('flex');
+                    logoutModal.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                }
+            }
+
+            // Expose to global scope for inline onclick calls used in markup
+            window.openLogoutModal = openLogoutModal;
+            window.closeLogoutModal = closeLogoutModal;
+
+            if (logoutAnchor) {
+                logoutAnchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openLogoutModal();
+                });
+            }
+        })();
+
         // Status Chart
         const statusCtx = document.getElementById('statusChart').getContext('2d');
         const statusData = <?= json_encode($status_distribution) ?>;
