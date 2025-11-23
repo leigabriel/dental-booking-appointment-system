@@ -25,10 +25,12 @@ CREATE TABLE doctors (
     name VARCHAR(255) NOT NULL,
     specialty VARCHAR(100) NOT NULL,
     email VARCHAR(255) UNIQUE,
+    is_available TINYINT(1) DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
     INDEX idx_specialty (specialty),
-    INDEX idx_user_id (user_id)
+    INDEX idx_user_id (user_id),
+    INDEX idx_is_available (is_available)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE services (
@@ -93,10 +95,10 @@ INSERT INTO `users` (`id`, `username`, `full_name`, `email`, `email_verified_at`
 
 INSERT INTO `doctors` (`id`, `user_id`, `name`, `specialty`, `email`, `created_at`) VALUES
 (1, 2, 'Nitchel Paula Acosta', 'General Dentist', 'nitchel@dentalcare.com', '2025-11-18 07:38:45'),
-(2, 4, 'Judith Hernandez', 'Orthodontics', 'judith@dentalcare.com', '2025-11-18 07:45:04'),
-(3, 5, 'Mylene Arellano', 'Periodontics', 'mylene@dentalcare.com', '2025-11-18 07:45:41'),
-(4, 6, 'Joana Ruth Canunigo', 'Endodontics', 'joana@dentalcare.com', '2025-11-18 07:47:06'),
-(5, 7, 'Cyred Geneta', 'Prosthodontics', 'cyred@dentalcare.com', '2025-11-18 07:48:15');
+(2, 3, 'Judith Hernandez', 'Orthodontics', 'judith@dentalcare.com', '2025-11-18 07:45:04'),
+(3, 4, 'Mylene Arellano', 'Periodontics', 'mylene@dentalcare.com', '2025-11-18 07:45:41'),
+(4, 5, 'Joana Ruth Canunigo', 'Endodontics', 'joana@dentalcare.com', '2025-11-18 07:47:06'),
+(5, 6, 'Cyred Geneta', 'Prosthodontics', 'cyred@dentalcare.com', '2025-11-18 07:48:15');
 
 -- Admin Account
 -- username or email = admin or admin@dentalcare.com
