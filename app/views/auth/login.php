@@ -143,7 +143,7 @@ $show_pass_icon = 'https://cdn-icons-png.flaticon.com/128/709/709612.png';
 
                 <div class="flex items-center justify-between text-sm">
                     <label class="flex items-center space-x-2">
-                        <input type="checkbox" class="h-4 w-4 text-[--primary-color] border-gray-300 rounded-2xl" required>
+                        <input type="checkbox" class="h-4 w-4 text-[--primary-color] border-gray-300 rounded-2xl" required checked>
                         <span class="text-gray-600">I agree to the <a href="#" class="text-[--primary-color] hover:underline">Terms & Privacy</a></span>
                     </label>
                     <a href="#" class="text-[--primary-color] hover:underline font-medium">Forgot Password?</a>
