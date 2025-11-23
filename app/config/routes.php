@@ -107,6 +107,10 @@ $router->get('/management/user_suspend/{id}', 'Management::user_suspend')
 $router->get('/management/user_unsuspend/{id}', 'Management::user_unsuspend')
   ->where_number('id');
 
+// Toggle Doctor Availability (Admin/Staff)
+$router->get('/management/doctor_toggle_availability/{id}', 'Management::doctor_toggle_availability')
+  ->where_number('id');
+
 // Appointments JSON for calendar/analytics
 $router->get('/management/appointments_json', 'Management::appointments_json');
 
@@ -193,6 +197,9 @@ $router->get('/doctor/dashboard', function () {
 // DOCTOR ACTIONS
 $router->get('/doctor/appointment_confirm/{id}', 'Doctor::appointment_confirm')->where_number('id');
 $router->post('/doctor/appointment_decline', 'Doctor::appointment_decline');
+
+// Toggle Doctor's Own Availability
+$router->get('/doctor/toggle_availability', 'Doctor::toggle_availability');
 
 $router->get('/doctor/profile', 'Doctor::profile');
 $router->post('/doctor/profile/update', 'Doctor::profile_update');
