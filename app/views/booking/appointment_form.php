@@ -199,6 +199,31 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
+        /* Unavailable Doctor Card Styles */
+        .doctor-card-unavailable {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .doctor-card-unavailable::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(239, 68, 68, 0.05),
+                rgba(239, 68, 68, 0.05) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            pointer-events: none;
+        }
+
         /* Payment Card Styles */
         .payment-card {
             position: relative;
@@ -530,18 +555,40 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                     <div id="doctorScroller" class="flex gap-4 overflow-x-auto pb-4 no-scrollbar snap-x snap-mandatory scroll-smooth">
                                         <?php if (!empty($doctors)): ?>
                                             <?php foreach ($doctors as $doctor): ?>
-                                                <div class="doctor-card-select selection-card flex-shrink-0 w-80 p-5 rounded-xl border-2 border-white/10 bg-blue-900/40 snap-start"
+                                                <?php 
+                                                    $is_available = isset($doctor['is_available']) && $doctor['is_available'] == 1;
+                                                    $card_class = $is_available ? 'doctor-card-select selection-card' : 'doctor-card-unavailable';
+                                                    $opacity = $is_available ? '' : 'opacity-60';
+                                                ?>
+                                                <div class="<?= $card_class ?> flex-shrink-0 w-80 p-5 rounded-xl border-2 <?= $is_available ? 'border-white/10' : 'border-red-500/50' ?> bg-blue-900/40 snap-start <?= $opacity ?> <?= $is_available ? '' : 'cursor-not-allowed' ?>" 
+                                                    <?php if ($is_available): ?>
                                                     data-doctor-id="<?= html_escape($doctor['id']) ?>"
                                                     data-doctor-name="<?= html_escape('Dr. ' . $doctor['name']) ?>"
-                                                    data-specialty="<?= html_escape($doctor['specialty']) ?>">
-                                                    <div class="check-icon">
-                                                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                                        </svg>
-                                                    </div>
+                                                    data-specialty="<?= html_escape($doctor['specialty']) ?>"
+                                                    <?php endif; ?>>
+                                                    
+                                                    <?php if (!$is_available): ?>
+                                                        <!-- Unavailable Badge -->
+                                                        <div class="absolute top-3 right-3 z-10">
+                                                            <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-red-500/90 text-white text-xs font-bold shadow-lg">
+                                                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                                                </svg>
+                                                                UNAVAILABLE
+                                                            </div>
+                                                        </div>
+                                                    <?php else: ?>
+                                                        <!-- Selection Check Icon -->
+                                                        <div class="check-icon">
+                                                            <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                                            </svg>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                    
                                                     <div class="flex items-start gap-4">
                                                         <div class="flex-shrink-0">
-                                                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-xl ring-4 ring-blue-500/20">
+                                                            <div class="w-20 h-20 rounded-full bg-gradient-to-br <?= $is_available ? 'from-blue-500 to-indigo-600' : 'from-gray-500 to-gray-700' ?> flex items-center justify-center shadow-xl ring-4 <?= $is_available ? 'ring-blue-500/20' : 'ring-gray-500/20' ?>">
                                                                 <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
                                                                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                                                                 </svg>
@@ -561,12 +608,20 @@ $time_slots = ['08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:0
                                                                 </svg>
                                                                 <span>Experienced Professional</span>
                                                             </div>
+                                                            <?php if (!$is_available): ?>
+                                                                <div class="mt-3 text-red-400 text-xs font-semibold">
+                                                                    <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                                    </svg>
+                                                                    This doctor is currently not available today
+                                                                </div>
+                                                            <?php endif; ?>
                                                         </div>
                                                     </div>
                                                 </div>
                                             <?php endforeach; ?>
                                         <?php else: ?>
-                                            <p class="text-gray-400 text-center py-8">No dentists currently available.</p>
+                                            <p class="text-gray-400 text-center py-8">No doctors found in the system.</p>
                                         <?php endif; ?>
                                     </div>
                                 </div>

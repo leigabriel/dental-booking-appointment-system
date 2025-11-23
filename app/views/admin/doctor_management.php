@@ -219,6 +219,7 @@ function display_validation_errors($errors)
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Specialty</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Account</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                                 </tr>
                             </thead>
@@ -243,12 +244,28 @@ function display_validation_errors($errors)
                                                     </span>
                                                 <?php endif; ?>
                                             </td>
+                                            <td class="px-3 py-4 text-sm text-gray-600">
+                                                <?php 
+                                                    $is_available = isset($doctor['is_available']) ? $doctor['is_available'] : 1;
+                                                    $status_class = $is_available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                                                    $status_icon = $is_available ? 'check-circle' : 'times-circle';
+                                                    $status_text = $is_available ? 'Available' : 'Unavailable';
+                                                ?>
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <?= $status_class ?>">
+                                                    <i class="fas fa-<?= $status_icon ?> mr-1"></i>
+                                                    <?= $status_text ?>
+                                                </span>
+                                            </td>
                                             <td class="px-3 py-4 text-sm space-x-2 whitespace-nowrap">
                                                 <button
                                                     class="text-blue-600 hover:text-blue-800 font-medium"
                                                     onclick="openModal('edit', <?= html_escape($doctor['id']) ?>)">
                                                     Edit
                                                 </button>
+                                                <a href="<?= site_url('management/doctor_toggle_availability/' . $doctor['id']) ?>"
+                                                   class="<?= $is_available ? 'text-orange-600 hover:text-orange-800' : 'text-green-600 hover:text-green-800' ?> font-medium">
+                                                    <?= $is_available ? 'Set Unavailable' : 'Set Available' ?>
+                                                </a>
                                                 <?php if ($current_role === 'admin'): ?>
                                                     <button type="button"
                                                         onclick="openDeleteModal('<?= site_url('management/doctor_delete/' . $doctor['id']) ?>', '<?= html_escape($doctor['name']) ?>')"
@@ -261,7 +278,7 @@ function display_validation_errors($errors)
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="6" class="px-3 py-4 text-center text-gray-500">No doctors found.</td>
+                                        <td colspan="7" class="px-3 py-4 text-center text-gray-500">No doctors found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>

@@ -271,4 +271,26 @@ class Doctor extends Controller
         $this->session->set_flashdata('success_message', 'Your account has been deleted successfully.');
         redirect('login');
     }
+
+    // Toggle doctor availability (Doctor can access)
+    public function toggle_availability()
+    {
+        $details = $this->_fetchDoctorDetails();
+        $doctorProfile = $details['doctor'];
+
+        if (!$doctorProfile) {
+            $this->session->set_flashdata('error_message', 'Doctor profile not found.');
+            redirect('doctor/dashboard');
+        }
+
+        $result = $this->DoctorModel->toggleAvailability($doctorProfile['id']);
+        if ($result) {
+            $new_status = $doctorProfile['is_available'] ? 'unavailable' : 'available';
+            $this->session->set_flashdata('success_message', "Your availability is now {$new_status}.");
+        } else {
+            $this->session->set_flashdata('error_message', 'Failed to update availability.');
+        }
+        
+        redirect('doctor/dashboard');
+    }
 }

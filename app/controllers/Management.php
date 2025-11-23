@@ -559,4 +559,40 @@ class Management extends Controller
         $this->session->set_flashdata('success_message', "User '{$user['username']}' has been unsuspended.");
         redirect($_SERVER['HTTP_REFERER'] ?? 'admin/dashboard');
     }
+
+    // Toggle doctor availability (Admin/Staff can access)
+    public function doctor_toggle_availability($id)
+    {
+        // Admin or Staff can toggle doctor availability
+        $this->_check_admin_or_staff();
+        
+        if (!$id) {
+            $this->session->set_flashdata('error_message', 'Invalid doctor ID.');
+            redirect($_SERVER['HTTP_REFERER'] ?? 'management/doctors');
+        }
+
+        // Use raw SQL to avoid the filter binding issue
+        if (!isset($this->db)) {
+            $this->call->database();
+        }
+
+        $sql = "SELECT * FROM doctors WHERE id = ? LIMIT 1";
+        $stmt = $this->db->raw($sql, [$id]);
+        $doctor = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$doctor) {
+            $this->session->set_flashdata('error_message', 'Doctor not found.');
+            redirect($_SERVER['HTTP_REFERER'] ?? 'management/doctors');
+        }
+
+        $result = $this->DoctorModel->toggleAvailability($id);
+        if ($result) {
+            $new_status = $doctor['is_available'] ? 'unavailable' : 'available';
+            $this->session->set_flashdata('success_message', "Dr. {$doctor['name']} is now {$new_status}.");
+        } else {
+            $this->session->set_flashdata('error_message', 'Failed to update doctor availability.');
+        }
+        
+        redirect($_SERVER['HTTP_REFERER'] ?? 'management/doctors');
+    }
 }

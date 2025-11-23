@@ -19,6 +19,7 @@ class Booking extends Controller
 
     public function index()
     {
+        // Show all doctors, including unavailable ones (they will be disabled in the view)
         $data['doctors'] = $this->DoctorModel->all();
         $data['services'] = $this->ServiceModel->all();
 
